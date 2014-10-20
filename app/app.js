@@ -46,10 +46,10 @@ app.run(function ($rootScope, $state, $stateParams, $location) {
     $rootScope.$stateParams = $stateParams;
 
     function login_cb() {
-        $state.go('home', null, {reload: true});
+        window.location.reload();
     }
     function logout_cb() {
-        $state.go('home', null, {reload: true});
+        window.location.reload();
     }
 
     /* auth */
