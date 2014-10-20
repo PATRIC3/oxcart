@@ -1,0 +1,49 @@
+
+body {
+    background-color: #3B4653;
+}
+
+.navbar-default {
+    background: #1C2228;
+    border-color: #546477;
+}
+.navbar-brand {
+	color: #eee;
+}
+
+
+.sidebar {
+    background-color: #3B4653;
+}
+.sidebar a {
+    color: #8496AB;
+}
+
+.sidebar ul li a.active {
+    background-color: #24323D;
+}
+.sidebar-collapse {
+    background-color: #120E19;
+    border-color: #54697B;
+}
+.sidebar-collapse i {
+    color: #978BB2;
+}
+
+
+#page-wrapper {
+	background-color: #fafafa;
+}
+
+#content {
+	background-color: #fff;
+	padding: 20px;
+	border: 1px solid #ccc;	
+-webkit-box-shadow: 1px 1px 16px 0px rgba(50, 50, 50, 0.25);
+-moz-box-shadow:    1px 1px 16px 0px rgba(50, 50, 50, 0.25);
+box-shadow:         1px 1px 16px 0px rgba(50, 50, 50, 0.25);
+}
+
+#footer {
+	background: #1C2228;
+}
