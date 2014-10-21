@@ -16,7 +16,7 @@ default:
 deploy: deploy-client
 
 deploy-client: deploy-configs
-	rsync --exclude '*.bak*' -arv . $(TARGET)/services/$(SERVICE_DIR)/webroot/.
+	rsync --exclude '.git' -arv . $(TARGET)/services/$(SERVICE_DIR)/webroot/.
 
 deploy-configs: build-configs
 	-mkdir -p $(TARGET)/services/$(SERVICE_DIR)/webroot
