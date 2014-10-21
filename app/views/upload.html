@@ -16,9 +16,7 @@
     </div>
 </div>
 
-
 <br>
-<!-- onchange="angular.element(this).scope().uploadFile(this.files)" -->
 
 <form enctype="multipart/form-data">
     <input name="upload" type="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
@@ -34,52 +32,8 @@
     Upload complete. :)  Now I will run an AWE job to add your data to <b><i>{{ddSelected}}</i></b>... or something like that. 
 </div>
 
-<br><br>
-
-
-<!--
-<div ng-controller="MyCtrl">
-    <input type="text" ng-model="myModelObj">
-    <input type="file" ng-file-select="onFileSelect($files)">
-    <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
-    <div ng-file-drop="onFileSelect($files)" 
-         ng-file-drag-over-class="optional-css-class-name-or-function"
-         ng-show="dropSupported">drop files here</div>
-    <div ng-file-drop-available="dropSupported=true" 
-         ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
-    <button ng-click="upload.abort()">Cancel Upload</button>
-</div>    
--->            
-<!--
-<div class="row">
-    <div class="col-md-5">
-
-        <div flow-init="{target: 'http://localhost:5000/upload'}"
-             flow-files-submitted="$flow.upload()"
-             flow-file-success="$file.msg = $message">
-
-            <div class="text-center">
-                <div class="alert" flow-drop flow-drag-enter="class='alert-success'" flow-drag-leave="class=''" ng-class="class">
-                    Drag and Drop your file here
-                </div>
-                <b>or</b><br>
-                <br>
-                <span class="btn btn-primary btn-sm" flow-btn>Upload File</span>
-            </div>
-
-            <table>
-                <tr ng-repeat="file in $flow.files">
-                    <td>{{$index+1}}</td>
-                    <td>{{file.name}}</td>
-                    <td>{{file.msg}}</td>
-                </tr>
-            </table>
-        </div> 
-                        <i class="fa fa-cloud-download"></i>
-
-
-    </div>
-</div>-->
+<br>
+<br>
 
 
 <div kb-upload></div>

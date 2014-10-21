@@ -8,7 +8,6 @@
 */
 
 app.service('appUI', function($http, $rootScope) {
-    console.log('made it')
     var self = this;
     
     // default workspace; used at the start of the application
@@ -45,6 +44,7 @@ app.service('appUI', function($http, $rootScope) {
 		this.cells.splice(index, 1);
     }
 
+    // set current working app
     this.setApp = function(name) {
         var cell_obj = self.method_dict[name];
         self.current_app = cell_obj;
@@ -58,7 +58,6 @@ app.service('appUI', function($http, $rootScope) {
 
     // Load data for apps, app builder, and data 
     $http.get('data/services.json').success(function(data) {
-        console.log('form data', data)
 
         // reorganize data since it doesn't make any sense.  
         // why is there no order to the groups of methods?
@@ -81,10 +80,10 @@ app.service('appUI', function($http, $rootScope) {
                            params: sanitize(meth.properties.parameters, 'param'),
                            returns: sanitize(meth.returns, 'output')};
 
-                var small = {title: meth.title,
-                           description: meth.description}
+                var meta = {title: meth.title,
+                            description: meth.description}
 
-                method.methods.push(small);
+                method.methods.push(meta);
                 method_dict[id] = obj;
             }
 

@@ -1,0 +1,73 @@
+
+<div class="col-md-9">
+    <div class="panel panel-default" app-cell>
+        <div class="panel-heading">
+            <span class="panel-title pull-left">{{appUI.current_app.title}}</span> 
+            
+            <div class="pull-right text-muted">
+                <a ng-click="flip($event)">
+                    <i class="fa fa-question"></i>
+                </a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="narrative-cell-container">
+            <div class="narrative-cell">
+                <div class="panel-body">
+
+                    <figure class="front">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group" ng-repeat="field in appUI.current_app.params">
+                            <label class="col-sm-3 control-label">{{field.ui_name}}</label>
+
+                            <div class="col-sm-9">
+                                <input ng-if="field.type == 'string'" ng-model="fields[field.ui_name]" type="text" class="form-control" placeholder="">
+                                <div ng-if="field.type != 'string'" 
+                                     dd-model="{{fields[field.ui_name]}}"
+                                     dd-selector 
+                                     dd-default="{{appUI.wsObjsByType[field.type][0].name}}"
+                                     dd-selected="" 
+                                     dd-data="appUI.wsObjsByType[field.type]">
+                                </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                              <button ng-click="runCell($index, appUI.current_app)" type="submit" class="btn btn-primary pull-right">Run</button>
+                            </div>
+                          </div>
+                        </form>
+                    </figure>
+                    
+                    <!-- back side of cell / documentation -->
+                    <figure class="back">
+                       {{appUI.current_app.description}}
+                    </figure>
+
+                </div> 
+            </div> 
+        </div>
+    </div> <!-- end cell -->
+
+</div>
+
+<div class="col-md-3">
+    <ul class="app-list list-group list-unstyled">
+        <li><a class="text-muted" >Assemble</a></li>
+        <li><a ui-sref="app.id({id: 'Annotate-ContigSet'})">Annotate</a></li>
+        <li><a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">Generate Initial Model</a></li>
+        <li><a ui-sref="app.id({id: 'Gapfill-a-Metabolic-Model'})">Gapfill Model</a></li>
+        <li><a ui-sref="app.id({id: 'Run-Flux-Balance-Analysis'})">Run Model</a></li>
+        <li><a ui-sref="app.id({id: 'Assemble-Genome-from-Fasta'})">Assemble Genome</a></li>
+        <li><a ui-sref="app.id({id: 'Import-NCBI-Genome'})">Genome Import</a></li>
+        <li><a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">Reconcile Giving New Model</a></li>
+        <li><a class="text-muted" >Model Input</a></li>
+        <li><a class="text-muted" >Model Translation</a></li>
+        <li><a class="text-muted" >Comparative Genomes</a></li>
+    </ul>
+</div>
+
+
+

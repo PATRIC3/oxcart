@@ -1,5 +1,5 @@
 
-<div ng-if="!appUI.current_app">
+<div ui-view>
     <h3>Apps</h3>
     <div class="row">
         <div class="col-md-12">
@@ -7,30 +7,29 @@
                 <span class="text-muted">
                     <div class="well well-sm">Assemble</div>
                 </span>
-                <a ng-click="appUI.setApp('Annotate ContigSet')">
+                <a ui-sref="app.id({id: 'Annotate-ContigSet'})">
                     <div class="well well-sm">Annotate</div>
                 </a>
-                <a ng-click="appUI.setApp('Build a Metabolic Model')">
+                <a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">
                     <div class="well well-sm">Generate Initial Model</div>
                 </a>
-                <a ng-click="appUI.setApp('Gapfill a Metabolic Model')">
+                <a ui-sref="app.id({id: 'Gapfill-a-Metabolic-Model'})">
                     <div class="well well-sm">Gapfill Model</div>
                 </a>
-                <a ng-click="appUI.setApp('Run Flux Balanace Analysis')">
+                <a ui-sref="app.id({id: 'Run-Flux-Balanace-Analysis'})">
                     <div class="well well-sm">Run FBA</div>
                 </a>
-                <a ng-click="appUI.setApp('Assemble Genome from Fasta')">
+                <a ui-sref="app.id({id: 'Assemble-Genome-from-Fasta'})">
                     <div class="well well-sm">Assemble Genome</div>
                 </a>
             </div>
             <div class="col-md-5">
-                <a ng-click="appUI.setApp('Import NCBI Genome')">
+                <a ui-sref="app.id({id: 'Import-NCBI-Genome'})">
                     <div class="well well-sm">Genome Import</div>
                 </a>
-                <a ng-click="appUI.setApp('Build a Metabolic Model')">
+                <a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">
                     <div class="well well-sm">Reconcile Giving New Model</div>
                 </a>
-                <a><div class="well well-sm">Generate Initial Model</div></a>
                 <span class="text-muted">
                     <div class="well well-sm">Model Input</div>
                 </span>
@@ -43,73 +42,6 @@
             </div>
         </div>
     </div>
-
-    <!--
-    <ul class="app-list list-group">
-        <li><a class="text-muted" >Assemble</a></li>
-        <li><a ng-click="appUI.setApp('Annotate ContigSet')">Annotate</a></li>
-        <li><a ng-click="appUI.setApp('Build a Metabolic Model')">Generate Initial Model</a></li>
-        <li><a ng-click="appUI.setApp('Gapfill a Metabolic Model')">Gapfill Model</a></li>
-        <li><a ng-click="appUI.setApp('Run Flux Balance Analysis')">Run Model</a></li>
-        <li><a ng-click="appUI.setApp('Assemble Genome from Fasta')">Assemble Genome</a></li>
-        <li><a ng-click="appUI.setApp('Import NCBI Genome')">Genome Import</a></li>
-        <li><a ng-click="appUI.setApp('Build a Metabolic Model')">Reconcile Giving New Model</a></li>
-        <li><a class="text-muted" >Model Input</a></li>
-        <li><a class="text-muted" >Model Translation</a></li>
-        <li><a class="text-muted" >Comparative Genomes</a></li>
-    </ul>-->
 </div>
 
-<div ng-if="appUI.current_app">
-    <div class="panel panel-default" app-cell>
-        <div class="panel-heading">
-            <span class="panel-title pull-left">{{appUI.current_app.title}}</span> 
-            
-            <div class="pull-right text-muted">
-                <a ng-click="flip($event)">
-                    <i class="fa fa-question"></i>
-                </a>
-            </div>
-            <div class="clearfix"></div>
-        </div>
 
-        <div class="narrative-cell-container">
-            <div class="narrative-cell">
-                <div class="panel-body">
-
-                    <figure class="front">
-                        <form class="form-horizontal" role="form">
-                          <div class="form-group" ng-repeat="field in appUI.current_app.params">
-                            <label class="col-sm-3 control-label">{{field.ui_name}}</label>
-
-                            <div class="col-sm-9">
-                                <input ng-if="field.type == 'string'" ng-model="fields[field.ui_name]" type="text" class="form-control" placeholder="">
-                                <div ng-if="field.type != 'string'" 
-                                     dd-model="{{fields[field.ui_name]}}"
-                                     dd-selector 
-                                     dd-default="{{appUI.wsObjsByType[field.type][0].name}}"
-                                     dd-selected="" 
-                                     dd-data="appUI.wsObjsByType[field.type]">
-                                </div>
-                            </div>
-                          </div>
-
-                          <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                              <button ng-click="runCell($index, appUI.current_app)" type="submit" class="btn btn-primary pull-right">Run</button>
-                            </div>
-                          </div>
-                        </form>
-                    </figure>
-                    
-                    <!-- back side of cell / documentation -->
-                    <figure class="back">
-                       {{appUI.current_app.description}}
-                    </figure>
-
-                </div> 
-            </div> 
-        </div> <!-- end body container-->
-
-    </div> <!-- end cell -->
-</div>

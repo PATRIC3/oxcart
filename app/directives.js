@@ -63,7 +63,6 @@ angular.module('directives', [])
           scope.$watch(attr.animateOnChange, function(nv,ov) {
             if (nv!=ov) {
               var c = nv > ov ? 'change-up' : 'change';
-              console.log('changing', c)
               elem.addClass(c).removeClass(c, {duration: 1000})
             }
           });    
@@ -80,7 +79,6 @@ angular.module('directives', [])
     return {
         templateUrl: 'app/partials/dd-selector.html',
         link: function(scope, element, attrs) {
-            console.log('here!')
             // model for input
             scope.ddModel = attrs.ddModel;
 
@@ -127,61 +125,11 @@ angular.module('directives', [])
                 scope.$apply(function(){
                     scope.uploads = data;
                 })
-                console.log(data)
             })
 
         }
     }
 })
-
-.directive('recentnarratives', function($location) {
-    return {
-        link: function(scope, element, attrs) {
-            $(element).loading()
-
-            scope.loadRecentNarratives = function() {
-                var p = kb.ws.list_objects({type: kb.nar_type}).fail(function(e){
-                    $(ele).rmLoading();
-                    $(ele).append('<div class="alert alert-danger">'+
-                                    e.error.message+'</div>')
-                });
-
-                
-                $.when(p).done(function(results){
-                    $(element).rmLoading();
-
-                    var narratives = [];
-                    if (results.length > 0) {
-                        for (var i in results) {
-                            var nar = {};
-                            nar.name = results[i][1];
-                            if (nar.name.slice(0,4) == 'auto') continue;
-
-                            nar.id = results[i][0];
-                            nar.wsid = results[i][6]
-                            nar.ws = results[i][7];
-                            nar.owner = results[i][5];
-
-                            nar.timestamp = kb.ui.getTimestamp(results[i][3]);
-                            nar.nealtime = kb.ui.formateDate(nar.timestamp) 
-                                            ? kb.ui.formateDate(nar.timestamp) : results[i][3].replace('T',' ').split('+')[0];
-                            narratives.push(nar);
-                        }
-
-                        scope.$apply(function() {
-                            scope.narratives = narratives;
-                        })
-                    } else {
-                        $(element).append('no narratives');
-                    }
-                });
-            }
-
-            scope.loadRecentNarratives();
-        }  /* end link */
-    };
-})
-
 
 .directive('sidebarCollapse', function() {
     return {

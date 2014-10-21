@@ -1,6 +1,6 @@
 
 
-var app = angular.module('appRunner', 
+var app = angular.module('appTasker', 
     ['ui.router', 'json-rpc', 'directives'])
         .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
@@ -8,40 +8,48 @@ var app = angular.module('appRunner',
     $locationProvider.html5Mode(false);  
 
     $stateProvider
-        .state('home', {
-            url: "/home",
+        .state('Login', {
+            url: "/login",
+            templateUrl: 'app/views/login.html',
+            controller: 'Login'})
+        .state('app', {
+            url: "/app-tasker",
             templateUrl: 'app/views/home.html',
-            controller: 'Analysis'})
-        .state('upload', {
+            controller: 'Analysis'})        
+        .state('app.upload', {
             url: "/upload",
             templateUrl: 'app/views/upload.html',
             controller: 'Upload'})   
-        .state('tasks', {
+        .state('app.tasks', {
             url: "/tasks",
             templateUrl: 'app/views/tasks.html',
             controller: 'Analysis'})
-        .state('apps', {
-            url: "/apps",
+        .state('app.apps', {
+            url: "/apps/",
             templateUrl: 'app/views/apps.html',
             controller: 'Analysis'})
-        .state('builder', {
+        .state('app.id', {
+            url: "/apps/:id",
+            templateUrl: 'app/views/apps.id.html',
+            controller: 'Analysis'})
+        .state('app.builder', {
             url: "/builder",
             templateUrl: 'app/views/app-builder.html',
             controller: 'Analysis'})
-        .state('objects', {
+        .state('app.objects', {
             url: "/objects",
             templateUrl: 'app/views/ws/objtable.html',
             controller: 'Analysis'
         })      
 
-    $urlRouterProvider.when('', '/home/')
-                      .when('/', '/home/')
-                      .when('#', '/home/');
+    $urlRouterProvider.when('', '/app-tasker')
+                      .when('/', '/app-tasker')
+                      .when('#', '/app-tasker');
 
 }]);
 
 
-app.run(function ($rootScope, $state, $stateParams, $location) {
+app.run(function ($rootScope, $state, $stateParams, $http) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
@@ -60,25 +68,29 @@ app.run(function ($rootScope, $state, $stateParams, $location) {
     $rootScope.userId = login_ele.kbaseLogin('session').user_id;
     $rootScope.token = login_ele.kbaseLogin('session').token;
 
-    kb = new KBCacheClient($rootScope.token);
+    //kb = new KBCacheClient($rootScope.token);
 });
 
 
 angular.module('json-rpc', [])
     .config([ "$provide", "$httpProvider",
     function($provide, $httpProvider) {
+
     /* kbase doesn't allow content-type */
     delete $httpProvider.defaults.headers.post['Content-Type'];
-    
-    return $provide.decorator('$http', ['$delegate', "$rootScope", "$q", 
-        function($delegate, $rootScope, $q) {
 
-            $delegate.rpc = function(service, method, parameters, config){
+    return $provide.decorator('$http', ['$delegate', "$rootScope", "$q", "config",
+        function($delegate, $rootScope, $q, $config) {
+            
+            $delegate.rpc = function(service, method, parameters){
                 var deferred = $q.defer();       
 
                 if (service == 'ws') {
-                    var url = "https://kbase.us/services/ws";
+                    var url = $config.services.ws_url;
                     var method = 'Workspace.'+method;
+                } else if (service == 'fba') { /* untested */
+                    var url = $config.services.fba_url;
+                    var method = 'fbaModelServices.'+method;
                 }
 
                 var data = {version: "1.1", 
@@ -86,15 +98,17 @@ angular.module('json-rpc', [])
                             params: [parameters], 
                             id: String(Math.random()).slice(2)};
 
-                $delegate.post(url, 
-                    data, 
-                    angular.extend({'headers': {'Authorization': $rootScope.token}}, config) )
-                .success(function(data) {
-                     deferred.resolve(data.result[0]);
-                })    
+                var config = angular.extend({'headers': 
+                                            {'Authorization': $rootScope.token}}, config);
+
+                $delegate.post(url, data, config)
+                         .success(function(data) {
+                               deferred.resolve(data.result[0]);
+                         });
+
                 return deferred.promise;
             };
 
-            return $delegate
+            return $delegate;
         }]);
 }]);

@@ -59,16 +59,14 @@ a, .pointer {
     /*padding: 0 15px;*/
     /* min-height: 568px; */ /*removed for footer */
     background-color: #fff;
-    padding:10px;
+    padding: 10px;
     padding-bottom: 100px;
 }
 
 @media(min-width:768px) {
     #page-wrapper {
         position: inherit;
-        margin: 0 0 0 250px;
-
-        border-left: 1px solid #e7e7e7;
+        margin: 0 0 0 200px;
         padding-bottom: 80px;
     }
 }
@@ -209,8 +207,9 @@ a, .pointer {
     .sidebar {
         z-index: 1;
         position: fixed;
-        width: 250px;
+        width: 200px;
         height: 100%;
+        border-right: 1px solid #e7e7e7;        
     }
 
     .navbar-top-links .dropdown-messages,

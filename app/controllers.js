@@ -8,15 +8,20 @@
 */
 
 
-app.controller('Analysis', function($scope, $state, $stateParams, appUI, $http) {
+app.controller('Analysis', function($scope, $state, $stateParams, appUI, uiTools, $http) {
     // service for appUI state
     $scope.appUI = appUI;
+
+    if ($stateParams.id) {
+        console.log($stateParams.id.replace(/-/g, ' ') )
+        appUI.setApp($stateParams.id.replace(/-/g, ' '))
+    }
 
     // selected workpsace
     $scope.ddSelected = appUI.current_ws;
     $scope.ws = $scope.ddSelected; // scope.ws variable for workspace browser
 
-
+    // if workspace object list have not been fetched yet, fetch
     if (!appUI.ws_objects) {
         $http.rpc('ws', 'list_objects', {workspaces: [$scope.ddSelected] } )
         .then(function(data){
@@ -38,32 +43,34 @@ app.controller('Analysis', function($scope, $state, $stateParams, appUI, $http) 
         })
     }
 
-    $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
-    .then(function(workspaces) {
-        var workspaces = workspaces.sort(compare)
+    // if workspace list has not been fetched yet, fetch
+    if (!appUI.ws_list) {
+        $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
+        .then(function(workspaces) {
+            var workspaces = workspaces.sort(compare)
 
-        function compare(a,b) {
-            var t1 = kb.ui.getTimestamp(b[3]) 
-            var t2 = kb.ui.getTimestamp(a[3]) 
-            if (t1 < t2) return -1;
-            if (t1 > t2) return 1;
-            return 0;
-        }
+            function compare(a,b) {
+                var t1 = uiTools.getTimestamp(b[3]) 
+                var t2 = uiTools.getTimestamp(a[3]) 
+                if (t1 < t2) return -1;
+                if (t1 > t2) return 1;
+                return 0;
+            }
 
-        var ws_list = [];
-        for (var i in workspaces) {
-            ws_list.push({name: workspaces[i][1], id: workspaces[i][0]})
-        }
+            var ws_list = [];
+            for (var i in workspaces) {
+                ws_list.push({name: workspaces[i][1], id: workspaces[i][0]})
+            }
 
-        appUI.ws_list = ws_list
-    });
+            appUI.ws_list = ws_list
+        });
+    }
 
     // update workspace objects if dropdown changes
     $scope.$watch('ddSelected', function(new_ws) {
         $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
-        .then(function(data) {
-
-            appUI.ws_objects = data;
+        .then(function(ws_objects) {
+            appUI.ws_objects = ws_objects;
 
             // if newly selected workspace is not the same
             // as current, go to workspace browser view 
@@ -77,7 +84,7 @@ app.controller('Analysis', function($scope, $state, $stateParams, appUI, $http) 
 
 })
 
-.controller('Upload', function($scope, $state, $stateParams, $http) {
+.controller('Upload', function($scope, $state, $http) {
     $scope.shockURL = "http://140.221.67.190:7078"
 
     // improve by using angular http
@@ -129,6 +136,11 @@ app.controller('Analysis', function($scope, $state, $stateParams, appUI, $http) 
         }
 
     }
+})
+
+.controller('Login', function() {
+
+
 
 })
 

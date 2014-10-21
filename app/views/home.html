@@ -1,17 +1,89 @@
 
-<h1>App Runner <small>v. Alpha</small></h1> 
-<h4 class="text-muted">Workspace-inspired, rough prototype of how apps could be done.</h4>
+<nav class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">
+            <!--
+            <li class="sidebar-search">
+            </li>-->
 
-<h5>Version Alpha:</h5>
-<ul>
-    <li>Just getting started</li>
-</ul>
+            <li>
+                <a ng-class="{ active: $state.includes('upload')}" ui-sref="app.upload">
+                    <i class="fa fa-cloud-upload"></i> Upload
+                    <span class="text-muted pull-right"></span>
+                </a>
+            </li>
 
-<h5>To do:</h5>
-<ul>
-    <li>Plug-in AWE for tasks</li>
-    <li>Restyle site using newly designed theme</li>
-    <li>Decide how the mini WS browser should appear, if at all.</li>
-    <li>Add social aspects</li>
-    <li>Run end-2-end tests using <a href="https://github.com/angular/protractor">protractor</a></li>
-</ul>    
+
+            <li>
+                <a ng-class="{ active: $state.includes('apps')}" ui-sref="app.apps">
+                    <i class="fa fa-bar-chart"></i> Apps
+                    <span class="text-muted pull-right"></span>
+                </a>
+            </li>
+
+            <li>
+                <a ng-class="{ active: $state.includes('tasks')}" ui-sref="app.tasks">
+                    <i class="fa fa-tasks"></i> Tasks
+                    <span class="text-muted pull-right">{{appUI.tasks.length}}</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <div class="sidebar-nav-small" style="display: none;">
+        <ul class="nav">
+            <li>
+                <a ng-class="{ active: $state.includes('upload')}" ui-sref="app.upload">
+                    <i class="fa fa-cloud-upload"></i>
+                </a>
+            </li>
+
+            <li>
+                <a ng-class="{ active: $state.includes('apps')}" ui-sref="app.apps">
+                    <i class="fa fa-bar-chart"></i>
+                </a>
+            </li>
+
+            <li>
+                <a ng-class="{ active: $state.includes('tasks')}" ui-sref="app.tasks">
+                    <i class="fa fa-tasks"></i>
+                    <span class="text-muted pull-right">{{appUI.tasks.length}}</span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+</nav>
+
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div ui-view id="content">
+                <h1>App Tasker <small>v. Alpha</small></h1>
+                <h4 class="text-muted">Prototype of how apps could be done.</h4>
+
+                <h5>Version Alpha:</h5>
+                <ul>
+                    <li>Just getting started</li>
+                </ul>
+
+                <h5>To do:</h5>
+                <ul>
+                    <li>Plug-in AWE for tasks</li>
+                    <li>Restyle site using newly designed theme</li>
+                    <li>Decide how the mini WS browser should appear, if at all.</li>
+                    <li>Add social aspects</li>
+                    <li>Run end-2-end tests using <a href="https://github.com/angular/protractor">protractor</a></li>
+                </ul>    
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
