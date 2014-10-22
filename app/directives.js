@@ -82,6 +82,9 @@ angular.module('directives', [])
             // model for input
             scope.ddModel = attrs.ddModel;
 
+            // custom classes
+            scope.ddClass = attrs.ddClass;
+
             // if there is a default for the text box, use it
             if (attrs.ddDefault) {
                 scope.ddSelected = attrs.ddDefault;

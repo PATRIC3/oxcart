@@ -9,9 +9,9 @@
 
 app.service('appUI', function($http, $rootScope) {
     var self = this;
-    
+
     // default workspace; used at the start of the application
-    var default_ws = $rootScope.userId+":home";    
+    var default_ws = $rootScope.userId+":home";
 
     // models for methods; two for faster retrieval and updating of templates
     this.methods = [];
@@ -54,7 +54,6 @@ app.service('appUI', function($http, $rootScope) {
     this.newTask = function(task) {
     	self.tasks.push(task);
     }
-
 
     // Load data for apps, app builder, and data 
     $http.get('data/services.json').success(function(data) {

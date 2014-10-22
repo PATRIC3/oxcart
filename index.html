@@ -69,14 +69,19 @@
                 <a class="navbar-brand pull-left" ui-sref="home">App Tasker</a>
             </div>
 
-            <form class="navbar-form navbar-left" role="search">
+            <form class="navbar-form navbar-left col-md-9" role="search">
                 <small class="text-muted">Current Workspace:</small>
-                <span dd-selector 
-                     dd-selected="selectedWS" 
-                     dd-data="appUI.ws_list" 
-                     on-change="wsSelected(value)">
-                </span>
-            </form>            
+
+                <div class="form-group ">
+                    <div dd-selector 
+                         dd-class=""
+                         dd-selected="selectedWS" 
+                         dd-data="appUI.ws_list" 
+                         on-change="wsSelected(value)">
+                    </div>
+                </div>
+
+            </form>    
 
             <ul class="nav navbar-top-links navbar-left">
                  <li ui-sref="objects({ws: ddSelected})">
