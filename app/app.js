@@ -69,7 +69,9 @@ app.run(function ($rootScope, $state, $stateParams, $http) {
     $rootScope.token = login_ele.kbaseLogin('session').token;
 
     //kb = new KBCacheClient($rootScope.token);
+
 });
+
 
 
 angular.module('json-rpc', [])
@@ -102,9 +104,13 @@ angular.module('json-rpc', [])
                                             {'Authorization': $rootScope.token}}, config);
 
                 $delegate.post(url, data, config)
-                         .success(function(data) {
-                               deferred.resolve(data.result[0]);
-                         });
+                         .then(function(response) {
+                            // only handle actual data
+                            return deferred.resolve(response.data.result[0]);
+                         }).catch(function(error) {
+                            return deferred.reject(error);
+                         })
+
 
                 return deferred.promise;
             };

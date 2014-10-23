@@ -1,13 +1,13 @@
 
 /* 
- * App Runner Model  
+ * App Tasker Model  
  *
  *   This is responisble for the state of the app runner model
  *   Two way binding is used to update the view
  *
 */
 
-app.service('appUI', function($http, $rootScope) {
+app.service('appUI', function($http, $rootScope, uiTools) {
     var self = this;
 
     // default workspace; used at the start of the application
@@ -34,13 +34,11 @@ app.service('appUI', function($http, $rootScope) {
     // add cell to app builder model
     this.addCell = function(name) {
         var cell_obj = self.method_dict[name];
-        console.log('add narrative cell:', name, cell_obj);
         self.cells.push(cell_obj);
     }
 
-    // remove cell from app builder model; pretty awesome, eh?
+    // remove cell from app builder model
     this.removeCell = function(index) {
-        console.log('remove narrative cell', this.cells[index]);
 		this.cells.splice(index, 1);
     }
 
@@ -70,7 +68,9 @@ app.service('appUI', function($http, $rootScope) {
 
             for (var i in nar_meths) {
                 var meth = nar_meths[i];
-                var id = meth.title;  // use title as id for now
+
+                // use title with hypens as method id for now
+                var id = meth.title.replace(/ /g, '-'); 
 
                 var obj = {title: meth.title,
                            description: meth.description,
@@ -79,11 +79,17 @@ app.service('appUI', function($http, $rootScope) {
                            params: sanitize(meth.properties.parameters, 'param'),
                            returns: sanitize(meth.returns, 'output')};
 
+                // use ui_name with hypens as field ids for now
+                for (var j in obj.params) {
+                    obj.params[j].id = obj.params[j].ui_name.replace(/ /g, '-');
+                }
+
+
+                method_dict[id] = obj;
+
                 var meta = {title: meth.title,
                             description: meth.description}
-
-                method.methods.push(meta);
-                method_dict[id] = obj;
+                method.methods.push(meta);                
             }
 
             methods.push(method);
@@ -101,11 +107,66 @@ app.service('appUI', function($http, $rootScope) {
 
         for (var i=0; i<Object.keys(properties).length; i++) {
             var key = key_prefix+String(i);
-
             props.push(properties[key]);
         }
         return props;
     }
+
+
+
+    $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
+    .then(function(data){
+        self.ws_objects = data;
+
+        var types = {};
+        for (var i in data) {
+            var type = data[i][2].split('-')[0];
+            var obj = {name: data[i][1], id: data[i][0]};
+
+            if (type in types) {
+                types[type].push(obj);
+            } else {
+                types[type] = [obj];
+            }
+        }
+
+        self.wsObjsByType = types
+    }).catch(function(e){
+        console.log('here', e)
+    });
+
+    // if workspace list has not been fetched yet, fetch
+    $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
+    .then(function(workspaces) {
+        var workspaces = workspaces.sort(compare)
+
+        function compare(a,b) {
+            var t1 = uiTools.getTimestamp(b[3]) 
+            var t2 = uiTools.getTimestamp(a[3]) 
+            if (t1 < t2) return -1;
+            if (t1 > t2) return 1;
+            return 0;
+        }
+
+        var ws_list = [];
+        for (var i in workspaces) {
+            ws_list.push({name: workspaces[i][1], id: workspaces[i][0]})
+        }
+
+        self.ws_list = ws_list
+    });
+
+
+    this.updateWSObjs = function(new_ws) {
+        $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
+        .then(function(ws_objects) {
+            self.ws_objects = ws_objects;
+
+        }, function(e) {
+            console.log('fail', e)
+        })        
+    }
+
 
 });
 
