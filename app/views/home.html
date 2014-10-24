@@ -24,7 +24,7 @@
             <li>
                 <a ng-class="{ active: $state.includes('tasks')}" ui-sref="app.tasks">
                     <i class="fa fa-tasks"></i> Tasks
-                    <span class="text-muted pull-right">{{appUI.tasks.length}}</span>
+                    <span id="task-count" class="text-muted pull-right">{{appUI.tasks.length}}</span>
                 </a>
             </li>
 
@@ -50,7 +50,7 @@
             <li>
                 <a ng-class="{ active: $state.includes('tasks')}" ui-sref="app.tasks">
                     <i class="fa fa-tasks"></i>
-                    <span class="text-muted pull-right">{{appUI.tasks.length}}</span>
+                    <span id="task-count" class="text-muted pull-right">{{appUI.tasks.length}}</span>
                 </a>
             </li>
         </ul>
