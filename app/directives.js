@@ -2,7 +2,7 @@
  * App Runner directives
  *  - narrativeCell : extends functionality of a cell 
  *  - kbWidget : wrapper for kbase jquery output widgets
- *  - ddSelector : searchable angular, bootstrapifyed dropdown used 
+ *  - ddFilter : searchable angular, bootstrapifyed dropdown used 
  *                 for selectors
  *
  * Controllers:  (See Analysis in js/controllers.js)
@@ -80,7 +80,6 @@ angular.module('directives', [])
 .directive('ddFilter', function() {
     return {
         templateUrl: 'app/partials/dd-filter.html',
-
         link: function(scope, element, attrs) {
 
             // id for input field

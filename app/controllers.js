@@ -18,13 +18,13 @@ app.controller('Analysis',
     $scope.selectedWS = appUI.current_ws;
 
     // update workspace objects if dropdown changes
-    $scope.$watch('selectedWS', function(new_ws) {
+    $scope.$watch('ddDisplayed', function(new_ws) {
         appUI.updateWSObjs(new_ws);
     })
 
 })
 
-.controller('Upload', function($scope, $state, $http) {
+.controller('Upload', function($scope, $state, $http, $rootScope) {
     $scope.shockURL = "http://140.221.67.190:7078"
 
     // improve by using angular http
@@ -38,7 +38,7 @@ app.controller('Analysis',
 
         var form = new FormData($('form')[0]);
         $.ajax({
-            url: $scope.shockURL+'/node',  //Server script to process data
+            url: $scope.shockURL+'/node',
             type: 'POST',
             xhr: function() { 
                 var myXhr = $.ajaxSettings.xhr();
@@ -74,8 +74,29 @@ app.controller('Analysis',
                 })
             }
         }
-
     }
+
+
+    /*
+    $.ajax({
+        url: $scope.shockURL+'/node?querynode&owner='+$rootScope.userId , 
+        type: 'GET',
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", SHOCK.auth_header.Authorization);
+        },
+        success: function(data) {
+            console.log('data', data)
+            $scope.$apply(function() {
+                $scope.uploads = data;
+            })
+        },
+        error: function(e){
+            console.log('fail', e)
+        },
+        contentType: false,
+    });*/
+
+
 })
 
 .controller('AppCell', function($scope, $stateParams, appUI) {
