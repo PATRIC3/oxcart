@@ -4,18 +4,18 @@ Directions for running end-2-end tests on oxcart
 2) Install java if needed
 3) install protractor
 
-sudo npm install -g protractor
+`sudo npm install -g protractor`
 
 4) Update webdriver-manager 
 
-webdriver-manager update
+`webdriver-manager update`
 
 5) start the server
 
-webdriver-manager start
+`webdriver-manager start`
 
 6) in oxcart/tests/, run tests with
 
-protractor config.js
+`protractor config.js`
 
 and then watch selenium do its magic.
