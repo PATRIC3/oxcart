@@ -22,25 +22,26 @@ var app = angular.module('appTasker',
             controller: 'Upload'})   
         .state('app.tasks', {
             url: "/tasks",
-            templateUrl: 'app/views/tasks.html',
-            controller: 'Analysis'})
+            templateUrl: 'app/views/tasks.html'})
         .state('app.apps', {
             url: "/apps/",
-            templateUrl: 'app/views/apps.html',
-            controller: 'Analysis'})
+            templateUrl: 'app/views/apps.html'})
         .state('app.id', {
             url: "/apps/:id",
             templateUrl: 'app/views/apps.id.html',
-            controller: 'Analysis'})
+            resolve: {
+              'ListObjData': function(appUI){
+                return appUI.promise;
+              }
+            },
+            controller: 'AppCell',
+        })
         .state('app.builder', {
             url: "/builder",
-            templateUrl: 'app/views/app-builder.html',
-            controller: 'Analysis'})
+            templateUrl: 'app/views/app-builder.html'})
         .state('app.objects', {
             url: "/objects",
-            templateUrl: 'app/views/ws/objtable.html',
-            controller: 'Analysis'
-        })      
+            templateUrl: 'app/views/ws/objtable.html'})      
 
     $urlRouterProvider.when('', '/app-tasker')
                       .when('/', '/app-tasker')

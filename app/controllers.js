@@ -14,15 +14,11 @@ app.controller('Analysis',
     // service for appUI state
     $scope.appUI = appUI;
 
-    if ($stateParams.id) {
-        appUI.setApp($stateParams.id);
-    }
-
     // selected workpsace
-    $scope.ddSelected = appUI.current_ws;
+    $scope.selectedWS = appUI.current_ws;
 
     // update workspace objects if dropdown changes
-    $scope.$watch('ddSelected', function(new_ws) {
+    $scope.$watch('selectedWS', function(new_ws) {
         appUI.updateWSObjs(new_ws);
     })
 
@@ -81,6 +77,22 @@ app.controller('Analysis',
 
     }
 })
+
+.controller('AppCell', function($scope, $stateParams, appUI) {
+    // service for appUI state
+    $scope.appUI = appUI;
+
+
+    if ($stateParams.id) {
+        appUI.setApp($stateParams.id);
+    }
+
+    $scope.getDefault = function(type) {
+        return appUI.wsObjsByType[type][0].name
+    }
+
+})
+
 
 .controller('Login', function() {
 

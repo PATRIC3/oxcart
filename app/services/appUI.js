@@ -7,7 +7,7 @@
  *
 */
 
-app.service('appUI', function($http, $rootScope, uiTools) {
+app.service('appUI', function($http, $rootScope, uiTools, $q) {
     var self = this;
 
     // default workspace; used at the start of the application
@@ -53,7 +53,7 @@ app.service('appUI', function($http, $rootScope, uiTools) {
     	self.tasks.push(task);
     }
 
-    // Load data for apps, app builder, and data 
+    // Load data for apps and app builder
     $http.get('data/services.json').success(function(data) {
 
         // reorganize data since it doesn't make any sense.  
@@ -112,30 +112,7 @@ app.service('appUI', function($http, $rootScope, uiTools) {
         return props;
     }
 
-
-
-    $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
-    .then(function(data){
-        self.ws_objects = data;
-
-        var types = {};
-        for (var i in data) {
-            var type = data[i][2].split('-')[0];
-            var obj = {name: data[i][1], id: data[i][0]};
-
-            if (type in types) {
-                types[type].push(obj);
-            } else {
-                types[type] = [obj];
-            }
-        }
-
-        self.wsObjsByType = types
-    }).catch(function(e){
-        console.log('here', e)
-    });
-
-    // if workspace list has not been fetched yet, fetch
+    // initial fetch of user's writable workspace list
     $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
     .then(function(workspaces) {
         var workspaces = workspaces.sort(compare)
@@ -156,7 +133,32 @@ app.service('appUI', function($http, $rootScope, uiTools) {
         self.ws_list = ws_list
     });
 
+    // initial fetch of ws object list
 
+    this.promise = $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
+    .then(function(data){
+        self.ws_objects = data;
+
+        var types = {};
+        for (var i in data) {
+            var type = data[i][2].split('-')[0];
+            var obj = {name: data[i][1], id: data[i][0]};
+
+            if (type in types) {
+                types[type].push(obj);
+            } else {
+                types[type] = [obj];
+            }
+        }
+
+        self.wsObjsByType = types;
+    }).catch(function(e){
+        console.log('here', e)
+    });
+
+    
+
+    // method for update ws object list
     this.updateWSObjs = function(new_ws) {
         $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
         .then(function(ws_objects) {
@@ -167,9 +169,7 @@ app.service('appUI', function($http, $rootScope, uiTools) {
         })        
     }
 
-
 });
-
 
  
 

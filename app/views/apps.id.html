@@ -19,15 +19,22 @@
                     <figure class="front">
                         <form class="form-horizontal" role="form">
                           <div class="form-group" ng-repeat="field in appUI.current_app.params">
+
                             <label class="col-sm-3 control-label">{{field.ui_name}}</label>
 
                             <div class="col-sm-9">
-                                <input ng-if="field.type == 'string'" ng-model="fields[field.ui_name]" type="text" class="form-control" placeholder="">
-                                <div ng-if="field.type != 'string'" 
-                                     dd-model="{{fields[field.ui_name]}}"
-                                     dd-selector 
-                                     dd-default="{{appUI.wsObjsByType[field.type][0].name}}"
-                                     dd-selected="" 
+                                <input ng-if="field.type == 'string'" 
+                                       id="input-{{field.id}}"
+                                       ng-model="fields[field.ui_name]" 
+                                       type="text" class="form-control" 
+                                       placeholder="">
+
+                                <div ng-if="field.type != 'string'"
+                                     dd-filter
+                                     dd-id="input-{{field.id}}" 
+                                     dd-title="Workspace Object"
+                                     dd-placeholder="Filter objects"
+                                     dd-default="{{getDefault(field.type)}}"
                                      dd-data="appUI.wsObjsByType[field.type]">
                                 </div>
                             </div>

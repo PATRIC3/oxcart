@@ -11,14 +11,20 @@
  * Authors:
  *  Neal Conrad <nealconrad@gmail.com>
  *
+ * Todo:
+ *  - Use models instead of DOM ids inputs for appCell and ddSelector.
+ *    This will help with testing as well
+ *
+ *
 */
-
 
 angular.module('directives', [])
 
 .directive('appCell', function(appUI) {
     return {
         link: function(scope, ele, attrs) {
+
+
 
             // dictionary for fields in form.  Here, keys are the ui_name 
             scope.fields = {};  
@@ -71,14 +77,18 @@ angular.module('directives', [])
    };
 })
 
-
-/* Author:
- *  Neal Conrad <nealconrad@gmail.com>
- */
-.directive('ddSelector', function() {
+.directive('ddFilter', function() {
     return {
-        templateUrl: 'app/partials/dd-selector.html',
+        templateUrl: 'app/partials/dd-filter.html',
+
         link: function(scope, element, attrs) {
+
+            // id for input field
+            scope.id = attrs.ddId;
+
+            scope.ddTitle = attrs.ddTitle;
+            scope.ddPlaceholder = attrs.ddPlaceholder;            
+
             // model for input
             scope.ddModel = attrs.ddModel;
 
@@ -87,7 +97,9 @@ angular.module('directives', [])
 
             // if there is a default for the text box, use it
             if (attrs.ddDefault) {
-                scope.ddSelected = attrs.ddDefault;
+                scope.ddDisplayed = attrs.ddDefault;
+            } else {
+                scope.ddDisplayed = "loading";
             }
 
             // model to watch is the attr 'dd-data'
@@ -98,17 +110,24 @@ angular.module('directives', [])
             scope.selectedIndex = -1;
             scope.ddSelect = function($index, item) {
                 scope.selectedIndex = $index;
-                scope.ddSelected = item.name;
+                scope.ddDisplayed = item.name;
             }
             
             // need to make work for state resets
             scope.openDDSelector = function() {
                 $(element).find('.input-group-btn').addClass('open');
-                $(element).find('.dd-selector' ).focus();
+                setTimeout(function(){$(element).find('input').focus(); }, 0);
             }
+
+            // need to make work for state resets
+            scope.closeDDSelector = function() {
+                $(element).find('.input-group-btn').removeClass('open');
+            }            
+
         }
     }
 })
+
 
 .directive('kbUpload', function($location, $rootScope) {
     return {
