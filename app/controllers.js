@@ -19,7 +19,9 @@ app.controller('Analysis',
 
     // update workspace objects if dropdown changes
     $scope.$watch('ddDisplayed', function(new_ws) {
-        appUI.updateWSObjs(new_ws);
+        if (new_ws) {
+            appUI.updateWSObjs(new_ws);
+        }
     })
 
 })

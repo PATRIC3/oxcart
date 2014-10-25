@@ -14,8 +14,7 @@ var app = angular.module('appTasker',
             controller: 'Login'})
         .state('app', {
             url: "/app-tasker",
-            templateUrl: 'app/views/home.html',
-            controller: 'Analysis'})        
+            templateUrl: 'app/views/home.html'})        
         .state('app.upload', {
             url: "/upload",
             templateUrl: 'app/views/upload.html',
@@ -30,8 +29,8 @@ var app = angular.module('appTasker',
             url: "/apps/:id",
             templateUrl: 'app/views/apps.id.html',
             resolve: {
-              'ListObjData': function(appUI){
-                return appUI.promise;
+              'GetObjs': function(appUI){
+                return appUI.getObjs;
               }
             },
             controller: 'AppCell',

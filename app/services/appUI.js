@@ -113,7 +113,7 @@ app.service('appUI', function($http, $rootScope, uiTools, $q) {
     }
 
     // initial fetch of user's writable workspace list
-    $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
+    this.getWS = $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
     .then(function(workspaces) {
         var workspaces = workspaces.sort(compare)
 
@@ -135,7 +135,7 @@ app.service('appUI', function($http, $rootScope, uiTools, $q) {
 
     // initial fetch of ws object list
 
-    this.promise = $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
+    this.getObjs = $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
     .then(function(data){
         self.ws_objects = data;
 
@@ -160,13 +160,13 @@ app.service('appUI', function($http, $rootScope, uiTools, $q) {
 
     // method for update ws object list
     this.updateWSObjs = function(new_ws) {
-        $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
+        var p = $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
         .then(function(ws_objects) {
             self.ws_objects = ws_objects;
-
         }, function(e) {
             console.log('fail', e)
         })        
+        return p;
     }
 
 });

@@ -9,7 +9,7 @@
  *
  *
  * Authors:
- *  Neal Conrad <nealconrad@gmail.com>
+ *  Neal Conrad <nconrad@cels.anl.gov>
  *
  * Todo:
  *  - Use models instead of DOM ids inputs for appCell and ddSelector.
@@ -114,13 +114,16 @@ angular.module('directives', [])
             
             // need to make work for state resets
             scope.openDDSelector = function() {
-                $(element).find('.input-group-btn').addClass('open');
-                setTimeout(function(){$(element).find('input').focus(); }, 0);
+                angular.element(element).find('.input-group-btn').addClass('open');
+                setTimeout(function(){
+                    angular.element(element).find('input').focus(); 
+                }, 0);
             }
 
             // need to make work for state resets
             scope.closeDDSelector = function() {
-                $(element).find('.input-group-btn').removeClass('open');
+                angular.element(element)
+                       .find('.input-group-btn').removeClass('open');
             }            
 
         }
