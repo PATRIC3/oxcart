@@ -18,7 +18,7 @@
 
 <br>
 
-<form enctype="multipart/form-data">
+<form id="upload-form" enctype="multipart/form-data">
     <input name="upload" type="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
 </form>
 
@@ -29,7 +29,7 @@
 </div>
 
 <div ng-if="uploadComplete">
-    Upload complete. :)  Now I will run an AWE job to add your data to <b><i>{{ddSelected}}</i></b>... or something like that. 
+    Upload complete. :)  Now I will run an AWE job to add your data to <b><i>{{selectedWS}}</i></b>... or something like that. 
 </div>
 
 <br>

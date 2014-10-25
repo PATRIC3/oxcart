@@ -37,8 +37,8 @@ app.controller('Analysis',
 
         //SHOCK.init({ token: USER_TOKEN, url: $scope.shockURL })
         //SHOCK.upload('uploader')
+        var form = new FormData($('#upload-form')[0]);
 
-        var form = new FormData($('form')[0]);
         $.ajax({
             url: $scope.shockURL+'/node',
             type: 'POST',
@@ -79,9 +79,9 @@ app.controller('Analysis',
     }
 
 
-    /*
+    
     $.ajax({
-        url: $scope.shockURL+'/node?querynode&owner='+$rootScope.userId , 
+        url: $scope.shockURL+'/node?query&owner='+$rootScope.userId , 
         type: 'GET',
         beforeSend: function (request) {
             request.setRequestHeader("Authorization", SHOCK.auth_header.Authorization);
@@ -96,7 +96,7 @@ app.controller('Analysis',
             console.log('fail', e)
         },
         contentType: false,
-    });*/
+    });
 
 
 })
