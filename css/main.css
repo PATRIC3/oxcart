@@ -429,8 +429,6 @@ table.dataTable thead .sorting:after {
 
 
 
-
-
 /* additional css */
 
 .sidebar-collapse {
@@ -442,26 +440,32 @@ table.dataTable thead .sorting:after {
 }
 
 
-.btn-add-model {
-    padding: 0px 5px;
+
+/* app page */
+.app-list a,
+.app-list span{
+    display: block;
+    color: #444;
+    margin: 0 0 20px 0;
+    border: 1px solid #fff;
 }
 
-#selected-models {
-    margin: 10px 15px 0 15px;
+.app-list a:hover {
+    text-decoration: none;
+    /*
+    border: 1px solid #a5a5a5; 
+
+    transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;*/
+}
+.app-list a h4 {
+    color: #428bca;
+}
+.app-list a:hover h4 {
+    text-decoration: underline;
 }
 
-#selected-models ul {
-    padding: 0 0 0 5px;
-    list-style: none;
-}
-
-#selected-models ul li {
-    border-bottom: 0px
-}
-.sidebar-nav i,
-.sidebar-nav object {
-    color: #666;
-}
 
 
 /* helper classes */s

@@ -28,6 +28,7 @@ app.controller('Analysis',
 
 .controller('Upload', function($scope, $state, $http, $rootScope) {
     $scope.shockURL = "http://140.221.67.190:7078"
+    SHOCK.init({ token: $rootScope.token, url: $scope.shockURL })    
 
     // improve by using angular http
     $scope.uploadFile = function(files) {
@@ -35,8 +36,7 @@ app.controller('Analysis',
             $scope.uploadComplete = false;
         })
 
-        //SHOCK.init({ token: USER_TOKEN, url: $scope.shockURL })
-        //SHOCK.upload('uploader')
+        console.log(SHOCK.auth_header.Authorization)
         var form = new FormData($('#upload-form')[0]);
 
         $.ajax({
@@ -53,6 +53,7 @@ app.controller('Analysis',
                 request.setRequestHeader("Authorization", SHOCK.auth_header.Authorization);
             },
             success: function(data) {
+                console.log('upload success', data)
                 $scope.$apply(function() {
                     $scope.uploadProgress = 0;
                     $scope.uploadComplete = true; 
@@ -79,7 +80,6 @@ app.controller('Analysis',
     }
 
 
-    
     $.ajax({
         url: $scope.shockURL+'/node?query&owner='+$rootScope.userId , 
         type: 'GET',
@@ -96,6 +96,8 @@ app.controller('Analysis',
             console.log('fail', e)
         },
         contentType: false,
+            cache: false,
+            processData: false        
     });
 
 

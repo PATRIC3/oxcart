@@ -1,7 +1,7 @@
 
 .dd-filter .dropdown-menu {
     padding: 0;
-    min-width: 220px;
+    max-width: 220px;
 }
 
 .dd-filter-header {
@@ -33,10 +33,23 @@
 .dd-filter-list {
     max-height: 300px; 
     overflow-y: scroll;
+    overflow-x:hidden;
 }
 
 
-.dd-filter-list > li > a,
+
+
+.dd-filter-list > li > a{
+    display: block;
+    color: #222;
+    padding: 5px 10px 5px 30px;    
+}
+
+.dd-filter-checked {
+    padding: 0 10px 0 0px;
+    margin: 0 0 0 -24px; /* offset due to ellipsis */
+}
+
 .dd-filter-empty {
     display:block;
     color: #222;
@@ -51,5 +64,11 @@
 
 .dd-filter-list > li > a:hover {
     text-decoration: none;
+}
 
+.truncate {
+    width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

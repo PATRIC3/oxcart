@@ -55,7 +55,6 @@ app.service('appUI', function($http, $rootScope, uiTools, $q) {
 
     // Load data for apps and app builder
     $http.get('data/services.json').success(function(data) {
-
         // reorganize data since it doesn't make any sense.  
         // why is there no order to the groups of methods?
         var methods = [];
@@ -98,6 +97,7 @@ app.service('appUI', function($http, $rootScope, uiTools, $q) {
         // update models, two-way-binding ftw.
         self.methods = methods;
         self.method_dict = method_dict;
+        console.log(self.method_dict)
     });
 
 
@@ -127,10 +127,12 @@ app.service('appUI', function($http, $rootScope, uiTools, $q) {
 
         var ws_list = [];
         for (var i in workspaces) {
-            ws_list.push({name: workspaces[i][1], id: workspaces[i][0]})
+            ws_list.push({name: workspaces[i][1], 
+                          id: workspaces[i][0], 
+                          count: workspaces[i][4]});
         }
 
-        self.ws_list = ws_list
+        self.ws_list = ws_list;
     });
 
     // initial fetch of ws object list
