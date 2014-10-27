@@ -28,19 +28,18 @@ app.controller('Analysis',
 
 .controller('Upload', function($scope, $state, $http, $rootScope) {
     $scope.shockURL = "http://140.221.67.190:7078"
-    SHOCK.init({ token: $rootScope.token, url: $scope.shockURL })    
+    var url = $scope.shockURL+'/node?querynode&owner=nconrad';
+    var auth = {Authorization: 'OAuth '+$rootScope.token};
 
-    // improve by using angular http
+    // use angular http
     $scope.uploadFile = function(files) {
         $scope.$apply( function() {
             $scope.uploadComplete = false;
         })
 
-        console.log(SHOCK.auth_header.Authorization)
         var form = new FormData($('#upload-form')[0]);
-
         $.ajax({
-            url: $scope.shockURL+'/node',
+            url: url,
             type: 'POST',
             xhr: function() { 
                 var myXhr = $.ajaxSettings.xhr();
@@ -49,22 +48,18 @@ app.controller('Analysis',
                 }
                 return myXhr;
             },            
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", SHOCK.auth_header.Authorization);
-            },
+            headers: auth,
             success: function(data) {
                 console.log('upload success', data)
                 $scope.$apply(function() {
                     $scope.uploadProgress = 0;
                     $scope.uploadComplete = true; 
                 })
-
             },
             error: function(e){
-                console.log('fail', e)
+                console.log('failed upload', e)
             },
             data: form,
-            cache: false,
             contentType: false,
             processData: false
         });
@@ -79,28 +74,20 @@ app.controller('Analysis',
         }
     }
 
-
     $.ajax({
-        url: $scope.shockURL+'/node?query&owner='+$rootScope.userId , 
+        url: url, 
         type: 'GET',
-        beforeSend: function (request) {
-            request.setRequestHeader("Authorization", SHOCK.auth_header.Authorization);
-        },
+        headers: auth,
         success: function(data) {
-            console.log('data', data)
             $scope.$apply(function() {
                 $scope.uploads = data;
             })
+            console.log('data', data)
         },
         error: function(e){
             console.log('fail', e)
         },
-        contentType: false,
-            cache: false,
-            processData: false        
     });
-
-
 })
 
 .controller('AppCell', function($scope, $stateParams, appUI) {
@@ -118,10 +105,7 @@ app.controller('Analysis',
 
 })
 
-
 .controller('Login', function() {
-
-
 
 })
 
