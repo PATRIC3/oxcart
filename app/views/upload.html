@@ -3,7 +3,7 @@
     <div class="col-md-5">
         <div class="dashboard-info blue">
             <i class="fa fa-cloud-upload fa-5x pull-left"></i>
-            <div class="h1" upload-count>0</div>
+            <div class="h1">{{uploadingCount ? uploadingCount : 0}}</div>
             <div class="h4">Uploading</div>
         </div>
     </div>
@@ -29,7 +29,7 @@
 </div>
 
 <div ng-if="uploadComplete">
-    Upload complete. :)  Now I will run an AWE job to add your data to <b><i>{{selectedWS}}</i></b>... or something like that. 
+    Upload complete.  Now I will run an AWE job to add your data to <b><i>{{selectedWS}}</i></b>... or something like that. 
 </div>
 
 <br>

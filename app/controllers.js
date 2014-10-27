@@ -28,12 +28,15 @@ app.controller('Analysis',
 
 .controller('Upload', function($scope, $state, $http, $rootScope) {
     $scope.shockURL = "http://140.221.67.190:7078"
-    var url = $scope.shockURL+'/node?querynode&owner=nconrad';
-    var auth = {Authorization: 'OAuth '+$rootScope.token};
+    var url = $scope.shockURL+'/node';
+    var auth = {Authorization: 'OAuth ' + $rootScope.token};
+    var config = {headers:  auth }
 
     // use angular http
     $scope.uploadFile = function(files) {
+
         $scope.$apply( function() {
+            $scope.uploadingCount = 1;
             $scope.uploadComplete = false;
         })
 
@@ -52,8 +55,10 @@ app.controller('Analysis',
             success: function(data) {
                 console.log('upload success', data)
                 $scope.$apply(function() {
+                    $scope.uploadingCount = 0;
                     $scope.uploadProgress = 0;
-                    $scope.uploadComplete = true; 
+                    $scope.uploadComplete = true;
+                    $scope.getUploads(); 
                 })
             },
             error: function(e){
@@ -74,20 +79,18 @@ app.controller('Analysis',
         }
     }
 
-    $.ajax({
-        url: url, 
-        type: 'GET',
-        headers: auth,
-        success: function(data) {
-            $scope.$apply(function() {
+    $scope.getUploads = function() {
+        $http.get(url+'?querynode&owner=nconrad&limit=10000', config)
+            .success(function(data) {
                 $scope.uploads = data;
+                console.log('uploaded data', data)
+            }).error(function(e){
+                console.log('fail', e)
             })
-            console.log('data', data)
-        },
-        error: function(e){
-            console.log('fail', e)
-        },
-    });
+    }
+
+    // get upload list on load
+    $scope.getUploads();
 })
 
 .controller('AppCell', function($scope, $stateParams, appUI) {
