@@ -71,6 +71,10 @@ a, .pointer {
     }
 }
 
+#page-wrapper > .row {
+    margin: 0; /* override bootstrap */
+}
+
 #content {
     padding: 0 20px;
     padding-bottom: 10px;
@@ -439,8 +443,6 @@ table.dataTable thead .sorting:after {
     margin-top: 20px; /*override bootstrap*/
 }
 
-
-
 /* app page */
 .app-list a,
 .app-list span{
@@ -452,12 +454,6 @@ table.dataTable thead .sorting:after {
 
 .app-list a:hover {
     text-decoration: none;
-    /*
-    border: 1px solid #a5a5a5; 
-
-    transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -webkit-transition: all .5s ease-in-out;*/
 }
 .app-list a h4 {
     color: #428bca;
@@ -465,8 +461,6 @@ table.dataTable thead .sorting:after {
 .app-list a:hover h4 {
     text-decoration: underline;
 }
-
-
 
 /* helper classes */s
 .pointer {
