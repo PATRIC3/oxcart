@@ -1,13 +1,5 @@
 module.exports = function(grunt) {
 
-    /*
-    var files = ['app/app.js',
-                 'config.js',
-                 'app/services/appUI.js',
-                 'app/services/uiTools.js',
-                 'app/controllers.js',
-                 'app/directives.js']*/
-
     // Project config
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -45,9 +37,9 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['copy:copyindex',
                                  'useminPrepare',
                                  'concat',
-                                 'uglify:generated',                            
+                                 'uglify:generated',
                                  'usemin']);
 
-    grunt.registerTask('default', ['ngAnnotate','uglify']);
+    //grunt.registerTask('default', ['ngAnnotate','uglify']);
 
 };
