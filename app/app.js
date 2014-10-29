@@ -1,7 +1,7 @@
 
 
 angular.module('appTasker', 
-    ['ui.router', 'json-rpc', 'directives'])
+    ['ui.router', 'json-rpc', 'directives', 'dd-filter'])
         .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
 
