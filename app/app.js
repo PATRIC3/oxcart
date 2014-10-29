@@ -1,11 +1,11 @@
 
 
-var app = angular.module('appTasker', 
+angular.module('appTasker', 
     ['ui.router', 'json-rpc', 'directives'])
         .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
 
-    $locationProvider.html5Mode(false);  
+    $locationProvider.html5Mode(false);
 
     $stateProvider
         .state('Login', {
@@ -29,9 +29,9 @@ var app = angular.module('appTasker',
             url: "/apps/:id",
             templateUrl: 'app/views/apps.id.html',
             resolve: {
-              'GetObjs': function(appUI){
+              'GetObjs': ['appUI', function(appUI){
                 return appUI.getObjs;
-              }
+              }]
             },
             controller: 'AppCell',
         })
@@ -46,10 +46,9 @@ var app = angular.module('appTasker',
                       .when('/', '/app-tasker')
                       .when('#', '/app-tasker');
 
-}]);
+}])
 
-
-app.run(['$rootScope', '$state', '$stateParams', '$http',
+.run(['$rootScope', '$state', '$stateParams', '$http',
     function ($rootScope, $state, $stateParams, $http) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;

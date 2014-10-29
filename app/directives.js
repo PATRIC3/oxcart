@@ -19,12 +19,9 @@
 */
 
 angular.module('directives', [])
-
-.directive('appCell', function(appUI) {
+.directive('appCell', ['appUI', function(appUI) {
     return {
         link: function(scope, ele, attrs) {
-
-
 
             // dictionary for fields in form.  Here, keys are the ui_name 
             scope.fields = {};  
@@ -45,7 +42,7 @@ angular.module('directives', [])
 
         }
     }
-})
+}])
 
 .directive('showData', function() {
     return {
@@ -125,31 +122,6 @@ angular.module('directives', [])
                 angular.element(element)
                        .find('.input-group-btn').removeClass('open');
             }            
-
-        }
-    }
-})
-
-
-.directive('kbUpload', function($location, $rootScope) {
-    return {
-        link: function(scope, element, attrs) {
-
-            SHOCK.init({ token: $rootScope.token, url: scope.shockURL })
-
-            var url = "http://140.221.67.190:7078/node" ;
-
-            /*
-            var prom = SHOCK.get_all_nodes(function(data) {
-                console.log('shock data!', data)
-            })*/
-            
-            var prom = SHOCK.get_all_nodes();
-            $.when(prom).done(function(data){
-                scope.$apply(function(){
-                    scope.uploads = data;
-                })
-            })
 
         }
     }

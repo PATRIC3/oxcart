@@ -6,7 +6,9 @@
  *
 */
 
-app.service('uiTools', function() {
+
+angular.module('appTasker')
+.service('uiTools', function() {
     // this method will display an absolutely position notification
     // in the app on the 'body' tag.  This is useful for api success/failure 
     // notifications

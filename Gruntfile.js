@@ -1,13 +1,14 @@
 module.exports = function(grunt) {
 
+    /*
     var files = ['app/app.js',
                  'config.js',
                  'app/services/appUI.js',
                  'app/services/uiTools.js',
                  'app/controllers.js',
-                 'app/directives.js']
+                 'app/directives.js']*/
 
-  // Project config
+    // Project config
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: { 

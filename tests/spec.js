@@ -1,6 +1,6 @@
 describe('app tasker home', function() {
     var url = "http://localhost/oxcart/#/app-tasker"
-    var annotate_url = "http://localhost/oxcart/#/app-tasker/apps/Annotate-ContigSet"
+    var annotate_url = "http://localhost/oxcart/dev.html#/app-tasker/apps/Annotate-ContigSet"
 
 
     var input1 = element(by.id('input-Scientific-Name'));

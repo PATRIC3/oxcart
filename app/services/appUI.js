@@ -1,13 +1,14 @@
 
 /* 
- * App Tasker Model  
+ * App Tasker Model (appUI service)
  *
  *   This is responisble for the state of the app runner model
  *   Two way binding is used to update the view
  *
 */
 
-app.service('appUI', ['$http', '$rootScope', 'uiTools', '$q',
+angular.module('appTasker')
+.service('appUI', ['$http', '$rootScope', 'uiTools', '$q',
     function($http, $rootScope, uiTools, $q) {
 
     var self = this;

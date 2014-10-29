@@ -7,10 +7,10 @@
  *  
 */
 
-
-app.controller('Analysis', 
-    ['$scope', '$state', '$stateParams', 'appUI', 'uiTools', '$http',
-    function($scope, $state, $stateParams, appUI, uiTools, $http) {
+angular.module('appTasker')
+.controller('Analysis', 
+['$scope', '$state', '$stateParams', 'appUI', 'uiTools', '$http',
+function($scope, $state, $stateParams, appUI, uiTools, $http) {
 
     // service for appUI state
     $scope.appUI = appUI;

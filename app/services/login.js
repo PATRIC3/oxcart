@@ -6,7 +6,8 @@
  *
 */
 
-app.service('login', function() {
+angular.module('appTasker')
+.service('login', function() {
    
 });
 
