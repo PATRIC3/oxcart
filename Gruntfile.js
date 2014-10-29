@@ -22,23 +22,27 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-          files: ['app/css/*', 'app/js/*'],
-          tasks: ['uglify']
+            files: ['app/css/*', 'app/js/*'],
+            tasks: ['uglify']
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');    
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-ng-annotate');  
     grunt.loadNpmTasks('grunt-usemin');
 
+
     grunt.registerTask('build', ['copy:copyindex',
                                  'useminPrepare',
                                  'concat',
+                                 'cssmin:generated',
                                  'uglify:generated',
                                  'usemin']);
+
 
     //grunt.registerTask('default', ['ngAnnotate','uglify']);
 

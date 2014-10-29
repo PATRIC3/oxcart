@@ -130,7 +130,7 @@ angular.module('directives', [])
 .directive('sidebarCollapse', function() {
     return {
         link: function(scope, element, attr) {
-            var original_w = 250;
+            var original_w = 200;
             var new_w = 56;
 
             var collapsed = false;
