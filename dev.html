@@ -38,7 +38,14 @@
     <script src="js/angular/angular-ui-router.min.js"></script>
 
     
-    <script src="build/site.js"></script>
+    <!-- build:js build/site.js -->
+    <script src="app/app.js"></script>
+    <script src="config.js"></script>    
+    <script src="app/services/appUI.js"></script>
+    <script src="app/services/uiTools.js"></script>
+    <script src="app/controllers.js"></script>
+    <script src="app/directives.js"></script>
+    <!-- endbuild -->
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

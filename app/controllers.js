@@ -9,6 +9,7 @@
 
 
 app.controller('Analysis', 
+    ['$scope', '$state', '$stateParams', 'appUI', 'uiTools', '$http',
     function($scope, $state, $stateParams, appUI, uiTools, $http) {
 
     // service for appUI state
@@ -24,9 +25,12 @@ app.controller('Analysis',
         }
     })
 
-})
+}])
 
-.controller('Upload', function($scope, $state, $http, $rootScope) {
+.controller('Upload', 
+    ['$scope', '$state', '$http', '$rootScope',
+    function($scope, $state, $http, $rootScope) {
+
     $scope.shockURL = "http://140.221.67.190:7078"
     var url = $scope.shockURL+'/node';
     var auth = {Authorization: 'OAuth ' + $rootScope.token};
@@ -91,9 +95,11 @@ app.controller('Analysis',
 
     // get upload list on load
     $scope.getUploads();
-})
+}])
 
-.controller('AppCell', function($scope, $stateParams, appUI) {
+.controller('AppCell', 
+    ['$scope', '$stateParams', 'appUI',
+    function($scope, $stateParams, appUI) {
     // service for appUI state
     $scope.appUI = appUI;
 
@@ -106,7 +112,7 @@ app.controller('Analysis',
         return appUI.wsObjsByType[type][0].name
     }
 
-})
+}])
 
 .controller('Login', function() {
 

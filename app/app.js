@@ -49,7 +49,8 @@ var app = angular.module('appTasker',
 }]);
 
 
-app.run(function ($rootScope, $state, $stateParams, $http) {
+app.run(['$rootScope', '$state', '$stateParams', '$http',
+    function ($rootScope, $state, $stateParams, $http) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
@@ -70,7 +71,7 @@ app.run(function ($rootScope, $state, $stateParams, $http) {
 
     //kb = new KBCacheClient($rootScope.token);
 
-});
+}]);
 
 
 

@@ -7,7 +7,9 @@
  *
 */
 
-app.service('appUI', function($http, $rootScope, uiTools, $q) {
+app.service('appUI', ['$http', '$rootScope', 'uiTools', '$q',
+    function($http, $rootScope, uiTools, $q) {
+
     var self = this;
 
     // default workspace; used at the start of the application
@@ -171,7 +173,7 @@ app.service('appUI', function($http, $rootScope, uiTools, $q) {
         return p;
     }
 
-});
+}]);
 
  
 
