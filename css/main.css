@@ -59,7 +59,7 @@ a, .pointer {
     /*padding: 0 15px;*/
     /* min-height: 568px; */ /*removed for footer */
     background-color: #fff;
-    padding: 30px;
+    padding: 15px 30px;
     padding-bottom: 100px;
 }
 
@@ -522,5 +522,12 @@ table.comparison-table tr {
 table.comparison-table th, table.comparison-table td {
     width: 10%;
 }
+
+/* fix me -> bootstrap 3.3 */
+.modal-dialog {
+    z-index: 9999;
+}
+
+
 
 

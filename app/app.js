@@ -1,8 +1,9 @@
 
 
 angular.module('appTasker', 
-    ['ui.router', 'json-rpc', 'directives', 'dd-filter'])
-        .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
+['ui.router', 'json-rpc', 'directives', 'dd-filter'])
+.config(['$locationProvider', '$stateProvider', 
+         '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
 
     $locationProvider.html5Mode(false);
@@ -48,10 +49,11 @@ angular.module('appTasker',
 
 }])
 
-.run(['$rootScope', '$state', '$stateParams', '$http',
-    function ($rootScope, $state, $stateParams, $http) {
+.run(['$rootScope', '$state', '$stateParams', '$http', 'config',
+    function ($rootScope, $state, $stateParams, $http, config) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    $rootScope.ui_name = config.ui.name;
 
     function login_cb() {
         window.location.reload();
@@ -67,9 +69,6 @@ angular.module('appTasker',
 
     $rootScope.userId = login_ele.kbaseLogin('session').user_id;
     $rootScope.token = login_ele.kbaseLogin('session').token;
-
-    //kb = new KBCacheClient($rootScope.token);
-
 }]);
 
 

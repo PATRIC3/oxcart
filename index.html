@@ -8,7 +8,7 @@
     <meta name="description" content="Prototype for App Runner">
     <meta name="author" content="nconrad">
 
-    <title>App Tasker</title>
+    <title>{{$root.ui_name}}</title>
 
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">  
     <link href="css/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -41,7 +41,7 @@
                 <a class="navbar-brand sidebar-collapse" sidebar-collapse>
                     <i class="fa fa-caret-left"></i> <i class="fa fa-bars"></i>
                 </a>
-                <a class="navbar-brand pull-left" ui-sref="app">App Tasker</a>
+                <a class="navbar-brand pull-left" ui-sref="app">{{$root.ui_name}}</a>
             </div>
 
             <form class="navbar-form navbar-left col-md-12" role="search">
@@ -49,7 +49,7 @@
                     <div dd-filter
                          dd-id="input-ws" 
                          dd-title="Current Workspace"
-                         dd-placeholder="Filter workspaces"                         
+                         dd-placeholder="Filter workspaces"
                          dd-default="{{selectedWS}}"
                          dd-data="appUI.ws_list">
                     </div>
@@ -59,7 +59,7 @@
 
             <ul class="nav navbar-top-links navbar-left">
                  <li ui-sref="app.objects({ws: selectedWS})">
-                    <a>Data (<span>{{appUI.ws_objects.length}}</span>)</a>
+                    <a>Objects (<span>{{appUI.ws_objects.length}}</span>)</a>
                 </li>  
             </ul>
 
