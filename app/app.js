@@ -1,7 +1,7 @@
 
 
 angular.module('appTasker', 
-['ui.router', 'json-rpc', 'directives', 'dd-filter'])
+['ui.router', 'kbase-rpc', 'directives', 'dd-filter'])
 .config(['$locationProvider', '$stateProvider', 
          '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
@@ -71,49 +71,3 @@ angular.module('appTasker',
     $rootScope.token = login_ele.kbaseLogin('session').token;
 }]);
 
-
-
-angular.module('json-rpc', [])
-    .config([ "$provide", "$httpProvider",
-    function($provide, $httpProvider) {
-
-    /* kbase doesn't allow content-type */
-    delete $httpProvider.defaults.headers.post['Content-Type'];
-
-    return $provide.decorator('$http', ['$delegate', "$rootScope", "$q", "config",
-        function($delegate, $rootScope, $q, $config) {
-            
-            $delegate.rpc = function(service, method, parameters){
-                var deferred = $q.defer();       
-
-                if (service == 'ws') {
-                    var url = $config.services.ws_url;
-                    var method = 'Workspace.'+method;
-                } else if (service == 'fba') { /* untested */
-                    var url = $config.services.fba_url;
-                    var method = 'fbaModelServices.'+method;
-                }
-
-                var data = {version: "1.1", 
-                            method: method,
-                            params: [parameters], 
-                            id: String(Math.random()).slice(2)};
-
-                var config = angular.extend({'headers': 
-                                            {'Authorization': $rootScope.token}}, config);
-
-                $delegate.post(url, data, config)
-                         .then(function(response) {
-                            // only handle actual data
-                            return deferred.resolve(response.data.result[0]);
-                         }).catch(function(error) {
-                            return deferred.reject(error);
-                         })
-
-
-                return deferred.promise;
-            };
-
-            return $delegate;
-        }]);
-}]);
