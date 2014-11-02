@@ -2,6 +2,8 @@
 /* service configuration settings for UI */
 angular.module('appTasker').service('config', function() {
 
+	this.ui = {name: "App Tasker"};
+
     this.services = {"ws_url": "[% ws_url %]",
                      "fba_url": "[% fba_url %]"};
 
