@@ -20,7 +20,7 @@ angular.module('appTasker')
     this.methods = [];
     this.method_dict = {};
 
-    // model for cells displayed
+    // model for cells displayed (not in use)
     this.cells = [];
 
     // current selected app
@@ -55,6 +55,24 @@ angular.module('appTasker')
     this.newTask = function(task) {
     	self.tasks.push(task);
     }
+
+
+    // hard-coded app list for now
+    this.appList = [{name: 'Assemble', disabled: true},
+                    {name: 'Annotate', id: 'Annotate-ContigSet'},
+                    {name: 'Generate Initial Model', id: 'Build-a-Metabolic-Model'},
+                    {name: 'Gapfill Model', id: 'Gapfill-a-Metabolic-Model'},
+                    {name: 'Run FBA', id: 'Run-Flux-Balance-Analysis'},
+                    {name: 'Assemble Genome', id: 'Assemble-Genome-from-Fasta'},                    
+                    {name: 'Genome Import', id: 'Import-NCBI-Genome'},
+                    {name: 'Reconcile Giving New Model', id: 'Build-a-Metabolic-Model'},
+                    {name: 'Model Input', disabled: true},
+                    {name: 'Model Translation', disabled: true},
+                    {name: 'Comparative Genomes', disabled: true}]
+
+    // turn the app list into a list of two
+    this.appTable = getColumns(this.appList, 2);
+
 
     // Load data for apps and app builder
     $http.get('data/services.json').success(function(data) {
@@ -100,7 +118,6 @@ angular.module('appTasker')
         // update models, two-way-binding ftw.
         self.methods = methods;
         self.method_dict = method_dict;
-        console.log(self.method_dict)
     });
 
 
@@ -113,6 +130,19 @@ angular.module('appTasker')
             props.push(properties[key]);
         }
         return props;
+    }
+
+    // takes array and divides it into columns of arbitrary 'size'
+    function getColumns(list, size) {
+        var col_length = Math.ceil(list.length / size)
+
+        var cols = [];
+        for (var i=0; i<size; i++) {
+            cols.push(list.slice(i*col_length, (i+1)*col_length));
+        }
+
+        console.log(cols)
+        return cols;
     }
 
     // initial fetch of user's writable workspace list

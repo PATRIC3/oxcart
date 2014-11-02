@@ -1,0 +1,82 @@
+
+/* helper classes */
+hr.skinny {
+    margin: 10px 0px;
+}
+.pointer {
+    cursor: hand;
+    cursor: pointer;
+}
+
+.hover { 
+    opacity: .6;
+}
+.hover:hover {
+    opacity: 1;
+}
+
+.hover-inverted:hover {
+    opacity: .8;
+}
+
+.link {
+    color: #428bca;
+}
+.icon {
+    color: #666;
+}
+.icon:hover {
+    color: #222;
+}
+
+.overflow {
+    overflow-x: scroll;
+}
+
+
+.sidebar-collapse {
+    border-right: 1px solid #e7e7e7;
+}
+
+.page-header {
+    margin-top: 20px; /*override bootstrap*/
+}
+
+.page-title {
+    margin: 5px 0px;
+}
+
+/* app pages */
+
+.app-search {
+    margin: 15px 0 0 0;
+}
+
+.app-list {
+    margin: 20px 0 0 0;
+}
+.app-list a,
+.app-list span{
+    display: block;
+    color: #444;
+    margin: 0 0 20px 0;
+    border: 1px solid #fff;
+}
+
+.app-list a:hover {
+    text-decoration: none;
+}
+.app-list a h4 {
+    color: #428bca;
+}
+.app-list a:hover h4 {
+    text-decoration: underline;
+}
+
+
+
+
+/* fixme -> bootstrap 3.3 */
+.modal-dialog {
+    z-index: 9999;
+}

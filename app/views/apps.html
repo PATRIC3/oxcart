@@ -1,63 +1,32 @@
 
 <div ui-view>
-    <div class="page-header">
-        <h3>Apps</h3>
+    <div class="row page-title">
+        <div class="col-md-3">
+            <div class="h3">Apps</div>
+        </div>
+        <div class="col-md-5">        
+            <input ng-model="appQuery" type="search" 
+                   class="form-control pull-right app-search" placeholder="Search apps">
+        </div>
+        <div class="col-md-1 col-md-offset-3">
+        </div>        
     </div>
+    <hr class="skinny"></hr>
 
     <div class="row">
-        <div class="col-md-12">
-            <div class="col-md-6">
-                <div class="app-list">
+        <div class="col-md-6 app-list" ng-repeat="col in appUI.appTable">
+            <div ng-repeat="app in col | filter:appQuery">
+                <div ng-if="app.disabled">
                     <span class="text-muted">
-                        <h4 class="media-heading">Assemble</h4>
-                        {{appUI.method_dict['Assemble'].description}}
+                        <h4 class="media-heading">{{app.name}}</h4>
+                        {{appUI.method_dict[app.id].description}}
                     </span>
-                    <a ui-sref="app.id({id: 'Annotate-ContigSet'})">
-                        <h4 class="media-heading">Annotate</h4>
-                        {{appUI.method_dict['Annotate-ContigSet'].description}}
-                    </a>
-                    <a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">
-                        <h4 class="media-heading">Generate Initial Model</h4>
-                        {{appUI.method_dict['Build-a-Metabolic-Model'].description}}
-                    </a>
-                    <a ui-sref="app.id({id: 'Gapfill-a-Metabolic-Model'})">
-                        <h4 class="media-heading">Gapfill Model</h4>
-                        {{appUI.method_dict['Gapfill-a-Metabolic-Model'].description}}
-                    </a>
-                    <a ui-sref="app.id({id: 'Run-Flux-Balance-Analysis'})">
-                        <h4 class="media-heading">Run FBA</h4>
-                        {{appUI.method_dict['Run-Flux-Balanace-Analysis'].description}}
-                    </a>
-                    <a ui-sref="app.id({id: 'Assemble-Genome-from-Fasta'})">
-                        <h4 class="media-heading">Assemble Genome</h4>
-                        {{appUI.method_dict['Assemble-Genome-from-Fasta'].description}}
-                    </a>
                 </div>
-
-            </div>
-
-            <div class="col-md-6">
-                <div class="app-list">                
-                    <a ui-sref="app.id({id: 'Import-NCBI-Genome'})">
-                        <h4 class="media-heading">Genome Import</h4>
-                        {{appUI.method_dict['Import-NCBI-Genome'].description}}                        
-                    </a>
-                    <a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">
-                        <h4 class="media-heading">Reconcile Giving New Model</h4>
-                        {{appUI.method_dict['Build-a-Metabolic-Model'].description}}                        
-                    </a>
-                    <span class="text-muted">
-                        <h4 class="media-heading">Model Input</h4>
-                        {{appUI.method_dict['Assemble-Genome-from-Fasta'].description}}                        
-                    </span>
-                    <span class="text-muted">
-                        <h4 class="media-heading">Model Translation</h4>
-                        {{appUI.method_dict['Assemble-Genome-from-Fasta'].description}}                        
-                    </span>
-                    <span class="text-muted">
-                        <h4 class="media-heading">Comparative Genomes</h4>
-                        {{appUI.method_dict['Assemble-Genome-from-Fasta'].description}}                        
-                    </span>
+                <div ng-if="!app.disabled">
+                    <a ui-sref="app.id({id: app.id})">
+                        <h4 class="media-heading">{{app.name}}</h4>
+                        {{appUI.method_dict[app.id].description}}
+                    </a> 
                 </div>
             </div>
         </div>
