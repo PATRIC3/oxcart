@@ -114,6 +114,10 @@ function($scope, $state, $stateParams, appUI, uiTools, $http) {
 
 }])
 
+.controller('Apps', ['$scope', 'appUI', function($scope, appUI) {
+
+}])
+
 .controller('Login', function() {
 
 })

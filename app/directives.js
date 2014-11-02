@@ -131,4 +131,3 @@ angular.module('directives', [])
         }
     }
 })
-

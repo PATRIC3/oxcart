@@ -25,7 +25,8 @@ angular.module('appTasker',
             templateUrl: 'app/views/tasks.html'})
         .state('app.apps', {
             url: "/apps/",
-            templateUrl: 'app/views/apps.html'})
+            templateUrl: 'app/views/apps.html',
+            controller: 'Apps'})
         .state('app.id', {
             url: "/apps/:id",
             templateUrl: 'app/views/apps.id.html',

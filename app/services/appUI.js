@@ -56,7 +56,6 @@ angular.module('appTasker')
     	self.tasks.push(task);
     }
 
-
     // hard-coded app list for now
     this.appList = [{name: 'Assemble', disabled: true},
                     {name: 'Annotate', id: 'Annotate-ContigSet'},
@@ -68,11 +67,9 @@ angular.module('appTasker')
                     {name: 'Reconcile Giving New Model', id: 'Build-a-Metabolic-Model'},
                     {name: 'Model Input', disabled: true},
                     {name: 'Model Translation', disabled: true},
-                    {name: 'Comparative Genomes', disabled: true}]
+                    {name: 'Comparative Genomes', disabled: true}];
 
-    // turn the app list into a list of two
     this.appTable = getColumns(this.appList, 2);
-
 
     // Load data for apps and app builder
     $http.get('data/services.json').success(function(data) {
@@ -118,6 +115,16 @@ angular.module('appTasker')
         // update models, two-way-binding ftw.
         self.methods = methods;
         self.method_dict = method_dict;
+
+        // append some descriptions to choosen apps for now
+        for (var i=0; i<self.appList.length; i++) {
+            var id = self.appList[i].id;
+            if (id) {
+                self.appList[i].description = self.method_dict[id].description;
+            }
+        }
+
+        console.log(self.appList)
     });
 
 
@@ -140,8 +147,6 @@ angular.module('appTasker')
         for (var i=0; i<size; i++) {
             cols.push(list.slice(i*col_length, (i+1)*col_length));
         }
-
-        console.log(cols)
         return cols;
     }
 
@@ -169,7 +174,6 @@ angular.module('appTasker')
     });
 
     // initial fetch of ws object list
-
     this.getObjs = $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
     .then(function(data){
         self.ws_objects = data;
@@ -192,8 +196,7 @@ angular.module('appTasker')
     });
 
     
-
-    // method for update ws object list
+    // method to update ws object list
     this.updateWSObjs = function(new_ws) {
         var p = $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
         .then(function(ws_objects) {

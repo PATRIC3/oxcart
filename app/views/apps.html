@@ -14,8 +14,27 @@
     <hr class="skinny"></hr>
 
     <div class="row">
-        <div class="col-md-6 app-list" ng-repeat="col in appUI.appTable">
-            <div ng-repeat="app in col | filter:appQuery">
+        <div ng-if="!appQuery">
+            <div class="col-md-6 app-list" ng-repeat="col in appUI.appTable">                    
+                <div ng-repeat="app in col">
+                    <div ng-if="app.disabled">
+                        <span class="text-muted">
+                            <h4 class="media-heading">{{app.name}}</h4>
+                            {{appUI.method_dict[app.id].description}}
+                        </span>
+                    </div>
+                    <div ng-if="!app.disabled">
+                        <a ui-sref="app.id({id: app.id})">
+                            <h4 class="media-heading">{{app.name}}</h4>
+                            {{appUI.method_dict[app.id].description}}
+                        </a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="appQuery" class="col-md-12 app-list" >
+            <div ng-repeat="app in appUI.appList | filter : appQuery">
                 <div ng-if="app.disabled">
                     <span class="text-muted">
                         <h4 class="media-heading">{{app.name}}</h4>
@@ -30,5 +49,7 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
