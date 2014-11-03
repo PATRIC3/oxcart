@@ -2,10 +2,11 @@
 /* service configuration settings for UI */
 angular.module('appTasker').service('config', function() {
 
-	this.ui = {name: "[% app_name %]"};
+    this.ui = {name: "[% app_name %]"};
 
-    this.services = {"ws_url": "[% ws_url %]",
-                     "fba_url": "[% fba_url %]",
-                     auth_url: "https://kbase.us/services/authorization/Sessions/Login"};
+    this.services = {ws_url: "[% ws_url %]",
+                     fba_url: "[% fba_url %]",
+                     auth_url: "https://kbase.us/services/authorization/Sessions/Login",
+                     shock_url: "http://140.221.67.190:7078"};
 
 })

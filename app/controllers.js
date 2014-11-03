@@ -36,10 +36,10 @@ function($scope, $state, appUI, authService, $window) {
 }])
 
 .controller('Upload', 
-    ['$scope', '$state', '$http', '$rootScope',
-    function($scope, $state, $http, $rootScope) {
+    ['$scope', '$http', '$rootScope', 'config',
+    function($scope, $http, $rootScope, config) {
 
-    $scope.shockURL = "http://140.221.67.190:7078"
+    $scope.shockURL = config.services.shock_url;
     var url = $scope.shockURL+'/node';
     var auth = {Authorization: 'OAuth ' + $rootScope.token};
     var config = {headers:  auth }
