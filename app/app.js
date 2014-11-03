@@ -51,14 +51,20 @@ angular.module('appTasker',
             url: "/objects",
             templateUrl: 'app/views/ws/objtable.html',
             authenticate: true
-        }).state('transition', {
-              url: 'transition?destination',
-              controller: function ($state, $stateParams) {
-                $state.go($stateParams.destination);
-              },
-              authenticate:false
-            })
+        })
 
+
+        // user pages
+        .state('user', {
+            url: "/user",
+            templateUrl: 'app/views/user/profile.html',
+            authenticate: false
+        })
+        .state('userSettings', {
+            url: "/user-settings",
+            templateUrl: 'app/views/user/settings.html',
+            authenticate: false
+        });
 
     $urlRouterProvider.when('', '/app-tasker')
                       .when('/', '/app-tasker')

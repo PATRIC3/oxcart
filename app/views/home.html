@@ -4,7 +4,7 @@
         <ul class="nav" id="side-menu">
 
             <li>
-                <a ng-class="{ active: $state.includes('upload')}" ui-sref="app.upload">
+                <a ng-class="{ active: $state.includes('app.upload')}" ui-sref="app.upload">
                     <i class="fa fa-cloud-upload"></i> Upload
                     <span class="text-muted pull-right"></span>
                 </a>
@@ -12,14 +12,14 @@
 
 
             <li>
-                <a ng-class="{ active: $state.includes('apps')}" ui-sref="app.apps">
+                <a ng-class="{ active: $state.includes('app.apps')}" ui-sref="app.apps">
                     <i class="fa fa-bar-chart"></i> Run Apps
                     <span class="text-muted pull-right"></span>
                 </a>
             </li>
 
             <li>
-                <a ng-class="{ active: $state.includes('tasks')}" ui-sref="app.tasks">
+                <a ng-class="{ active: $state.includes('app.tasks')}" ui-sref="app.tasks">
                     <i class="fa fa-tasks"></i> Task Status
                     <span id="task-count" class="text-muted pull-right">{{appUI.tasks.length}}</span>
                 </a>
@@ -31,19 +31,19 @@
     <div class="sidebar-nav-small" style="display: none;">
         <ul class="nav">
             <li>
-                <a ng-class="{ active: $state.includes('upload')}" ui-sref="app.upload">
+                <a ng-class="{ active: $state.includes('app.upload')}" ui-sref="app.upload">
                     <i class="fa fa-cloud-upload"></i>
                 </a>
             </li>
 
             <li>
-                <a ng-class="{ active: $state.includes('apps')}" ui-sref="app.apps">
+                <a ng-class="{ active: $state.includes('app.apps')}" ui-sref="app.apps">
                     <i class="fa fa-bar-chart"></i>
                 </a>
             </li>
 
             <li>
-                <a ng-class="{ active: $state.includes('tasks')}" ui-sref="app.tasks">
+                <a ng-class="{ active: $state.includes('app.tasks')}" ui-sref="app.tasks">
                     <i class="fa fa-tasks"></i>
                     <span id="task-count" class="text-muted pull-right">{{appUI.tasks.length}}</span>
                 </a>

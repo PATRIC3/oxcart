@@ -124,7 +124,6 @@ angular.module('appTasker')
             }
         }
 
-        console.log(self.appList)
     });
 
 
