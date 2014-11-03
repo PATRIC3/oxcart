@@ -65,7 +65,7 @@
             </form>    
 
             <ul ng-if="$root.user" class="nav navbar-top-links navbar-left">
-                 <li ui-sref="app.objects({ws: selectedWS})">
+               <li ui-sref="app.objects({ws: selectedWS})">
                     <a>Objects (<span>{{appUI.ws_objects.length}}</span>)</a>
                 </li>  
             </ul>
@@ -76,12 +76,15 @@
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a ui-sref="user.profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li>
+                            <a ui-sref="user"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
-                        <li><a ui-sref="user.settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        <li>
+                            <a ui-sref="userSettings"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a ng-click="logout()"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li>
+                            <a ng-click="logout()"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>                    
                 </li>
