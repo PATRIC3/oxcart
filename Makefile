@@ -6,10 +6,12 @@ include $(TOP_DIR)/tools/Makefile.common
 SERVICE_NAME = Oxcart
 SERVICE_DIR  = oxcart
 
+# These should all be handled by the auto-deploy
 WS_URL = https://kbase.us/services/ws
 FBA_URL = https://kbase.us/services/KBaseFBAModeling
+APP_NAME = "App Name"
 
-TPAGE_ARGS = --define ws_url=$(WS_URL) --define fba_url=$(FBA_URL)
+TPAGE_ARGS = --define ws_url=$(WS_URL) --define fba_url=$(FBA_URL) --define app_name=$(APP_NAME)
 
 default:
 
