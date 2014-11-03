@@ -2,6 +2,12 @@
 In reverse chronological order
 
 
+Running "cssmin:generated" (cssmin) task
+File build/style.css created: 9.63 kB → 6.44 kB
+
+Running "uglify:generated" (uglify) task
+File build/site.js created: 1.48 MB → 838.05 kB
+
 
 ===
 

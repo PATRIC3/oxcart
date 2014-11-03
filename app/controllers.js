@@ -9,8 +9,8 @@
 
 angular.module('appTasker')
 .controller('Analysis', 
-['$scope', '$state', '$stateParams', 'appUI', 'uiTools', '$http',
-function($scope, $state, $stateParams, appUI, uiTools, $http) {
+['$scope', '$state', 'appUI', 'authService', '$window',
+function($scope, $state, appUI, authService, $window) {
 
     // service for appUI state
     $scope.appUI = appUI;
@@ -24,6 +24,14 @@ function($scope, $state, $stateParams, appUI, uiTools, $http) {
             appUI.updateWSObjs(new_ws);
         }
     })
+
+    $scope.logout = function() {
+        authService.logout();
+        $state.transitionTo('login', {}, { reload: true, inherit: true, notify: false })
+              .then(function() {
+                  $window.location.reload();
+              });
+    }
 
 }])
 
@@ -84,7 +92,7 @@ function($scope, $state, $stateParams, appUI, uiTools, $http) {
     }
 
     $scope.getUploads = function() {
-        $http.get(url+'?querynode&owner=nconrad&limit=10000', config)
+        $http.get(url+'?querynode&owner='+$rootScope.user+'&limit=10000', config)
             .success(function(data) {
                 $scope.uploads = data;
                 console.log('uploaded data', data)
@@ -118,7 +126,19 @@ function($scope, $state, $stateParams, appUI, uiTools, $http) {
 
 }])
 
-.controller('Login', function() {
+.controller('Login', ['$scope', '$state', 'authService', '$window',
+    function($scope, $state, authService, $window) {
 
-})
+    $scope.loginUser = function(user, pass) {
+        $scope.loading = true;
+        authService.login(user, pass)
+            .then(function(data) {
+                $state.transitionTo('app.apps', {}, { reload: true, inherit: true, notify: false })
+                      .then(function() {
+                          $window.location.reload();
+                      });
+            });
+    }
+
+}])
 

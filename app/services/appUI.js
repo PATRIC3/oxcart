@@ -8,13 +8,13 @@
 */
 
 angular.module('appTasker')
-.service('appUI', ['$http', '$rootScope', 'uiTools', '$q',
-    function($http, $rootScope, uiTools, $q) {
+.service('appUI', ['$http', '$rootScope', 'uiTools', '$q', 'authService',
+    function($http, $rootScope, uiTools, $q, authService) {
 
     var self = this;
 
     // default workspace; used at the start of the application
-    var default_ws = $rootScope.userId+":home";
+    var default_ws = authService.user+":home";
 
     // models for methods; two for faster retrieval and updating of templates
     this.methods = [];

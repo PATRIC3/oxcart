@@ -952,6 +952,8 @@
                 args.cookie = 1;
                 args.fields = this.options.fields.join(',');
 
+                console.log('args', args)
+
                 $.support.cors = true;
                 $.ajax(
                     {

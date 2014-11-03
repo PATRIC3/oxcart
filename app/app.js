@@ -1,32 +1,38 @@
 
 
 angular.module('appTasker', 
-['ui.router', 'kbase-rpc', 'directives', 'dd-filter'])
+['ui.router', 'kbase-rpc', 'kbase-auth', 'directives', 'dd-filter', 'ngMaterial'])
 .config(['$locationProvider', '$stateProvider', 
-         '$httpProvider', '$urlRouterProvider',
+         '$httpProvider', '$urlRouterProvider', 
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
 
     $locationProvider.html5Mode(false);
 
     $stateProvider
-        .state('Login', {
+        .state('login', {
             url: "/login",
             templateUrl: 'app/views/login.html',
-            controller: 'Login'})
+            controller: 'Login',
+            authenticate: false})
         .state('app', {
             url: "/app-tasker",
-            templateUrl: 'app/views/home.html'})        
+            templateUrl: 'app/views/home.html',
+            authenticate: true,
+            controller: 'Analysis'})
         .state('app.upload', {
             url: "/upload",
             templateUrl: 'app/views/upload.html',
-            controller: 'Upload'})   
+            controller: 'Upload',
+            authenticate: true})   
         .state('app.tasks', {
             url: "/tasks",
-            templateUrl: 'app/views/tasks.html'})
+            templateUrl: 'app/views/tasks.html',
+            authenticate: true})
         .state('app.apps', {
             url: "/apps/",
             templateUrl: 'app/views/apps.html',
-            controller: 'Apps'})
+            controller: 'Apps',
+            authenticate: true})
         .state('app.id', {
             url: "/apps/:id",
             templateUrl: 'app/views/apps.id.html',
@@ -36,39 +42,49 @@ angular.module('appTasker',
               }]
             },
             controller: 'AppCell',
-        })
+            authenticate: true})
         .state('app.builder', {
             url: "/builder",
-            templateUrl: 'app/views/app-builder.html'})
+            templateUrl: 'app/views/app-builder.html',
+            authenticate: true})
         .state('app.objects', {
             url: "/objects",
-            templateUrl: 'app/views/ws/objtable.html'})      
+            templateUrl: 'app/views/ws/objtable.html',
+            authenticate: true
+        }).state('transition', {
+              url: 'transition?destination',
+              controller: function ($state, $stateParams) {
+                $state.go($stateParams.destination);
+              },
+              authenticate:false
+            })
+
 
     $urlRouterProvider.when('', '/app-tasker')
                       .when('/', '/app-tasker')
                       .when('#', '/app-tasker');
 
+    // Send to login if the URL was not found
+    $urlRouterProvider.otherwise("/login");                      
+
 }])
 
-.run(['$rootScope', '$state', '$stateParams', '$http', 'config',
-    function ($rootScope, $state, $stateParams, $http, config) {
+.run(['$rootScope', '$state', '$stateParams', '$http', 'config', 'authService',
+    function ($rootScope, $state, $stateParams, $http, config, authService) {
+
+    $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
+        if (toState.authenticate && !authService.isAuthenticated()){
+            $state.transitionTo("login");
+            event.preventDefault(); 
+        }
+    })
+
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.ui_name = config.ui.name;
 
-    function login_cb() {
-        window.location.reload();
-    }
-    function logout_cb() {
-        window.location.reload();
-    }
+    $rootScope.user = authService.user;
+    $rootScope.token = authService.token;
+}])
 
-    /* auth */
-    var login_ele = $('#login');
-    login_ele.kbaseLogin({login_callback: login_cb, logout_callback: logout_cb});
-    login_ele.css('padding-top', '14px');
-
-    $rootScope.userId = login_ele.kbaseLogin('session').user_id;
-    $rootScope.token = login_ele.kbaseLogin('session').token;
-}]);
 
