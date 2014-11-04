@@ -130,14 +130,18 @@ function($scope, $state, appUI, authService, $window) {
     function($scope, $state, authService, $window) {
 
     $scope.loginUser = function(user, pass) {
-
         $scope.loading = true;
         authService.login(user, pass)
             .success(function(data) {
+
+                // see https://github.com/angular-ui/ui-router/issues/582
                 $state.transitionTo('app.apps', {}, { reload: true, inherit: true, notify: false })
-                      .then(function() {
-                          $window.location.reload();
+                      .then(function() {               
+                        setTimeout(function(){
+                            $window.location.reload();
+                        }, 0);
                       });
+                      
             }).error(function(e, status){
                 $scope.loading = false;
                 if (status == 401) {

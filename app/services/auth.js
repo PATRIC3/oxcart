@@ -14,7 +14,7 @@ angular.module('kbase-auth', [])
 .service('authService', ['$http', 'config', function($http, config) {
     var self = this;
 
-    var auth = getSession();
+    var auth = JSON.parse( localStorage.getItem('auth') );
 
     // if authenticated, set user/token
     if (auth) {
