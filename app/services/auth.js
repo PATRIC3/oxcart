@@ -14,7 +14,7 @@ angular.module('kbase-auth', [])
 .service('authService', ['$http', 'config', function($http, config) {
     var self = this;
 
-    var auth = JSON.parse( localStorage.getItem('auth') );
+    var auth = getSession();
 
     // if authenticated, set user/token
     if (auth) {
@@ -50,7 +50,11 @@ angular.module('kbase-auth', [])
     }
 
     this.isAuthenticated = function() {
-        return self.user ? true : false;
+        return (self.user && getSession()) ? true : false;
+    }
+
+    function getSession() {
+        return JSON.parse( localStorage.getItem('auth') );
     }
 
 }]);
