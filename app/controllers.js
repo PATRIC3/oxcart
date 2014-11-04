@@ -130,15 +130,29 @@ function($scope, $state, appUI, authService, $window) {
     function($scope, $state, authService, $window) {
 
     $scope.loginUser = function(user, pass) {
+
         $scope.loading = true;
         authService.login(user, pass)
-            .then(function(data) {
+            .success(function(data) {
                 $state.transitionTo('app.apps', {}, { reload: true, inherit: true, notify: false })
                       .then(function() {
                           $window.location.reload();
                       });
-            });
+            }).error(function(e, status){
+                $scope.loading = false;
+                if (status == 401) {
+                    $scope.inValid = true;
+                } else {
+                    $scope.failMsg = "Coud not reach authentication service: "+e.error_msg;
+                }
+
+            })
     }
 
 }])
-
+.controller('LeftCtrl', ['$scope', '$timeout', '$mdSidenav',
+    function($scope, $timeout, $mdSidenav) {
+  $scope.close = function() {
+    $mdSidenav('left').close();
+  };
+}])

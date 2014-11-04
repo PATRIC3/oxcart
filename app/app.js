@@ -80,7 +80,7 @@ angular.module('appTasker',
 
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
         if (toState.authenticate && !authService.isAuthenticated()){
-            $state.transitionTo("login");
+            $state.go('login');
             event.preventDefault(); 
         }
     })

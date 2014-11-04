@@ -14,7 +14,6 @@ angular.module('kbase-auth', [])
 .service('authService', ['$http', 'config', function($http, config) {
     var self = this;
 
-
     var auth = JSON.parse( localStorage.getItem('auth') );
 
     // if authenticated, set user/token
@@ -31,20 +30,19 @@ angular.module('kbase-auth', [])
                     password: pass,
                     status: 1,
                     cookie:1,
-                    fields: "name,kbase_sessionid,user_id,token"}
+                    fields: "name,kbase_sessionid,user_id,token"};
 
         return $http({method: "POST",
-                url: config.services.auth_url,
-                data: $.param(data),
-             }).then(function(data) {
+                      url: config.services.auth_url,
+                      data: $.param(data),
+                    }).success(function(data) {
+                        // store token
+                        localStorage.setItem('auth', JSON.stringify(data));
+                        self.user = data.user_id;
+                        self.token = data.token;
 
-                // store token
-                localStorage.setItem('auth', JSON.stringify(data.data));
-                self.user = data.data.user_id;
-                self.token = data.data.token;
-
-                return data.data;
-             })
+                        return data;
+                    });
     }
 
     this.logout = function() {

@@ -74,9 +74,18 @@ hr.skinny {
 }
 
 
-
-
 /* fixme -> bootstrap 3.3 */
 .modal-dialog {
     z-index: 9999;
 }
+
+/* polymer designing */
+
+md-input-group label {
+    margin-bottom: 0;
+}
+md-input-group input {
+    width: 100%;
+}
+
+

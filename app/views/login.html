@@ -1,10 +1,29 @@
 
-
-
-
 <br><br>
 <div class="col-md-4 col-md-offset-4">
-    <h5>Login to continue to {{$root.ui_name}}</h5>
+    <h3>Login to continue to {{$root.ui_name}}</h3>
+
+    <div ng-if="inValid" class="alert alert-danger" role="alert">
+        <b>Try again.</b>
+        Wrong username and/or password
+    </div>
+
+    <div ng-if="failMsg" class="alert alert-danger" role="alert">
+        <b>Oh snap!</b>
+        {{failMsg}}
+    </div>
+
+
+    <form>
+        <md-text-float ng-model="user" label="Globus username"></md-text-float>
+        <md-text-float ng-model="pass" label="Password" type="password"></md-text-float>
+        <md-button ng-click="loginUser(user, pass)" type="submit" class="md-primary pull-left">
+            Login
+        </md-button>
+    </form>        
+    <md-progress-circular ng-if="loading" class="pull-left" mode="indeterminate" diameter="25"></md-progress-circular>
+
+    <!--
     <form role="form">
         <div class="form-group">
             <input ng-model="user" type="text" class="form-control" placeholder="Globus username">
@@ -13,9 +32,9 @@
             <input ng-model="pass" type="password" class="form-control" placeholder="Password">
         </div>
 
-        <button ng-click="loginUser(user, pass)" type="submit" class="btn btn-primary pull-left">Login</button>
-        <md-progress-circular ng-if="loading" class="pull-left" mode="indeterminate" diameter="25"></md-progress-circular>
-
+        <button ng-click="loginUser(user, pass)" type="submit" class="btn btn-primary">Login</button>
+        <md-progress-circular ng-if="loading" class="" mode="indeterminate" diameter="25"></md-progress-circular>
     </form>
+    -->
+</div>
 
-</div>   
