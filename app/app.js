@@ -17,8 +17,7 @@ angular.module('appTasker',
         .state('app', {
             url: "/app-tasker",
             templateUrl: 'app/views/home.html',
-            authenticate: true,
-            controller: 'Analysis'})
+            authenticate: true})
         .state('app.upload', {
             url: "/upload",
             templateUrl: 'app/views/upload.html',

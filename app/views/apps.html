@@ -19,14 +19,14 @@
                 <div ng-repeat="app in col">
                     <div ng-if="app.disabled">
                         <span class="text-muted">
-                            <h4 class="media-heading">{{app.name}}</h4>
-                            {{appUI.method_dict[app.id].description}}
+                            <h4 class="media-heading">{{app.label}}</h4>
+                            {{appUI.appDict[app.id].description}}
                         </span>
                     </div>
                     <div ng-if="!app.disabled">
                         <a ui-sref="app.id({id: app.id})">
-                            <h4 class="media-heading">{{app.name}}</h4>
-                            {{appUI.method_dict[app.id].description}}
+                            <h4 class="media-heading">{{app.label}}</h4>
+                            {{appUI.appDict[app.id].description}}
                         </a> 
                     </div>
                 </div>
@@ -37,14 +37,14 @@
             <div ng-repeat="app in appUI.appList | filter : appQuery">
                 <div ng-if="app.disabled">
                     <span class="text-muted">
-                        <h4 class="media-heading">{{app.name}}</h4>
-                        {{appUI.method_dict[app.id].description}}
+                        <h4 class="media-heading">{{app.label}}</h4>
+                        {{appUI.appDict[app.id].description}}
                     </span>
                 </div>
                 <div ng-if="!app.disabled">
                     <a ui-sref="app.id({id: app.id})">
-                        <h4 class="media-heading">{{app.name}}</h4>
-                        {{appUI.method_dict[app.id].description}}
+                        <h4 class="media-heading">{{app.label}}</h4>
+                        {{appUI.appDict[app.id].description}}
                     </a> 
                 </div>
             </div>

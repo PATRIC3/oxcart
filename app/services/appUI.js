@@ -17,14 +17,14 @@ angular.module('appTasker')
     var default_ws = authService.user+":home";
 
     // models for methods; two for faster retrieval and updating of templates
-    this.methods = [];
-    this.method_dict = {};
+    this.apps = [];
+    this.appDict = {};
 
     // model for cells displayed (not in use)
     this.cells = [];
 
     // current selected app
-    this.current_app;
+    this.currentApp;
 
 	// model for ws objects in 'data' view
     this.current_ws = default_ws;
@@ -36,7 +36,7 @@ angular.module('appTasker')
 
     // add cell to app builder model
     this.addCell = function(name) {
-        var cell_obj = self.method_dict[name];
+        var cell_obj = self.appDict[name];
         self.cells.push(cell_obj);
     }
 
@@ -47,8 +47,9 @@ angular.module('appTasker')
 
     // set current working app
     this.setApp = function(name) {
-        var cell_obj = self.method_dict[name];
-        self.current_app = cell_obj;
+        var cell_obj = self.appDict[name];
+        console.log(self.appDict[name])
+        self.currentApp = cell_obj;
     }
 
     // a task is of the form {name: cell.title, fields: scope.fields}
@@ -56,9 +57,29 @@ angular.module('appTasker')
     	self.tasks.push(task);
     }
 
-    // hard-coded app list for now
-    this.appList = [{name: 'Assemble', disabled: true},
-                    {name: 'Annotate', id: 'Annotate-ContigSet'},
+
+    // This is the true app service/api
+    // We are using this for demonstration of the functionality for now
+    $http.rpc('app', 'enumerate_apps')
+         .then(function(apps) {
+            self.apps = apps;
+
+            var appDict = {}
+            for (var i=0; i<apps.length; i++) {
+                //{label: apps[i].label, description: apps[i].description}
+                appDict[apps[i].id] = apps[i];
+            }
+
+            self.appDict = appDict;
+
+            self.appTable = getColumns(self.apps, 2);    
+        })
+
+
+    // additional, hard-coded apps for now
+    // this.appList = [{name: 'Assemble', disabled: true},
+    //                {name: 'Annotate', id: 'Annotate-ContigSet'}];
+                    /*
                     {name: 'Generate Initial Model', id: 'Build-a-Metabolic-Model'},
                     {name: 'Gapfill Model', id: 'Gapfill-a-Metabolic-Model'},
                     {name: 'Run FBA', id: 'Run-Flux-Balance-Analysis'},
@@ -67,11 +88,13 @@ angular.module('appTasker')
                     {name: 'Reconcile Giving New Model', id: 'Build-a-Metabolic-Model'},
                     {name: 'Model Input', disabled: true},
                     {name: 'Model Translation', disabled: true},
-                    {name: 'Comparative Genomes', disabled: true}];
+                    {name: 'Comparative Genomes', disabled: true}];*/
 
-    this.appTable = getColumns(this.appList, 2);
+
+
 
     // Load data for apps and app builder
+    /*
     $http.get('data/services.json').success(function(data) {
         // reorganize data since it doesn't make any sense.  
         // why is there no order to the groups of methods?
@@ -113,8 +136,8 @@ angular.module('appTasker')
         }
 
         // update models, two-way-binding ftw.
-        self.methods = methods;
-        self.method_dict = method_dict;
+        //self.methods = methods;
+        //self.method_dict = method_dict;
 
         // append some descriptions to choosen apps for now
         for (var i=0; i<self.appList.length; i++) {
@@ -123,8 +146,7 @@ angular.module('appTasker')
                 self.appList[i].description = self.method_dict[id].description;
             }
         }
-
-    });
+    });*/
 
 
     // change param0, param1, etc... to a list.  not sure why.
@@ -151,7 +173,7 @@ angular.module('appTasker')
 
     // initial fetch of user's writable workspace list
     this.getWS = $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
-    .then(function(workspaces) {
+        .then(function(workspaces) {
         var workspaces = workspaces.sort(compare)
 
         function compare(a,b) {
@@ -205,6 +227,7 @@ angular.module('appTasker')
         })        
         return p;
     }
+
 
 }]);
 
