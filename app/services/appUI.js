@@ -60,6 +60,7 @@ angular.module('appTasker')
 
     // This is the true app service/api
     // We are using this for demonstration of the functionality for now
+
     $http.rpc('app', 'enumerate_apps')
          .then(function(apps) {
             self.apps = apps;
@@ -73,6 +74,8 @@ angular.module('appTasker')
             self.appDict = appDict;
 
             self.appTable = getColumns(self.apps, 2);    
+        }).catch(function(e){
+            console.log(e)
         })
 
 
@@ -172,6 +175,7 @@ angular.module('appTasker')
     }
 
     // initial fetch of user's writable workspace list
+    /*
     this.getWS = $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
         .then(function(workspaces) {
         var workspaces = workspaces.sort(compare)
@@ -193,8 +197,10 @@ angular.module('appTasker')
 
         self.ws_list = ws_list;
     });
+    */
 
     // initial fetch of ws object list
+    /*
     this.getObjs = $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
     .then(function(data){
         self.ws_objects = data;
@@ -215,9 +221,11 @@ angular.module('appTasker')
     }).catch(function(e){
         console.log('here', e)
     });
+    */
 
     
     // method to update ws object list
+    /*
     this.updateWSObjs = function(new_ws) {
         var p = $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
         .then(function(ws_objects) {
@@ -227,6 +235,7 @@ angular.module('appTasker')
         })        
         return p;
     }
+    */
 
 
 }]);
