@@ -24,6 +24,7 @@ angular.module('kbase-auth', [])
         this.user;
         this.token;
     }
+    console.log('using service:', config.services.auth_url)
 
     this.login = function(user, pass) {
         var data = {user_id: user, 

@@ -19,7 +19,8 @@ function($scope, $state, appUI, authService, $window) {
     $scope.selectedWS = appUI.current_ws;
 
     // update workspace objects if dropdown changes
-    $scope.$watch('ddDisplayed', function(new_ws) {
+    //$scope.$watch('ddDisplayed', function(new_ws) {
+    $scope.$on('ddChange', function(event, new_ws) {
         if (new_ws) {
             appUI.updateWSObjs(new_ws);
         }
@@ -40,6 +41,7 @@ function($scope, $state, appUI, authService, $window) {
     function($scope, $http, $rootScope, config) {
 
     $scope.shockURL = config.services.shock_url;
+    console.log($scope.shockURL)
     var url = $scope.shockURL+'/node';
     var auth = {Authorization: 'OAuth ' + $rootScope.token};
     var config = {headers:  auth }
@@ -111,10 +113,11 @@ function($scope, $state, appUI, authService, $window) {
     // service for appUI state
     $scope.appUI = appUI;
 
+    $scope.app = appUI.appDict[$stateParams.id];
 
-    if ($stateParams.id) {
-        appUI.setApp($stateParams.id);
-    }
+    //if ($stateParams.id) {
+    //    appUI.setApp($stateParams.id);
+    //}
 
     $scope.getDefault = function(type) {
         return appUI.wsObjsByType[type][0].name
@@ -135,7 +138,7 @@ function($scope, $state, appUI, authService, $window) {
             .success(function(data) {
 
                 // see https://github.com/angular-ui/ui-router/issues/582
-                $state.transitionTo('app.apps', {}, { reload: true, inherit: true, notify: false })
+                $state.transitionTo('app.apps', {}, {reload: true, inherit: true, notify: false})
                       .then(function() {               
                         setTimeout(function(){
                             $window.location.reload();

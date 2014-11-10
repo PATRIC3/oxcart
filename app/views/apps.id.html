@@ -2,7 +2,7 @@
 <div class="col-md-9">
     <div class="panel panel-default" app-cell>
         <div class="panel-heading">
-            <span class="panel-title pull-left">{{appUI.currentApp.label}}</span> 
+            <span class="panel-title pull-left">{{app.label}}</span> 
             
             <div class="pull-right text-muted">
                 <a ng-click="flip($event)">
@@ -19,7 +19,7 @@
                     <figure class="front">
                         <form class="form-horizontal" role="form">
 
-                          <div class="form-group" ng-repeat="field in appUI.currentApp.parameters">
+                          <div class="form-group" ng-repeat="field in app.parameters">
                             <label class="col-sm-3 control-label">{{field.label}}</label>
 
                             <div class="col-sm-9">
@@ -42,7 +42,7 @@
 
                           <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                              <button ng-click="runCell($index, appUI.currentApp)" type="submit" class="btn btn-primary pull-right">Run</button>
+                              <button ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">Run</button>
                             </div>
                           </div>
                         </form>
@@ -50,7 +50,7 @@
                     
                     <!-- back side of cell / documentation -->
                     <figure class="back">
-                       {{appUI.current_app.description}}
+                       {{app.description}}
                     </figure>
 
                 </div> 

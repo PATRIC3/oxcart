@@ -46,15 +46,28 @@ angular.module('appTasker')
     }
 
     // set current working app
+    /*
     this.setApp = function(name) {
         var cell_obj = self.appDict[name];
         console.log(self.appDict[name])
         self.currentApp = cell_obj;
-    }
+    }*/
 
     // a task is of the form {name: cell.title, fields: scope.fields}
-    this.newTask = function(task) {
-    	self.tasks.push(task);
+    this.startApp = function(id, params) {
+        console.log(id, params)
+        /*var params = {id: id,
+                      params: params, 
+                      workspace: 'my_workspace'};*/
+
+        var params = [id, params, 'my_workspace'];
+
+        $http.rpc('app', 'start_app', params)
+             .then(function(resp) {
+                console.log('response', resp)
+             })
+
+    	//self.tasks.push(task);
     }
 
 
@@ -78,6 +91,16 @@ angular.module('appTasker')
             console.log(e)
         })
 
+    /*       
+    var auth = {}
+    auth.token = authService.token;
+    var appService = new AppService("http://140.221.66.219:7124", auth)
+    var p = appService.enumerate_apps()
+    $.when(p).done(function(data){
+        console.log('app data', p)
+    }).fail(function(e) {
+        console.log('error', e)
+    })*.
 
     // additional, hard-coded apps for now
     // this.appList = [{name: 'Assemble', disabled: true},
@@ -175,7 +198,7 @@ angular.module('appTasker')
     }
 
     // initial fetch of user's writable workspace list
-    /*
+
     this.getWS = $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
         .then(function(workspaces) {
         var workspaces = workspaces.sort(compare)
@@ -197,10 +220,9 @@ angular.module('appTasker')
 
         self.ws_list = ws_list;
     });
-    */
+
 
     // initial fetch of ws object list
-    /*
     this.getObjs = $http.rpc('ws', 'list_objects', {workspaces: [self.current_ws] } )
     .then(function(data){
         self.ws_objects = data;
@@ -221,11 +243,9 @@ angular.module('appTasker')
     }).catch(function(e){
         console.log('here', e)
     });
-    */
 
     
     // method to update ws object list
-    /*
     this.updateWSObjs = function(new_ws) {
         var p = $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
         .then(function(ws_objects) {
@@ -235,7 +255,6 @@ angular.module('appTasker')
         })        
         return p;
     }
-    */
 
 
 }]);

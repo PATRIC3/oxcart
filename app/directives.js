@@ -34,9 +34,11 @@ angular.module('directives', [])
                 $($event.target).parents('.panel').find('.panel-body').slideToggle('fast');
             }
 
-            scope.runCell = function(index, cell) {
-                var task = {name: cell.title, fields: scope.fields};
-                appUI.newTask(task);
+            scope.runCell = function(index, app) {
+
+                console.log('fields', scope.fields)
+                console.log(app)
+                appUI.startApp(app.id, scope.fields);
             }
 
 
