@@ -9,6 +9,8 @@
 
 angular.module('appTasker')
 .service('uiTools', function() {
+    var self = this;
+
     // this method will display an absolutely position notification
     // in the app on the 'body' tag.  This is useful for api success/failure 
     // notifications
@@ -97,6 +99,26 @@ angular.module('appTasker')
         var hms = datetime.split('T')[1].split(':');
         hms[2] = hms[2].split('+')[0];  
         return Date.UTC(ymd[0],ymd[1]-1,ymd[2],hms[0],hms[1],hms[2]);  
+    }
+
+    this.getTimestampShock = function(datetime){
+        if (!datetime) return; 
+        var ymd = datetime.split('T')[0].split('-');
+        var hms = datetime.split('T')[1].split(':');
+        hms[2] = hms[2].split('.')[0];  
+        return Date.UTC(ymd[0],ymd[1]-1,ymd[2],hms[0],hms[1],hms[2]);  
+    }
+
+    this.relativeTimeShock = function(datetime) {
+        var timestamp = self.getTimestampShock(datetime);
+        var formated = self.formateDate(timestamp)
+        return formated;
+    }
+
+    this.relativeTimeWS = function(datetime) {
+        var timestamp = self.getTimestamp(datetime);
+        var formated = self.formateDate(timestamp)
+        return formated;
     }
 
     // interesting solution from http://stackoverflow.com/questions

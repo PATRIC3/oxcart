@@ -1,32 +1,42 @@
 <div class="row">
-    <div class="col-md-5">
-        <div class="dashboard-info blue">
+
+    <div class="col-md-4">
+        <div class="text-muted task-status-queued ts">
             <i class="fa fa-tasks fa-5x pull-left"></i>
-            <div class="h1">{{appUI.tasks.length}}</div>
-            <div class="h4">Running Tasks</div>
+            <div class="h1">{{appUI.queued.length}}</div>
+            <div class="h4">Queued</div>
         </div>
     </div>
-    <div class="col-md-5 col-md-offset-1">
-        <div class="dashboard-info green">
+    <div class="col-md-4">
+        <div class="text-muted task-status-running ts">
+            <i class="fa fa-play-circle  fa-5x pull-left"></i>
+            <div class="h1">{{appUI.running.length}}</div>
+            <div class="h4">Running</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="text-muted task-status-completed ts">
             <i class="fa fa-check-square fa-5x pull-left"></i>
-            <div class="h1" tasks-count>0</div>
+            <div class="h1">{{appUI.completed.length}}</div>
             <div class="h4">Completed</div>
         </div>
-    </div>
+    </div>   
 </div>
 
 <br><br>
-<div ng-if="appUI.tasks.length > 0">
+<div ng-if="!appUI.loading">
     <div class="row">
         <div class="col-md-12"> 
             <table class="table task-table">
                 <tr>
-                    <th><b>Task</b></th>
-                    <th><b>Time Started</b></th>
+                    <th><b>App</b></th>
+                    <th><b>ID</b></th>
+                    <th><b>Status</b></th>
                 <tr>
-                <tr ng-repeat="task in appUI.tasks">
-                    <td>{{task.name}}</td>
-                    <td>some time</td>
+                <tr ng-repeat="task in appUI.completed">
+                    <td>{{task.app}}</td>
+                    <td>{{task.id}}</td>
+                    <td>{{task.status}}</td>
                 </tr>
             </table>
 
@@ -34,7 +44,9 @@
     </div>
 </div>
 
-<div ng-if="appUI.tasks.length == 0">
+<md-progress-circular ng-if="appUI.loading" mode="indeterminate" diameter="40"></md-progress-circular>
+
+<div ng-if="!appUI.loading && appUI.tasks.length ==0">
     You have no tasks.  You may want to run tasks (analysis) via the 
     <a ui-sref="app.apps">Apps</a> tab.
 </div>

@@ -4,7 +4,7 @@
         <ul class="nav" id="side-menu">
 
             <li>
-                <a ng-class="{ active: $state.includes('app.upload')}" ui-sref="app.upload">
+                <a ui-sref-active="active" ui-sref="app.upload">
                     <i class="fa fa-cloud-upload"></i> Upload
                     <span class="text-muted pull-right"></span>
                 </a>
@@ -12,16 +12,26 @@
 
 
             <li>
-                <a ng-class="{ active: $state.includes('app.apps')}" ui-sref="app.apps">
+                <a ui-sref-active="active" ng-class="{active: $state.includes('app.id')}" ui-sref="app.apps">
                     <i class="fa fa-bar-chart"></i> Run Apps
                     <span class="text-muted pull-right"></span>
                 </a>
             </li>
 
             <li>
-                <a ng-class="{ active: $state.includes('app.tasks')}" ui-sref="app.tasks">
+                <a ui-sref-active="active" ui-sref="app.tasks">
                     <i class="fa fa-tasks"></i> Task Status
-                    <span id="task-count" class="badge text-muted pull-right">{{appUI.tasks.length}}</span>
+                    <span id="task-count" class="badge pull-right">
+                        <span id="task-count-running" class="queued" tooltip="queued tasks">
+                            {{appUI.queued.length}} 
+                        </span>
+                        <span id="task-count-queued" class="running" tooltip="running tasks">
+                            {{appUI.running.length}} 
+                        </span>
+                        <span id="task-count-completed" class="completed" tooltip="completed tasked">
+                            {{appUI.completed.length}} 
+                        </span> 
+                    </span>               
                 </a>
             </li>
         </ul>
@@ -31,19 +41,19 @@
     <div class="sidebar-nav-small" style="display: none;">
         <ul class="nav">
             <li>
-                <a ng-class="{ active: $state.includes('app.upload')}" ui-sref="app.upload">
+                <a ui-sref-active="active" ui-sref="app.upload">
                     <i class="fa fa-cloud-upload"></i>
                 </a>
             </li>
 
             <li>
-                <a ng-class="{ active: $state.includes('app.apps')}" ui-sref="app.apps">
+                <a ui-sref-active="active" ui-sref="app.apps">
                     <i class="fa fa-bar-chart"></i>
                 </a>
             </li>
 
             <li>
-                <a ng-class="{ active: $state.includes('app.tasks')}" ui-sref="app.tasks">
+                <a ui-sref-active="active" ui-sref="app.tasks">
                     <i class="fa fa-tasks"></i>
                     <span id="task-count" class="text-muted pull-right">{{appUI.tasks.length}}</span>
                 </a>
@@ -69,8 +79,8 @@
 
                 <h5>To do:</h5>
                 <ul>
-                    <li>Plug-in AWE for tasks</li>
-                    <li>Restyle site using newly designed theme</li>
+                    <li>Need api for pagination</li>
+                    <li>Need api for counts</li>
                 </ul>
 
                 <h5>Notes:</h5>

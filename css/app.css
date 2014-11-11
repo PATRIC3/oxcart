@@ -33,6 +33,9 @@ hr.skinny {
     overflow-x: scroll;
 }
 
+.sidebar-nav .nav > li > a {
+    padding: 10px 10px 10px 15px;
+}
 
 .sidebar-collapse {
     border-right: 1px solid #e7e7e7;
@@ -73,6 +76,47 @@ hr.skinny {
     text-decoration: underline;
 }
 
+#task-count {
+    background-color: #666;
+}
+
+#task-count-queued:after,
+#task-count-running:after {
+    content: "\2022";
+    color: #ccc;
+}
+
+
+.ts {
+    padding-left: 5px;
+}
+
+.task-status-queued {
+    border-left: 5px solid #96e8ff;
+}
+
+
+.task-status-running {
+    border-left: 5px solid #ffee93;
+}
+
+.task-status-completed {
+    border-left: 5px solid #a5ffa0;
+}
+.queued {
+    /*color: #007fff;*/
+    color: #96e8ff;
+}
+.running {
+    /*color: #c9ba4c;*/
+    color: #ffee93;
+}
+.completed {
+    /*color: #379e1a;*/
+    color: #a5ffa0;
+}
+
+
 
 /* fixme -> bootstrap 3.3 */
 .modal-dialog {
@@ -87,5 +131,8 @@ md-input-group label {
 md-input-group input {
     width: 100%;
 }
+
+
+
 
 

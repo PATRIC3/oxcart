@@ -1,30 +1,30 @@
-
 /* 
  * App Tasker Model (appUI service)
  *
- *   This is responisble for the state of the app runner model
+ *   This is responisble for the state of the app tasker model
  *   Two way binding is used to update the view
  *
 */
 
 angular.module('appTasker')
-.service('appUI', ['$http', '$rootScope', 'uiTools', '$q', 'authService',
-    function($http, $rootScope, uiTools, $q, authService) {
+.service('appUI', ['$http', '$rootScope', '$log', 'uiTools', '$q', 'authService', 
+    function($http, $rootScope, $log, uiTools, $q, authService) {
 
     var self = this;
 
     // default workspace; used at the start of the application
     var default_ws = authService.user+":home";
 
+    // how often to update tasks/status (in ms)
+    var pollInterval = 5000;
+
     // models for methods; two for faster retrieval and updating of templates
+    this.loadingApps = true;
     this.apps = [];
     this.appDict = {};
 
     // model for cells displayed (not in use)
     this.cells = [];
-
-    // current selected app
-    this.currentApp;
 
 	// model for ws objects in 'data' view
     this.current_ws = default_ws;
@@ -32,163 +32,133 @@ angular.module('appTasker')
     this.wsObjsByType;
 
 	// model for tasks; appears in 'running tasks'
+    this.loadingTasks = true;  // models are loading at runtime
 	this.tasks = [];
+    this.queued = [];
+    this.running = [];
+    this.completed = [];    
 
-    // add cell to app builder model
+    // add cell to app builder model (not in use)
     this.addCell = function(name) {
         var cell_obj = self.appDict[name];
         self.cells.push(cell_obj);
     }
 
-    // remove cell from app builder model
+    // remove cell from app builder model (not in use)
     this.removeCell = function(index) {
 		this.cells.splice(index, 1);
     }
 
-    // set current working app
-    /*
-    this.setApp = function(name) {
-        var cell_obj = self.appDict[name];
-        console.log(self.appDict[name])
-        self.currentApp = cell_obj;
-    }*/
-
     // a task is of the form {name: cell.title, fields: scope.fields}
     this.startApp = function(id, params) {
-        console.log(id, params)
-        /*var params = {id: id,
-                      params: params, 
-                      workspace: 'my_workspace'};*/
-
         var params = [id, params, 'my_workspace'];
-
         $http.rpc('app', 'start_app', params)
              .then(function(resp) {
                 console.log('response', resp)
              })
 
-    	//self.tasks.push(task);
+    	self.queued.push({id: id, app: params.app});
     }
 
+    // promise for lists of tasks with their status and other info
+    this.getStatus = function() {
+        return $http.rpc('app', 'enumerate_tasks')
+                     .then(function(tasks) {
+                        var ids = []
+                        for (var i in tasks) {
+                            ids.push(tasks[i].id)
+                        }
 
-    // This is the true app service/api
-    // We are using this for demonstration of the functionality for now
+                        var p = $http.rpc('app', 'query_task_status', [ids])
+                            .then(function(status_list) {
+                                // join status to task list
+                                for (var i in tasks) {
+                                    tasks[i].status = status_list[tasks[i].id];
+                                }
 
+                                //self.tasks = tasks;
+                                return tasks
+                            })
+
+                        return p;
+                     })
+    }
+
+    // method for parsing task list and updating models
+    function updateStatus() {
+        var d = new Date();
+        var t1 = d.getTime();
+
+        $log.debug('updating status model');
+
+        var completed = [],
+            running = [],
+            queued = [];
+
+        return self.getStatus()
+                   .then(function(tasks) {
+                       for (var i in tasks) {
+                           var task = tasks[i];
+
+                           if (task.status == 'completed') {
+                               completed.push(task);
+                           } else if (task.status == 'queued') {
+                               queued.push(task);                
+                           } else if (task.status == 'in-progress') {
+                               running.push(task);
+                           }
+                       }
+
+                       // update models
+                       self.tasks = tasks;                    
+                       self.completed = completed;
+                       self.queued = queued;
+                       self.running = running;
+                       self.loadingTasks = false;
+
+                       // logging
+                       var d = new Date();
+                       var t2 = d.getTime();
+                       var diff = (t2 - t1);
+                       $log.debug('finished updating status model', diff+' ms')
+                   });
+    }
+    // run update on startup
+    updateStatus();
+
+    // method for auto-updating models
+    // IMPROVEMENT: it would be great to a see a long-polling delta method here
+    this.autoUpdateStatus = function() {
+        console.log('updating status model every '+pollInterval+ ' ms...');
+        setInterval(updateStatus, pollInterval);
+    }
+
+    // run auto updater on load
+    this.autoUpdateStatus();
+
+
+    // used in 'Run Apps' pages
     $http.rpc('app', 'enumerate_apps')
          .then(function(apps) {
             self.apps = apps;
 
             var appDict = {}
             for (var i=0; i<apps.length; i++) {
-                //{label: apps[i].label, description: apps[i].description}
                 appDict[apps[i].id] = apps[i];
             }
 
             self.appDict = appDict;
 
-            self.appTable = getColumns(self.apps, 2);    
+            self.appTable = getColumns(self.apps, 2);
+            self.loadingApps = false;
         }).catch(function(e){
             console.log(e)
         })
 
-    /*       
-    var auth = {}
-    auth.token = authService.token;
-    var appService = new AppService("http://140.221.66.219:7124", auth)
-    var p = appService.enumerate_apps()
-    $.when(p).done(function(data){
-        console.log('app data', p)
-    }).fail(function(e) {
-        console.log('error', e)
-    })*.
-
-    // additional, hard-coded apps for now
-    // this.appList = [{name: 'Assemble', disabled: true},
-    //                {name: 'Annotate', id: 'Annotate-ContigSet'}];
-                    /*
-                    {name: 'Generate Initial Model', id: 'Build-a-Metabolic-Model'},
-                    {name: 'Gapfill Model', id: 'Gapfill-a-Metabolic-Model'},
-                    {name: 'Run FBA', id: 'Run-Flux-Balance-Analysis'},
-                    {name: 'Assemble Genome', id: 'Assemble-Genome-from-Fasta'},                    
-                    {name: 'Genome Import', id: 'Import-NCBI-Genome'},
-                    {name: 'Reconcile Giving New Model', id: 'Build-a-Metabolic-Model'},
-                    {name: 'Model Input', disabled: true},
-                    {name: 'Model Translation', disabled: true},
-                    {name: 'Comparative Genomes', disabled: true}];*/
-
-
-
-
-    // Load data for apps and app builder
-    /*
-    $http.get('data/services.json').success(function(data) {
-        // reorganize data since it doesn't make any sense.  
-        // why is there no order to the groups of methods?
-        var methods = [];
-        var method_dict = {}
-        for (var key in data) {
-            var group_name = key
-            var method = {name: group_name, methods: []}
-
-            var nar_meths = data[group_name].methods;
-
-            for (var i in nar_meths) {
-                var meth = nar_meths[i];
-
-                // use title with hypens as method id for now
-                var id = meth.title.replace(/ /g, '-'); 
-
-                var obj = {title: meth.title,
-                           description: meth.description,
-                           input: meth.properties.widgets.input,
-                           output: meth.properties.widgets.output,
-                           params: sanitize(meth.properties.parameters, 'param'),
-                           returns: sanitize(meth.returns, 'output')};
-
-                // use ui_name with hypens as field ids for now
-                for (var j in obj.params) {
-                    obj.params[j].id = obj.params[j].ui_name.replace(/ /g, '-');
-                }
-
-
-                method_dict[id] = obj;
-
-                var meta = {title: meth.title,
-                            description: meth.description}
-                method.methods.push(meta);                
-            }
-
-            methods.push(method);
-        }
-
-        // update models, two-way-binding ftw.
-        //self.methods = methods;
-        //self.method_dict = method_dict;
-
-        // append some descriptions to choosen apps for now
-        for (var i=0; i<self.appList.length; i++) {
-            var id = self.appList[i].id;
-            if (id) {
-                self.appList[i].description = self.method_dict[id].description;
-            }
-        }
-    });*/
-
-
-    // change param0, param1, etc... to a list.  not sure why.
-    function sanitize(properties, key_prefix) {
-        var props = [];
-
-        for (var i=0; i<Object.keys(properties).length; i++) {
-            var key = key_prefix+String(i);
-            props.push(properties[key]);
-        }
-        return props;
-    }
 
     // takes array and divides it into columns of arbitrary 'size'
     function getColumns(list, size) {
-        var col_length = Math.ceil(list.length / size)
+        var col_length = Math.ceil(list.length / size);
 
         var cols = [];
         for (var i=0; i<size; i++) {
@@ -198,7 +168,6 @@ angular.module('appTasker')
     }
 
     // initial fetch of user's writable workspace list
-
     this.getWS = $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
         .then(function(workspaces) {
         var workspaces = workspaces.sort(compare)
@@ -245,7 +214,7 @@ angular.module('appTasker')
     });
 
     
-    // method to update ws object list
+    // method to update ws object list, called on change
     this.updateWSObjs = function(new_ws) {
         var p = $http.rpc('ws', 'list_objects', {workspaces: [new_ws]})
         .then(function(ws_objects) {

@@ -8,7 +8,7 @@
 */
 
 angular.module('appTasker')
-.controller('Analysis', 
+.controller('MainCtrl', 
 ['$scope', '$state', 'appUI', 'authService', '$window',
 function($scope, $state, appUI, authService, $window) {
 
@@ -34,77 +34,18 @@ function($scope, $state, appUI, authService, $window) {
               });
     }
 
+
 }])
 
 .controller('Upload', 
-    ['$scope', '$http', '$rootScope', 'config',
-    function($scope, $http, $rootScope, config) {
+    ['$scope', '$http', 'shock', 'uiTools',
+    function($scope, $http, shock, uiTools) {
 
-    $scope.shockURL = config.services.shock_url;
-    console.log($scope.shockURL)
-    var url = $scope.shockURL+'/node';
-    var auth = {Authorization: 'OAuth ' + $rootScope.token};
-    var config = {headers:  auth }
+    $scope.shock = shock;
+    $scope.relativeTime = uiTools.relativeTimeShock;
+    $scope.readableSize = uiTools.readableSize;    
 
-    // use angular http
-    $scope.uploadFile = function(files) {
 
-        $scope.$apply( function() {
-            $scope.uploadingCount = 1;
-            $scope.uploadComplete = false;
-        })
-
-        var form = new FormData($('#upload-form')[0]);
-        $.ajax({
-            url: url,
-            type: 'POST',
-            xhr: function() { 
-                var myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload){ 
-                    myXhr.upload.addEventListener('progress', updateProgress, false);
-                }
-                return myXhr;
-            },            
-            headers: auth,
-            success: function(data) {
-                console.log('upload success', data)
-                $scope.$apply(function() {
-                    $scope.uploadingCount = 0;
-                    $scope.uploadProgress = 0;
-                    $scope.uploadComplete = true;
-                    $scope.getUploads(); 
-                })
-            },
-            error: function(e){
-                console.log('failed upload', e)
-            },
-            data: form,
-            contentType: false,
-            processData: false
-        });
-
-        function updateProgress (oEvent) {
-            if (oEvent.lengthComputable) {
-                var percent = oEvent.loaded / files[0].size;
-                $scope.$apply(function() {
-                    $scope.uploadProgress = Math.floor(percent*100);
-                })
-            }
-        }
-    }
-
-    $scope.getUploads = function() {
-        $http.get(url+'?querynode&owner='+$rootScope.user+'&limit=10000', config)
-            .success(function(data) {
-                $scope.uploads = data;
-                console.log('uploaded data', data)
-            }).error(function(e){
-                console.log('fail', e)
-            })
-    }
-
-    // get upload list on load
-    $scope.getUploads();
 }])
 
 .controller('AppCell', 

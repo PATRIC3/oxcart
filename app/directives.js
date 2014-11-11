@@ -35,9 +35,6 @@ angular.module('directives', [])
             }
 
             scope.runCell = function(index, app) {
-
-                console.log('fields', scope.fields)
-                console.log(app)
                 appUI.startApp(app.id, scope.fields);
             }
 
@@ -62,18 +59,15 @@ angular.module('directives', [])
     }
 })
 
-.directive('animateOnChange', function($animate) {
-  return {
-      link: function(scope, elem, attr) {
-          scope.$watch(attr.animateOnChange, function(nv,ov) {
-            if (nv!=ov) {
-              var c = nv > ov ? 'change-up' : 'change';
-              elem.addClass(c).removeClass(c, {duration: 1000})
-            }
-          });    
+.directive('tooltip', function() {
+    return {
+        link: function(scope, element, attr) { 
+            var title = attr.tooltip;
+
+            $(element).tooltip({title: title});
 
         }
-   };
+    }
 })
 
 .directive('sidebarCollapse', function() {

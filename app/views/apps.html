@@ -1,6 +1,6 @@
 
 <div ui-view>
-    <div class="row page-title">
+    <div class="row">
         <div class="col-md-3">
             <div class="h3">Apps</div>
         </div>
@@ -14,27 +14,8 @@
     <hr class="skinny"></hr>
 
     <div class="row">
-        <div ng-if="!appQuery">
-            <div class="col-md-6 app-list" ng-repeat="col in appUI.appTable">                    
-                <div ng-repeat="app in col">
-                    <div ng-if="app.disabled">
-                        <span class="text-muted">
-                            <h4 class="media-heading">{{app.label}}</h4>
-                            {{appUI.appDict[app.id].description}}
-                        </span>
-                    </div>
-                    <div ng-if="!app.disabled">
-                        <a ui-sref="app.id({id: app.id})">
-                            <h4 class="media-heading">{{app.label}}</h4>
-                            {{appUI.appDict[app.id].description}}
-                        </a> 
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div ng-if="appQuery" class="col-md-12 app-list" >
-            <div ng-repeat="app in appUI.appList | filter : appQuery">
+        <div  ng-if="!appQuery" class="col-md-6 app-list" ng-repeat="col in appUI.appTable">
+            <div ng-repeat="app in col">
                 <div ng-if="app.disabled">
                     <span class="text-muted">
                         <h4 class="media-heading">{{app.label}}</h4>
@@ -50,6 +31,27 @@
             </div>
         </div>
 
+
+        <div ng-if="appQuery" class="col-md-12 app-list" ng-repeat="app in appUI.apps | filter : appQuery" >
+                <div ng-if="app.disabled">
+                    <span class="text-muted">
+                        <h4 class="media-heading">{{app.label}}</h4>
+                        {{appUI.appDict[app.id].description}}
+                    </span>
+                </div>
+                <div ng-if="!app.disabled">
+                    <a ui-sref="app.id({id: app.id})">
+                        <h4 class="media-heading">{{app.label}}</h4>
+                        {{appUI.appDict[app.id].description}}
+                    </a> 
+                </div>
+        </div>
+
+        <div ng-if="!appUI.loadingApps" ng-show="(appUI.apps | filter: appQuery).length == 0" class="col-md-12">
+            <b class="text-muted">No apps found</b>
+        </div>        
+
+        <md-progress-circular ng-if="appUI.loadingApps" mode="indeterminate" diameter="40"></md-progress-circular>
 
     </div>
 </div>

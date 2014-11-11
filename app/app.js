@@ -3,8 +3,10 @@
 angular.module('appTasker', 
 ['ui.router', 'seed-rpc', 'kbase-auth', 'directives', 'dd-filter', 'ngMaterial'])
 .config(['$locationProvider', '$stateProvider', 
-         '$httpProvider', '$urlRouterProvider', 
-    function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
+         '$httpProvider', '$urlRouterProvider', '$logProvider',
+    function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider, $logProvider) {
+
+    $logProvider.debugEnabled(false);
 
     $locationProvider.html5Mode(false);
 
