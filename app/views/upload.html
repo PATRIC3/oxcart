@@ -3,14 +3,14 @@
     <div class="col-md-5">
         <div class="dashboard-info blue">
             <i class="fa fa-cloud-upload fa-5x pull-left"></i>
-            <div class="h1">{{shock.uploadingCount ? shock.uploadingCount : 0}}</div>
+            <div class="h1">{{uploadingCount ? uploadingCount : 0}}</div>
             <div class="h4">Uploading</div>
         </div>
     </div>
     <div class="col-md-5 col-md-offset-1">
         <div class="dashboard-info green">
             <i class="fa fa-check-square fa-5x pull-left"></i>
-            <div class="h1">{{shock.uploadCount}}</div>
+            <div class="h1">{{uploadCount}}</div>
             <span class="h4">Completed</span>
         </div>
     </div>
@@ -19,17 +19,17 @@
 <br>
 
 <form id="upload-form" enctype="multipart/form-data">
-    <input name="upload" type="file" onchange="angular.element(this).shock.uploadFile(inputFile)"/>
+    <input name="upload" type="file" onchange="angular.element(this).scope().uploadFile(this.files)">
 </form>
 
-<div ng-if="shock.uploadProgress" class="progress">
-  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{shock.uploadProgress}}%;">
+<div ng-if="uploadProgress" class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{uploadProgress}}%;">
     <span>{{shock.uploadProgress}}% Complete</span>
   </div>
 </div>
 
-<div ng-if="shock.uploadComplete">
-    Upload complete.  Now I will run an AWE job to add your data to <b><i>{{selectedWS}}</i></b>... or something like that. 
+<div ng-if="uploadComplete">
+    Upload complete.  Now I will run an AWE job to add your data to <b><i>{{selectedWS}}</i></b>... or something like that.
 </div>
 
 <br>
@@ -39,7 +39,7 @@
 
 
 <div class="row">
-    <div ng-if="!shock.loading" class="col-md-12">
+    <div ng-if="!loading" class="col-md-12">
         <h3>Completed</h3>
         <table class="table">
             <tr>
@@ -47,9 +47,9 @@
                 <th>Size</th>
                 <th>Created</th>                                
             </tr>
-            <tr ng-repeat="info in shock.uploads.data">
+            <tr ng-repeat="info in uploads.data">
                 <td>
-                    <a href="{{shock.nodeURL}}/{{info.id}}?download" download>
+                    <a href="{{nodeURL}}/{{info.id}}?download" download>
                         {{info.file.name}}
                     </a>
                 </td>
@@ -58,5 +58,5 @@
             </tr>
         </table>
     </div>
-    <md-progress-circular ng-if="shock.loading" mode="indeterminate" diameter="40"></md-progress-circular>
+    <md-progress-circular ng-if="loading" mode="indeterminate" diameter="40"></md-progress-circular>
 </div>

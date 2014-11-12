@@ -19,14 +19,13 @@ angular.module('appTasker')
     var config = {headers:  auth }
 
     // use angular http
-    this.uploadFile = function(files) {
+    this.uploadFile = function(form) {
 
         //$scope.$apply( function() {
             self.uploadingCount = 1;
             self.uploadComplete = false;
         //})
 
-        var form = new FormData($('#upload-form')[0]);
         $.ajax({
             url: nodeURL,
             type: 'POST',

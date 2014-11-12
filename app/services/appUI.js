@@ -64,6 +64,7 @@ angular.module('appTasker')
     this.getStatus = function() {
         return $http.rpc('app', 'enumerate_tasks')
                      .then(function(tasks) {
+                        console.log('tasks', tasks)
                         var ids = []
                         for (var i in tasks) {
                             ids.push(tasks[i].id)
@@ -78,9 +79,13 @@ angular.module('appTasker')
 
                                 //self.tasks = tasks;
                                 return tasks
-                            })
+                            }).catch(function(e){
+
+                     })
 
                         return p;
+                     }).catch(function(e){
+                        $log.error(e)
                      })
     }
 
@@ -124,7 +129,7 @@ angular.module('appTasker')
                    });
     }
     // run update on startup
-    updateStatus();
+    //updateStatus();
 
     // method for auto-updating models
     // IMPROVEMENT: it would be great to a see a long-polling delta method here
@@ -134,12 +139,13 @@ angular.module('appTasker')
     }
 
     // run auto updater on load
-    this.autoUpdateStatus();
+    //this.autoUpdateStatus();
 
 
     // used in 'Run Apps' pages
     $http.rpc('app', 'enumerate_apps')
          .then(function(apps) {
+
             self.apps = apps;
 
             var appDict = {}
