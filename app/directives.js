@@ -17,6 +17,7 @@
  *
  *
 */
+var INTEGER_REGEXP = /^\-?\d+$/;
 
 angular.module('directives', [])
 .directive('appCell', ['appUI', function(appUI) {
@@ -24,7 +25,7 @@ angular.module('directives', [])
         link: function(scope, ele, attrs) {
 
             // dictionary for fields in form.  Here, keys are the ui_name 
-            scope.fields = {};  
+            //scope.fields = {};  
 
             scope.flip = function($event) {
                 $($event.target).parents('.panel').find('.narrative-cell').toggleClass('flipped')
@@ -33,11 +34,6 @@ angular.module('directives', [])
             scope.minimize = function($event) {
                 $($event.target).parents('.panel').find('.panel-body').slideToggle('fast');
             }
-
-            scope.runCell = function(index, app) {
-                appUI.startApp(app.id, scope.fields);
-            }
-
 
         }
     }
@@ -70,6 +66,30 @@ angular.module('directives', [])
     }
 })
 
+.directive('validate', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+
+        var type = attrs.validate;
+
+        ctrl.$validators.validate = function(modelValue, viewValue) {
+            scope.errorMsg = false;
+            if (type == 'int') {
+                if (ctrl.$isEmpty(modelValue)) return true;
+                if (INTEGER_REGEXP.test(viewValue)) return true;
+
+                // else fail
+                scope.errorMsg = "this field must be an integer";
+                return false;
+            }
+
+        };
+    }
+  };
+})
+
+// todo: use ngMaterial instead
 .directive('sidebarCollapse', function() {
     return {
         link: function(scope, element, attr) {

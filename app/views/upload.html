@@ -49,7 +49,7 @@
             </tr>
             <tr ng-repeat="info in uploads.data">
                 <td>
-                    <a href="{{nodeURL}}/{{info.id}}?download" download>
+                    <a download ng-click="download(node.id)">
                         {{info.file.name}}
                     </a>
                 </td>

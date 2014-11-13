@@ -23,13 +23,13 @@
                     <i class="fa fa-tasks"></i> Task Status
                     <span id="task-count" class="badge pull-right">
                         <span id="task-count-running" class="queued" tooltip="queued tasks">
-                            {{appUI.queued.length}} 
+                            {{appUI.status.queued}} 
                         </span>
                         <span id="task-count-queued" class="running" tooltip="running tasks">
-                            {{appUI.running.length}} 
+                            {{appUI.status.inprogress}} 
                         </span>
-                        <span id="task-count-completed" class="completed" tooltip="completed tasked">
-                            {{appUI.completed.length}} 
+                        <span id="task-count-completed" class="completed" tooltip="completed tasks">
+                            {{appUI.status.completed}}
                         </span> 
                     </span>               
                 </a>

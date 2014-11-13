@@ -1,23 +1,22 @@
 <div class="row">
-
     <div class="col-md-4">
         <div class="text-muted task-status-queued ts">
             <i class="fa fa-tasks fa-5x pull-left"></i>
-            <div class="h1">{{appUI.queued.length}}</div>
+            <div class="h1">{{appUI.status.queued}}</div>
             <div class="h4">Queued</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="text-muted task-status-running ts">
             <i class="fa fa-play-circle  fa-5x pull-left"></i>
-            <div class="h1">{{appUI.running.length}}</div>
+            <div class="h1">{{appUI.status.inprogress}}</div>
             <div class="h4">Running</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="text-muted task-status-completed ts">
             <i class="fa fa-check-square fa-5x pull-left"></i>
-            <div class="h1">{{appUI.completed.length}}</div>
+            <div class="h1">{{appUI.status.completed}}</div>
             <div class="h4">Completed</div>
         </div>
     </div>   
@@ -32,11 +31,17 @@
                     <th><b>App</b></th>
                     <th><b>ID</b></th>
                     <th><b>Status</b></th>
+                    <th><b>Submit Time</b></th>                    
+                    <th><b>Start Time</b></th>
+                    <th><b>End Time</b></th>
                 <tr>
-                <tr ng-repeat="task in appUI.completed">
+                <tr ng-repeat="task in appUI.tasks.all">
                     <td>{{task.app}}</td>
                     <td>{{task.id}}</td>
                     <td>{{task.status}}</td>
+                    <td>{{relativeTime(task.submit_time)}}</td>                    
+                    <td>{{relativeTime(task.start_time)}}</td>
+                    <td>{{task.completed_time ? relativeTime(task.completed_time) : "running..." }}</td>
                 </tr>
             </table>
 
@@ -46,7 +51,7 @@
 
 <md-progress-circular ng-if="appUI.loading" mode="indeterminate" diameter="40"></md-progress-circular>
 
-<div ng-if="!appUI.loading && appUI.tasks.length ==0">
+<div ng-if="!appUI.loading && appUI.tasks.length == 0">
     You have no tasks.  You may want to run tasks (analysis) via the 
     <a ui-sref="app.apps">Apps</a> tab.
 </div>

@@ -37,6 +37,11 @@ hr.skinny {
     padding: 10px 10px 10px 15px;
 }
 
+.sidebar-nav .nav > li > a.active{
+    padding-left: 11px;
+    border-left: 4px solid #40D4E7;
+}
+
 .sidebar-collapse {
     border-right: 1px solid #e7e7e7;
 }

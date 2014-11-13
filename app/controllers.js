@@ -34,6 +34,7 @@ function($scope, $state, appUI, authService, $window, config) {
               });
     }
 
+    /*
     var auth = {token: authService.token}
     var appService = new AppService(config.services.app_url, auth)
 
@@ -41,7 +42,7 @@ function($scope, $state, appUI, authService, $window, config) {
         console.log('app', data)
     }).fail(function(e){
         console.log('failed', e)
-    })
+    })*/
 
 }])
 
@@ -105,8 +106,7 @@ function($scope, $state, appUI, authService, $window, config) {
             .success(function(data) {
                 $scope.uploads = data;
                 $scope.uploadCount = data.total_count;
-                $scope.loading = false;             
-                console.log('uploaded data', data)
+                $scope.loading = false;
             }).error(function(e){
                 console.log('fail', e)
             })
@@ -118,10 +118,17 @@ function($scope, $state, appUI, authService, $window, config) {
 
     $scope.nodeURL = nodeURL;
     $scope.relativeTime = uiTools.relativeTimeShock;
-    $scope.readableSize = uiTools.readableSize;    
-
-
+    $scope.readableSize = uiTools.readableSize;
 }])
+
+// controller for Task Status view
+.controller('TaskStatus', 
+    ['$scope', '$stateParams', 'uiTools',
+    function($scope, $stateParams, uiTools) {
+        $scope.relativeTime = uiTools.relativeTimeShock;
+        $scope.readableSize = uiTools.readableSize;
+}])
+
 
 .controller('AppCell', 
     ['$scope', '$stateParams', 'appUI',
@@ -129,11 +136,22 @@ function($scope, $state, appUI, authService, $window, config) {
     // service for appUI state
     $scope.appUI = appUI;
 
+    // set 'app' as app (via URL)
     $scope.app = appUI.appDict[$stateParams.id];
 
-    //if ($stateParams.id) {
-    //    appUI.setApp($stateParams.id);
-    //}
+
+    $scope.fields = {};
+
+    $scope.runCell = function(index, app) {
+        console.log('heres the app', app)
+
+        for (var i in app.parameters) {
+            var param = app.parameters[i];
+
+        }
+        appUI.startApp(app.id, $scope.fields);
+    }
+
 
     $scope.getDefault = function(type) {
         return appUI.wsObjsByType[type][0].name

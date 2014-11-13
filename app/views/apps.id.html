@@ -12,75 +12,83 @@
             <div class="clearfix"></div>
         </div>
 
-        <div class="narrative-cell-container">
-            <div class="narrative-cell">
-                <div class="panel-body">
 
-                    <figure class="front">
-                        <form class="form-horizontal" role="form">
+        <div class="panel-body">
+            <figure class="front">
+                {{app.description}}<br><br>
+                <form name="appForm" class="form-horizontal" role="form">
 
-                          <div class="form-group" ng-repeat="field in app.parameters">
-                            <label class="col-sm-3 control-label">{{field.label}}</label>
+                  <div class="form-group" ng-repeat="field in app.parameters">
+                    <label class="col-sm-3 control-label">{{field.label}}</label>
 
-                            <div class="col-sm-9">
-                                <input ng-if="field.type != 'wstype'" 
-                                       id="input-{{field.id}}"
-                                       ng-model="fields[field.id]" 
-                                       type="text" class="form-control" 
-                                       placeholder="">
+                    <div class="col-sm-9">
+                        <input ng-if="field.type == 'string'"
+                               id="input-{{field.id}}"
+                               ng-model="fields[field.id]" 
+                               name="{{field.id}}"                               
+                               type="text" 
+                               class="form-control" 
+                               placeholder="{{field.default}}">
 
-                                <div ng-if="field.type == 'wstype'"
-                                     dd-filter
-                                     dd-id="input-{{field.id}}" 
-                                     dd-title="Workspace Object"
-                                     dd-placeholder="Filter objects"
-                                     dd-default="{{getDefault(field.wstype)}}"
-                                     dd-data="appUI.wsObjsByType[field.wstype]">
-                                </div>
-                            </div>
-                          </div>
+                        <input ng-if="field.type == 'int'"
+                               id="input-{{field.id}}"
+                               ng-model="fields[field.id]" 
+                               name="{{field.id}}"
+                               type="number" 
+                               class="form-control" 
+                               placeholder="{{field.default}}">
 
-                          <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                              <button ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">Run</button>
-                            </div>
-                          </div>
-                        </form>
-                    </figure>
-                    
-                    <!-- back side of cell / documentation -->
-                    <figure class="back">
-                       {{app.description}}
-                    </figure>
+                        <input ng-if="field.type == 'wsid'"
+                               id="input-{{field.id}}"
+                               ng-model="fields[field.id]" 
+                               name="{{field.id}}"
+                               type="text" 
+                               class="form-control" 
+                               placeholder="{{field.default}}">
 
-                </div> 
-            </div> 
+                        <div ng-if="field.type == 'wstype'"
+                             dd-filter
+                             dd-id="input-{{field.id}}" 
+                             dd-title="Workspace Object"
+                             dd-placeholder="Filter objects"
+                             dd-default="{{getDefault(field.wstype)}}"
+                             dd-data="appUI.wsObjsByType[field.wstype]">
+                        </div>
+
+                        <select ng-if="field.type == 'enum'" class="form-control">
+                            <option ng-repeat="x in field.enum">{{x}}</option>
+                        </select>
+
+
+                        <span validate="{{field.type}}" 
+                              ng-model="fields[field.id]"
+                              ng-show="errorMsg"
+                              class="text-danger">{{errorMsg}}</span>                        
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                      <button ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">Run</button>
+                    </div>
+                  </div>
+                </form>
+            </figure>
+            
+            <!-- back side of cell / documentation -->
+            <figure class="back">
+            </figure>
         </div>
-    </div> <!-- end cell -->
+    </div> <!-- end panel -->
 
 </div>
 
-<div class="lcol-md-3">
-    <ul class="list-unstyled">
+<div class="col-md-3">
+    <ul class="app-list list-unstyled">
         <li ng-repeat="app in appUI.apps">
             <a ui-sref="app.id({id: app.id})">{{app.label}}</a>
         </li>
     </ul>
-    <!--
-    <ul class="list-group list-unstyled">
-        <li><a class="text-muted" >Assemble</a></li>
-        <li><a ui-sref="app.id({id: 'Annotate-ContigSet'})">Annotate</a></li>
-        <li><a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">Generate Initial Model</a></li>
-        <li><a ui-sref="app.id({id: 'Gapfill-a-Metabolic-Model'})">Gapfill Model</a></li>
-        <li><a ui-sref="app.id({id: 'Run-Flux-Balance-Analysis'})">Run FBA</a></li>
-        <li><a ui-sref="app.id({id: 'Assemble-Genome-from-Fasta'})">Assemble Genome</a></li>
-        <li><a ui-sref="app.id({id: 'Import-NCBI-Genome'})">Genome Import</a></li>
-        <li><a ui-sref="app.id({id: 'Build-a-Metabolic-Model'})">Reconcile Giving New Model</a></li>
-        <li><a class="text-muted" >Model Input</a></li>
-        <li><a class="text-muted" >Model Translation</a></li>
-        <li><a class="text-muted" >Comparative Genomes</a></li>
-    </ul>
-    -->
 </div>
 
 

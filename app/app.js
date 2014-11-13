@@ -24,10 +24,11 @@ angular.module('appTasker',
             url: "/upload",
             templateUrl: 'app/views/upload.html',
             controller: 'Upload',
-            authenticate: true})   
+            authenticate: true})  
         .state('app.tasks', {
             url: "/tasks",
             templateUrl: 'app/views/tasks.html',
+            controller: 'TaskStatus',
             authenticate: true})
         .state('app.apps', {
             url: "/apps/",
@@ -38,6 +39,9 @@ angular.module('appTasker',
             url: "/apps/:id",
             templateUrl: 'app/views/apps.id.html',
             resolve: {
+              'GetApps': ['appUI', function(appUI){
+                return appUI.getApps;
+              }],
               'GetObjs': ['appUI', function(appUI){
                 return appUI.getObjs;
               }]

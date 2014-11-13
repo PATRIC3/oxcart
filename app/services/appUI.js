@@ -10,13 +10,19 @@ angular.module('appTasker')
 .service('appUI', ['$http', '$rootScope', '$log', 'uiTools', '$q', 'authService', 
     function($http, $rootScope, $log, uiTools, $q, authService) {
 
+    // if not logged in, don't bother using this
+    if (!authService.user) return;
+
     var self = this;
+
+    // how often to update tasks/status (in ms)
+    var polling = true;
+    var pollTasksMS = 5000;
+    var pollStatusMS = 4000;    
+    var taskDispCount = 50; 
 
     // default workspace; used at the start of the application
     var default_ws = authService.user+":home";
-
-    // how often to update tasks/status (in ms)
-    var pollInterval = 5000;
 
     // models for methods; two for faster retrieval and updating of templates
     this.loadingApps = true;
@@ -26,17 +32,19 @@ angular.module('appTasker')
     // model for cells displayed (not in use)
     this.cells = [];
 
-	// model for ws objects in 'data' view
+    // model for ws objects in 'data' view
     this.current_ws = default_ws;
-	this.ws_objects;
+    this.ws_objects;
     this.wsObjsByType;
 
-	// model for tasks; appears in 'running tasks'
-    this.loadingTasks = true;  // models are loading at runtime
-	this.tasks = [];
-    this.queued = [];
-    this.running = [];
-    this.completed = [];    
+    // model for tasks; appears in 'running tasks'
+    this.loadingTasks = true;       // models are loading at runtime
+    this.tasks = {all: [],
+                  queued: [], 
+                  in_progress: [], 
+                  completed: []};
+    this.status = {};
+
 
     // add cell to app builder model (not in use)
     this.addCell = function(name) {
@@ -46,105 +54,107 @@ angular.module('appTasker')
 
     // remove cell from app builder model (not in use)
     this.removeCell = function(index) {
-		this.cells.splice(index, 1);
+        this.cells.splice(index, 1);
     }
 
     // a task is of the form {name: cell.title, fields: scope.fields}
-    this.startApp = function(id, params) {
-        var params = [id, params, 'my_workspace'];
+    this.startApp = function(id, form_params) {
+        // make the app appear more responsive
+        self.status.queued = self.status.queued + 1;
+
+
+        var params = [id, form_params, 'my_workspace'];
         $http.rpc('app', 'start_app', params)
              .then(function(resp) {
                 console.log('response', resp)
+                self.updateStatus();
              })
-
-    	self.queued.push({id: id, app: params.app});
     }
 
-    // promise for lists of tasks with their status and other info
-    this.getStatus = function() {
-        return $http.rpc('app', 'enumerate_tasks')
-                     .then(function(tasks) {
-                        console.log('tasks', tasks)
-                        var ids = []
+    // update status (queued, inprogress, completed) counts
+    this.updateStatus = function() {
+        $http.rpc('app', 'query_task_summary')
+            .then(function(res) {
+                self.status = {queued: 'queued' in res ? res.queued : 0,
+                               inprogress: 'in-progress' in res ? res['in-progress'] : 0,
+                               completed: 'completed' in res ? res.completed : 0};
+                $log.debug('status', res);
+            }).catch(function(e){
+                $log.error(e)
+            })
+    }
+
+    // update model, grouped by status, return promise
+    this.updateTasks = function() {
+        var d = new Date();
+        var t1 = d.getTime();
+        $log.debug('updating tasks model');        
+
+        return $http.rpc('app', 'enumerate_tasks', [0, taskDispCount])
+                    .then(function(tasks) {
+                        $log.debug('tasks', tasks)
+                        console.log(tasks)
+
+                        var stash = {all: [],
+                                     queued: [], 
+                                     in_progress: [], 
+                                     completed: []};
+
                         for (var i in tasks) {
-                            ids.push(tasks[i].id)
+                            var status = tasks[i].status;
+
+                            if (status == 'completed') {
+                                stash.completed.push( tasks[i] );
+                            } else if (status == 'in-progress')  {
+                                stash.in_progress.push( tasks[i] );
+                            } else if (status == 'queued') {
+                                stash.queued.push( tasks[i] );
+                            }
                         }
 
-                        var p = $http.rpc('app', 'query_task_status', [ids])
-                            .then(function(status_list) {
-                                // join status to task list
-                                for (var i in tasks) {
-                                    tasks[i].status = status_list[tasks[i].id];
-                                }
+                        stash.all = tasks;
 
-                                //self.tasks = tasks;
-                                return tasks
-                            }).catch(function(e){
+                        // update model
+                        self.tasks = stash;
+                        self.loadingTasks = false;
 
-                     })
+                        // performance logging
+                        var d = new Date();
+                        var t2 = d.getTime();
+                        var diff = (t2 - t1);
+                        $log.debug('finished updating status model', diff+' ms')
 
-                        return p;
                      }).catch(function(e){
                         $log.error(e)
                      })
     }
 
-    // method for parsing task list and updating models
-    function updateStatus() {
-        var d = new Date();
-        var t1 = d.getTime();
-
-        $log.debug('updating status model');
-
-        var completed = [],
-            running = [],
-            queued = [];
-
-        return self.getStatus()
-                   .then(function(tasks) {
-                       for (var i in tasks) {
-                           var task = tasks[i];
-
-                           if (task.status == 'completed') {
-                               completed.push(task);
-                           } else if (task.status == 'queued') {
-                               queued.push(task);                
-                           } else if (task.status == 'in-progress') {
-                               running.push(task);
-                           }
-                       }
-
-                       // update models
-                       self.tasks = tasks;                    
-                       self.completed = completed;
-                       self.queued = queued;
-                       self.running = running;
-                       self.loadingTasks = false;
-
-                       // logging
-                       var d = new Date();
-                       var t2 = d.getTime();
-                       var diff = (t2 - t1);
-                       $log.debug('finished updating status model', diff+' ms')
-                   });
-    }
-    // run update on startup
-    //updateStatus();
 
     // method for auto-updating models
     // IMPROVEMENT: it would be great to a see a long-polling delta method here
-    this.autoUpdateStatus = function() {
-        console.log('updating status model every '+pollInterval+ ' ms...');
-        setInterval(updateStatus, pollInterval);
+    this.autoUpdateTasks = function() {
+        console.log('updating tasks model every '+pollTasksMS+ ' ms...');
+        setInterval(self.updateTasks, pollTasksMS);
     }
 
-    // run auto updater on load
-    //this.autoUpdateStatus();
+    this.autoUpdateStatus = function() {
+        console.log('updating status model every '+pollStatusMS+ ' ms...');
+        setInterval(self.updateStatus, pollStatusMS);
+    }    
 
+    // run auto updater on load
+    this.updateTasks();    
+    this.updateStatus();    
+
+    if (polling) {
+        this.autoUpdateTasks();
+        this.autoUpdateStatus();    
+    }
 
     // used in 'Run Apps' pages
-    $http.rpc('app', 'enumerate_apps')
+    this.getApps = $http.rpc('app', 'enumerate_apps')
          .then(function(apps) {
+            console.log('apps', apps)
 
             self.apps = apps;
 
