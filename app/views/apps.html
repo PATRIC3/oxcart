@@ -13,8 +13,8 @@
     </div>
     <hr class="skinny"></hr>
 
-    <div class="row">
-        <div  ng-if="!appQuery" class="col-md-6 app-list" ng-repeat="col in appUI.appTable">
+    <div class="row app-list">
+        <div  ng-if="!appQuery" class="col-md-6" ng-repeat="col in appUI.appTable">
             <div ng-repeat="app in col">
                 <div ng-if="app.disabled">
                     <span class="text-muted">
@@ -31,20 +31,19 @@
             </div>
         </div>
 
-
-        <div ng-if="appQuery" class="col-md-12 app-list" ng-repeat="app in appUI.apps | filter : appQuery" >
-                <div ng-if="app.disabled">
-                    <span class="text-muted">
-                        <h4 class="media-heading">{{app.label}}</h4>
-                        {{appUI.appDict[app.id].description}}
-                    </span>
-                </div>
-                <div ng-if="!app.disabled">
-                    <a ui-sref="app.id({id: app.id})">
-                        <h4 class="media-heading">{{app.label}}</h4>
-                        {{appUI.appDict[app.id].description}}
-                    </a> 
-                </div>
+        <div ng-if="appQuery" class="col-md-12" ng-repeat="app in appUI.apps | filter : appQuery" >
+            <div ng-if="app.disabled">
+                <span class="text-muted">
+                    <h4 class="media-heading">{{app.label}}</h4>
+                    {{appUI.appDict[app.id].description}}
+                </span>
+            </div>
+            <div ng-if="!app.disabled">
+                <a ui-sref="app.id({id: app.id})">
+                    <h4 class="media-heading">{{app.label}}</h4>
+                    {{appUI.appDict[app.id].description}}
+                </a> 
+            </div>
         </div>
 
         <div ng-if="!appUI.loadingApps" ng-show="(appUI.apps | filter: appQuery).length == 0" class="col-md-12">

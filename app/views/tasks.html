@@ -26,10 +26,18 @@
 <div ng-if="!appUI.loading">
     <div class="row">
         <div class="col-md-12"> 
+            <!--
+            <div class="app-filter btn-group">
+                <label class="btn btn-primary active" ng-model="checkModel.all" btn-checkbox>All</label>                
+                <label class="btn btn-primary" ng-model="checkModel.queued" btn-checkbox>Queued</label>
+                <label class="btn btn-primary" ng-model="checkModel.running" btn-checkbox>Running</label>
+                <label class="btn btn-primary" ng-model="checkModel.completed" btn-checkbox>Complete</label>
+            </div>-->
+
             <table class="table task-table">
                 <tr>
                     <th><b>App</b></th>
-                    <th><b>ID</b></th>
+                    <th><b>ID (Result)</b></th>
                     <th><b>Status</b></th>
                     <th><b>Submit Time</b></th>                    
                     <th><b>Start Time</b></th>
@@ -37,11 +45,23 @@
                 <tr>
                 <tr ng-repeat="task in appUI.tasks.all">
                     <td>{{task.app}}</td>
-                    <td>{{task.id}}</td>
+                    <td><span tooltip="{{task.id}}">{{shortID(task.id)}}</span></td>
                     <td>{{task.status}}</td>
-                    <td>{{relativeTime(task.submit_time)}}</td>                    
-                    <td>{{relativeTime(task.start_time)}}</td>
-                    <td>{{task.completed_time ? relativeTime(task.completed_time) : "running..." }}</td>
+                    <td>
+                        <span tooltip="{{task.submit_time}}">
+                            {{relativeTime(task.submit_time)}}
+                        </span>
+                    </td>
+                    <td>
+                        <span tooltip="{{task.start_time}}">
+                            {{task.start_time == '0001-01-01T00:00:00Z' ? 'running...' : relativeTime(task.start_time)}}
+                        </span>
+                    </td>
+                    <td>
+                        <span tooltip="{{task.completed_time}}">
+                            {{task.completed_time == '0001-01-01T00:00:00Z' ? 'running...' : relativeTime(task.completed_time)}}
+                        </span>
+                    </td>
                 </tr>
             </table>
 

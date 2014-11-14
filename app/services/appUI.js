@@ -16,7 +16,7 @@ angular.module('appTasker')
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = true;
+    var polling = false;
     var pollTasksMS = 5000;
     var pollStatusMS = 4000;    
     var taskDispCount = 50; 

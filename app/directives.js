@@ -59,9 +59,7 @@ angular.module('directives', [])
     return {
         link: function(scope, element, attr) { 
             var title = attr.tooltip;
-
             $(element).tooltip({title: title});
-
         }
     }
 })

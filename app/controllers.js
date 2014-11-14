@@ -125,8 +125,16 @@ function($scope, $state, appUI, authService, $window, config) {
 .controller('TaskStatus', 
     ['$scope', '$stateParams', 'uiTools',
     function($scope, $stateParams, uiTools) {
+
+        $scope.shortID = function(id) {
+            return id.split('-')[0]+'...';
+        };
+
         $scope.relativeTime = uiTools.relativeTimeShock;
         $scope.readableSize = uiTools.readableSize;
+
+
+
 }])
 
 
