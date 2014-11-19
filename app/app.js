@@ -1,7 +1,8 @@
 
 
 angular.module('appTasker', 
-['ui.router', 'seed-rpc', 'kbase-auth', 'directives', 'dd-filter', 'ngMaterial'])
+['ui.router', 'seed-rpc', 'kbase-auth', 'directives', 'dd-filter', 'ngMaterial',
+ 'ng-context-menu', 'ui.grid', 'ui.grid.pagination', 'ui.grid.selection'])
 .config(['$locationProvider', '$stateProvider', 
          '$httpProvider', '$urlRouterProvider', '$logProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider, $logProvider) {
@@ -30,6 +31,16 @@ angular.module('appTasker',
             templateUrl: 'app/views/tasks.html',
             controller: 'TaskStatus',
             authenticate: true})
+        .state('app.ws', {
+            url: "/ws",
+            templateUrl: 'app/views/ws.html',
+            controller: 'WS',
+            authenticate: true})
+        .state('app.dir', {
+            url: "/ws{dir:.*}",
+            templateUrl: 'app/views/ws.dir.html',
+            controller: 'WS',
+            authenticate: true})                 
         .state('app.apps', {
             url: "/apps/",
             templateUrl: 'app/views/apps.html',

@@ -1,11 +1,18 @@
 
-<nav class="navbar-default sidebar" role="navigation">
+<nav class="sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
 
             <li>
                 <a ui-sref-active="active" ui-sref="app.upload">
                     <i class="fa fa-cloud-upload"></i> Upload
+                    <span class="text-muted pull-right"></span>
+                </a>
+            </li>
+
+            <li>
+                <a ui-sref-active="active" ui-sref="app.ws">
+                    <img src="img/file-cabinet-icon.svg" style="opacity: .4; margin-top: -2px;" width="18" height="18"> Workspaces
                     <span class="text-muted pull-right"></span>
                 </a>
             </li>
@@ -42,19 +49,25 @@
         <ul class="nav">
             <li>
                 <a ui-sref-active="active" ui-sref="app.upload">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fa fa-cloud-upload mute"></i>
                 </a>
             </li>
 
             <li>
+                <a ui-sref-active="active" ui-sref="app.ws">
+                    <i class="fa fa-folder mute"></i>
+                </a>
+            </li>            
+
+            <li>
                 <a ui-sref-active="active" ui-sref="app.apps">
-                    <i class="fa fa-bar-chart"></i>
+                    <i class="fa fa-bar-chart mute"></i>
                 </a>
             </li>
 
             <li>
                 <a ui-sref-active="active" ui-sref="app.tasks">
-                    <i class="fa fa-tasks"></i>
+                    <i class="fa fa-tasks mute"></i>
                     <span id="task-count" class="text-muted pull-right">{{appUI.tasks.length}}</span>
                 </a>
             </li>
@@ -65,31 +78,38 @@
 </nav>
 
 
-<div id="page-wrapper">
-    <div ui-view>
+<div ui-view>
+    <div id="page-wrapper">
         <div class="row">
-            <div class="col-md-12">
-                <h1>App Tasker <small>v. Alpha</small></h1>
-                <h4 class="text-muted">Prototype of how apps could be done.</h4>
+            <div class="col-md-10">
+                <h1>{{$root.ui_name}} <small>v. Alpha</small></h1>
+                <h4 class="text-muted">Prototype of how apps can be ran.</h4>
+                This web application is under major development and is pre-beta at this time.<br>
 
-                <h5>Version Alpha:</h5>
+                <br><br>
+                <h5>Known Issues:</h5>
                 <ul>
-                    <li>Just getting started</li>
-                </ul>
+                    <li>Can't delete folder (due to api)</li>
+                    <li>The API allows folders with empty string, which then becomes "undefined"(?), which then causes more issues</li>
+                    <li>Creating a folder also creates a folder in all parents</li>
 
-                <h5>To do:</h5>
-                <ul>
-                    <li>Need api for pagination</li>
-                    <li>Need api for counts</li>
                 </ul>
 
                 <h5>Notes:</h5>
                 <ul>
+                    <li>To submit a ticket for bugs or new features, please visit 
+                        <a href="https://github.com/brettin/oxcart/issues">here</a>.
                     <li><a href="https://github.com/brettin/oxcart/tree/master/tests">Test Harness</li> 
                 </ul>
+            </div>
+
+            <div class="col-md-2">
+                <br>
+                <a href="https://github.com/brettin/oxcart"><i class="fa fa-github fa-3x"></i></a>
             </div>
         </div>
     </div>
 </div>
+
 
 

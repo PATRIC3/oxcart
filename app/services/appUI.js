@@ -16,7 +16,7 @@ angular.module('appTasker')
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = false;
+    var polling = true;
     var pollTasksMS = 5000;
     var pollStatusMS = 4000;    
     var taskDispCount = 50; 
@@ -93,7 +93,6 @@ angular.module('appTasker')
         return $http.rpc('app', 'enumerate_tasks', [0, taskDispCount])
                     .then(function(tasks) {
                         $log.debug('tasks', tasks)
-                        console.log(tasks)
 
                         var stash = {all: [],
                                      queued: [], 
@@ -154,7 +153,6 @@ angular.module('appTasker')
     // used in 'Run Apps' pages
     this.getApps = $http.rpc('app', 'enumerate_apps')
          .then(function(apps) {
-            console.log('apps', apps)
 
             self.apps = apps;
 
@@ -183,7 +181,19 @@ angular.module('appTasker')
         return cols;
     }
 
+
+    /*
+    var auth = {token: authService.token}
+    var appService = new AppService(config.services.app_url, auth)
+
+    appService.enumerate_tasks(0, 25).done(function(data){
+        console.log('app', data)
+    }).fail(function(e){
+        console.log('failed', e)
+    })*/    
+
     // initial fetch of user's writable workspace list
+    /*
     this.getWS = $http.rpc('ws', 'list_workspace_info', {perm: 'w'} )
         .then(function(workspaces) {
         var workspaces = workspaces.sort(compare)
@@ -239,7 +249,7 @@ angular.module('appTasker')
             console.log('fail', e)
         })        
         return p;
-    }
+    }*/
 
 
 }]);

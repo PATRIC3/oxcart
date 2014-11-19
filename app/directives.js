@@ -46,14 +46,18 @@ angular.module('directives', [])
         }
     }
 })
-
-.directive('kbWidget', function() {
-    return {
-        link: function(scope, element, attrs) {
-            // instantiation of a kbase widget
-        }
-    }
-})
+/*
+.directive('ngRightClick', ['$parse', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+}])*/
 
 .directive('tooltip', function() {
     return {
@@ -63,6 +67,39 @@ angular.module('directives', [])
         }
     }
 })
+
+.directive('fixedHeader', ['$window', '$timeout', function($window, $timeout) {
+   return function(scope, elem, attr) {
+
+        var header_id = '#'+attr.fixedHeader;
+        var table_id = '#'+attr.fixedTable;
+
+        var w = angular.element($window);
+        w.bind('resize', function() {
+            console.log('called!')
+            adjustHeader();
+        })
+
+
+        function adjustHeader() {
+            var headers = elem.find('th');
+            var orig_headers = angular.element(table_id).find('th');
+
+            angular.forEach(orig_headers, function(v, k) {
+                // .css is the jquery
+                $(headers[k]).css({width: orig_headers[k].clientWidth}); 
+            })
+        }   
+
+        scope.$watch('loading', function() {
+            $timeout(function() {
+                adjustHeader();
+            }) 
+        } )
+
+
+   };
+}])
 
 .directive('validate', function() {
   return {
@@ -87,13 +124,23 @@ angular.module('directives', [])
   };
 })
 
+.directive('focusOn', function() {
+   return function(scope, elem, attr) {
+      scope.$on(attr.focusOn, function(e) {
+            console.log('adding focus')
+          elem[0].focus();
+      });
+   };
+})
+
 // todo: use ngMaterial instead
 .directive('sidebarCollapse', function() {
     return {
         link: function(scope, element, attr) {
             var original_w = 200;
             var new_w = 56;
-
+            var page_id = '#page-wrapper';
+            var page_id2 = '#table-page-wrapper';
             var collapsed = false;
 
             element.click(function() {
@@ -114,12 +161,15 @@ angular.module('directives', [])
                         });   
 
                     // animation for margin of page view
-                    $('#page-wrapper').animate({
+                    if ($(page_id).length) var id = page_id;
+                    else var id = page_id2;
+                    
+                    $(id).animate({
                             marginLeft: new_w,
                         }, 400, function() {
                             $('.sidebar-nav-small').fadeIn('fast');
                             collapsed = true
-                        });
+                        });                             
                    
                 } else {
                     element.find('.fa-caret-right').fadeOut(function() {
@@ -130,7 +180,10 @@ angular.module('directives', [])
 
                     $('.sidebar-nav-small').fadeOut('fast');
                     
-                    $('#page-wrapper').animate({
+                    if ($(page_id).length) var id = page_id;
+                    else var id = page_id2;
+
+                    $(id).animate({
                             marginLeft: original_w,
                         }, 300, function() {
                             $('.sidebar').css('width', original_w)

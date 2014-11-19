@@ -160,6 +160,10 @@ angular.module('appTasker')
         return share_str;
     }
 
+    this.trim = function(name, num) {
+        if (name.length <= num) return name;
+        else return name.slice(0, num)+'...';
+    }
 
 });
 

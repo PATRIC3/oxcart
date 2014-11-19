@@ -15,9 +15,12 @@
     <link href="js/angular/material/angular-material/angular-material.css" rel="stylesheet">
     <link href="js/angular/material/angular-material/themes/default-theme.css" rel="stylesheet">     
 
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">  
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="lib/ui-grid/ui-grid-unstable.css" rel="stylesheet">    
     <link href="css/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/app.css" rel="stylesheet" type="text/css">   
     <link rel="stylesheet" href="build/style.css">
 
     <script src="build/site.js"></script>
@@ -50,7 +53,7 @@
                 </a>
                 <a class="navbar-brand pull-left" ui-sref="app">{{$root.ui_name}}</a>
             </div>
-
+            <!--
             <form ng-if="$root.user" class="navbar-form navbar-left col-md-12" role="search">
                 <div class="form-group">
                     <div dd-filter
@@ -68,7 +71,7 @@
                <li ui-sref="app.objects({ws: selectedWS})">
                     <a>Objects (<span>{{appUI.ws_objects.length}}</span>)</a>
                 </li>  
-            </ul>
+            </ul>-->
 
             <ul ng-if="$root.user" class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
@@ -95,10 +98,7 @@
 
         <div id="footer">
             <span class="pull-right">
-                <i class="text-muted">Powered by </i>
-                <a href="http://kbase.us" class="hover-inverted">
-                    <img width=30 height=30 src="img/kbase_logo.png" />
-                </a>
+                <a>About</a>
             </span>
         </div>
     </div>

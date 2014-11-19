@@ -12,8 +12,9 @@ angular.module('appTasker')
 ['$scope', '$state', 'appUI', 'authService', '$window', 'config',
 function($scope, $state, appUI, authService, $window, config) {
 
-    // service for appUI state
-    $scope.appUI = appUI;
+    // app and ws services
+    $scope.appUI = appUI;   
+
 
     // selected workpsace
     $scope.selectedWS = appUI.current_ws;
@@ -34,17 +35,226 @@ function($scope, $state, appUI, authService, $window, config) {
               });
     }
 
-    /*
-    var auth = {token: authService.token}
-    var appService = new AppService(config.services.app_url, auth)
-
-    appService.enumerate_tasks(0, 25).done(function(data){
-        console.log('app', data)
-    }).fail(function(e){
-        console.log('failed', e)
-    })*/
 
 }])
+
+
+.controller('WS', 
+    ['$scope', '$stateParams', 'workspace', 'uiTools', '$document', '$timeout', '$mdDialog',
+    function($scope, $stateParams, ws, uiTools, $document, $timeout,  $mdDialog) {
+
+    $scope.ws = ws;
+
+    $scope.uiTools = uiTools;
+    $scope.relativeTime = uiTools.relativeTimeShock;
+    $scope.readableSize = uiTools.readableSize;
+
+    // let's sort by time first
+    $scope.predicate = 'timestamp';
+    $scope.reverse = true;
+
+    // model for row selection data
+    $scope.selected;
+
+    // model for when in edit mode
+    $scope.edit = false;
+
+    // model for primary click on row
+    $scope.select = false;
+
+    // load main workspace page
+    $scope.loading = true;
+
+    // if navigating directories, get the data
+    if ($stateParams.dir) {
+        $scope.directory = $stateParams.dir;
+
+        // get path in list form
+        var depth = $scope.directory.split('/').length -2
+        $scope.path = $scope.directory.split('/').splice(2, depth)
+
+        // get path strings for parent directories
+        var dir_names = $scope.directory.split('/').splice(1, depth)
+        var links = [];
+        for (var i=0; i < depth; i++) {
+            var link = '/'+dir_names.join('/');
+            links.push(link);
+            dir_names.pop();
+        }
+        links.reverse();
+        links = links.slice(1, links.length);
+
+        // model for data to be displayed
+        $scope.dirData = [];
+
+        $scope.loading = true;
+        ws.getDirectory($scope.directory).then(function(data) {
+            $scope.dirData = data;
+            $scope.loading = false;
+        })
+
+        $scope.getLink = function(i) {
+            return links[i];
+        }
+    } else {
+        ws.getWorkspaces().then(function(d) {
+            $scope.workspaces = d;
+            $scope.loading = false;
+        })
+    }
+    
+    $scope.prevent = function(e) {
+        e.stopPropagation();
+    }
+
+    // context menu open
+    $scope.openMenu = function(e, i, item) {
+        $scope.selected = {type: item.type ? item.type : 'Workspace', 
+                           name: item.name,
+                           index: i};
+                           console.log($scope.selected)
+    }
+
+    // context menu close
+    $scope.closeMenu = function(e, i, item) {
+        // if not editing something, remove selection
+        if (!$scope.edit) {
+            $scope.selected = undefined;
+        }
+    }
+
+    // new workspace creation
+    $scope.newWSModal = function(ev, path) {
+        $mdDialog.show({
+            templateUrl: 'app/views/ws/new-ws.html',
+            onComplete: function() {
+                console.log('here')
+                $scope.$broadcast('editable');
+            },
+            controller: function($scope, foo) {
+                $scope.cancel = function(){
+                    $mdDialog.hide();
+                }
+                $scope.save = function(name){
+                    newWS(name);
+                    $mdDialog.hide();
+                }
+            },
+            locals: {foo: 1},
+        });
+    }    
+
+    function newWS(name) {
+        ws.newWS(name).then(function() {
+            $scope.updateWorkspaces();
+        })
+    }
+
+    // used for creating new folder, maybe other things later
+    $scope.newPlaceholder = function() {
+        $scope.newFolder = true;
+        $timeout(function() {
+            $scope.$broadcast('placeholderAdded');
+        })
+    }
+
+    // saves the folder name, updates view
+    $scope.saveFolder = function(path, name) {
+        $scope.newFolder = false;
+        $scope.saving = true;
+        ws.newFolder(path, name).then(function() {
+            $scope.saving = false;
+            $scope.updateDir();
+        })
+    }
+
+    // delete an object
+    $scope.deleteObj = function(path, name) {
+        ws.deleteObj(path,name).then(function() {
+            $scope.updateDir();
+        })
+    }
+
+    // delete an workspace
+    $scope.deleteWS = function(name) {
+        $scope.deleting = true;
+        ws.deleteWS(name).then(function() {
+            $scope.updateWorkspaces();
+        })
+    }
+
+    // used to create editable name
+    $scope.editableName = function(path, selected) {
+        console.log(selected.index)
+        $scope.edit = {index: selected.index};
+        console.log($scope.edit.index)
+
+        $timeout(function() {
+            $scope.$broadcast('editable');
+        })
+    }
+
+    // used for rename and move, update view
+    $scope.mv = function(path, name, new_path, new_name) {
+        console.log('calling mv ', path, name, new_path, new_name)
+        $scope.selected = undefined;
+
+        $scope.saving = true;
+        ws.mv(path, name, new_path, new_name).then(function( ){
+            $scope.saving = false;            
+            $scope.edit = false;
+            $scope.updateDir();
+        }).error(function(e) {
+            console.log('could not save', e)
+            $scope.saving = false;
+            $scope.edit = false;
+        });
+
+    }
+
+
+    $scope.selectRow = function(e, i, item) {
+        $scope.select = true;
+        $scope.selected = {type: item.type ? item.type : 'Workspace', 
+                           name: item.name,
+                           index: i};
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        // let template update
+        $timeout(function() {
+            $document.bind('click', events);
+        })
+
+        // don't interfere with context menu
+        function events() {
+            $scope.$apply(function() {
+                $scope.select = false;
+                $scope.selected = undefined;
+            })
+            $document.unbind('click', events);
+        }
+    }
+
+    // updates the view
+    $scope.updateDir = function() {
+        ws.getDirectory($scope.directory).then(function(data) {
+            $scope.dirData = data;            
+        })
+    }
+
+    // updates the view
+    $scope.updateWorkspaces = function() {
+        ws.getWorkspaces().then(function(d) {
+            $scope.workspaces = d;
+            $scope.loading = false;
+        })
+    }
+
+
+}])
+
 
 .controller('Upload', 
     ['$scope', '$http', 'shock', 'uiTools', 'config', 'authService',
@@ -132,12 +342,9 @@ function($scope, $state, appUI, authService, $window, config) {
 
         $scope.relativeTime = uiTools.relativeTimeShock;
         $scope.readableSize = uiTools.readableSize;
-
-
-
 }])
 
-
+// Controller for container of app form
 .controller('AppCell', 
     ['$scope', '$stateParams', 'appUI',
     function($scope, $stateParams, appUI) {
@@ -151,8 +358,6 @@ function($scope, $state, appUI, authService, $window, config) {
     $scope.fields = {};
 
     $scope.runCell = function(index, app) {
-        console.log('heres the app', app)
-
         for (var i in app.parameters) {
             var param = app.parameters[i];
 
@@ -171,6 +376,7 @@ function($scope, $state, appUI, authService, $window, config) {
 
 }])
 
+// login controller. that's it.
 .controller('Login', ['$scope', '$state', 'authService', '$window',
     function($scope, $state, authService, $window) {
 
@@ -199,9 +405,53 @@ function($scope, $state, appUI, authService, $window, config) {
     }
 
 }])
-.controller('LeftCtrl', ['$scope', '$timeout', '$mdSidenav',
-    function($scope, $timeout, $mdSidenav) {
-  $scope.close = function() {
-    $mdSidenav('left').close();
-  };
-}])
+
+
+
+
+
+/*
+        $scope.gridOptions = {filterOptions: {filterText: '', 
+                                              useExternalFilter: false,
+                                              showFilter: true},
+                              showColumnMenu: true,
+                              columnDefs: [{field: "name", displayName: "Name"},
+                                           {field: "owner", displayName: "Owner"},
+                                           {field: "mode_date", displayName: "Mod Date"},
+                                           {field: "objects", displayName: "Objects"},
+                                           {field: "directories", displayName: "Directories"}]
+                             };      
+  
+        $scope.gridOptions.minRowsToShow = 1000;
+
+    ws.updateWorkspaces().then(function(d) {
+
+        var data = [];
+        for (var i in d) {
+            var ws = d[i]
+            data.push({name: ws[1],
+                       owner: ws[2],
+                       mod_date: ws[3],
+                       objects: ws[4],
+                       directories: ws[5]})  
+
+        }                      
+
+        $scope.gridOptions.onRegisterApi = function (gridApi) {
+            $scope.gridApi = gridApi;
+        }    
+
+
+        $scope.gridOptions.data = data;
+    })
+
+
+    // oh, open source https://github.com/angular-ui/ng-grid/issues/1735
+    function setHeight(extra) {
+      $scope.height = (($scope.gridOptions.data.length * 30) + 30);
+      if (extra) {
+        $scope.height += extra;
+      }
+      $scope.api.grid.gridHeight = $scope.height;
+    }
+  */

@@ -1,0 +1,159 @@
+
+<div id="table-page-wrapper">
+    <div class="fixed-header"  fixed-header="ws-table-header" fixed-table="ws-table">
+        <h3>
+            <a ui-sref="app.ws">Workspaces</a>
+            <span ng-repeat="d in path | limitTo: path.length-1">
+                / <a ui-sref="app.dir({dir: '{{getLink($index)}}' })">{{d}}</a>
+            </span>
+            / {{path[path.length-1]}}
+        </h3>
+
+        <!-- workspace options -->
+        <div ng-if="!loading" class="pull-right">
+            <span class="ws-opt" ng-click="newPlaceholder(directory)">
+                <i class="fa fa-folder-o"></i>
+                new folder
+            </span>
+
+            <span class="ws-opt" >
+                <i class="fa fa-plus"></i>
+                new object
+            </span> 
+        </div>
+
+
+        <table ng-show="!loading" class="table ws-table-header">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th ng-click="predicate = 'name'; reverse=!reverse" class="point">Name
+                        <span ng-if="predicate == 'name'">
+                            <i ng-if="reverse" class="fa fa-caret-down"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                        </span>
+                    </th>
+                    <th ng-click="predicate = 'type'; reverse=!reverse" class="point">Type
+                        <span ng-if="predicate == 'type'">
+                            <i ng-if="reverse" class="fa fa-caret-down mute"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
+                        </span>
+                    </th> 
+                    <th ng-click="predicate = 'timestamp'; reverse=!reverse" class="point">Mod Date
+                        <span ng-if="predicate == 'timestamp'">
+                            <i ng-if="reverse" class="fa fa-caret-down mute"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
+                        </span>
+                    </th>
+                    <th ng-click="predicate = 'size'; reverse=!reverse" class="point">Size
+                        <span ng-if="predicate == 'size'">
+                            <i ng-if="reverse" class="fa fa-caret-down mute"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
+                        </span>
+                    </th>     
+                <tr>
+            </thead>
+        </table>
+    </div>
+
+    <table ng-if="!loading" id="ws-table" class="table table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Type</th> 
+                <th>Mod Date</th>
+                <th>Size</th>     
+            <tr>
+        </thead>
+
+        <tr ng-if="newFolder">
+            <td><i class="fa fa-folder-o fa-2x soft"></i></td>
+            <td>
+                <form ng-submit="saveFolder(directory, folder.name)" name="new">
+                    <input type="text" 
+                           name="folder"
+                           ng-model="folder.name" 
+                           focus-on="placeholderAdded" 
+                           ng-blur="saveFolder(directory, folder.name)">
+                </form>
+                <span ng-if="saving">saving...</span>
+            </td>
+            <td>Directory</td>
+            <td>-</td>
+            <td>-</td>        
+        </tr>
+
+        <tr ng-repeat="item in dirData | orderBy:predicate:reverse" 
+            ng-class="{active: selected.index == $index}"
+            context-menu="openMenu($event, $index, item)"
+            context-menu-close="closeMenu($event, $index, item)"
+            data-target="context-menu">
+
+            <td ng-if="item.type == 'Directory'">
+                <i class="fa fa-folder-o fa-2x soft"></i>
+            </td>
+            <td ng-if="item.type != 'Directory'">
+                <i class="fa fa-file-text-o fa-2x soft"></i>
+            </td>
+            <td>
+                <form ng-if="edit.index == $index" ng-submit="mv(directory, selected.name, directory, edit.name)">
+                    <input ng-if="!saving"
+                           type="text"
+                           ng-model="edit.name" 
+                           focus-on="editable"
+                           ng-blur="mv(directory, selected.name, directory, edit.name)" required>
+                    <span ng-if="saving">saving...</span>                  
+                </form>
+                <a ng-if="edit.index != $index" ui-sref="app.dir({dir: '{{directory}}/{{item.name}}' })"
+                   ng-click="prevent($event)">{{item.name}}</a>
+                    <span ng-if="deleting">deleting...</span>                    
+            </td>
+            <td>{{item.type}}</td>
+            <td>{{relativeTime(item.mod_date)}}</td>
+            <td>{{item.type != 'Directory' ? readableSize(item.size) : '-'}}</td>        
+        </tr>
+    </table>
+
+
+    <div class="dropdown position-fixed" id="context-menu">
+        <ul class="dropdown-menu" role="menu">
+            <li>
+              <a class="pointer" role="menuitem" tabindex="1"
+                 ng-click="selected.type == 'Directory' ? ws.deleteFolder(directory, selected.name) : deleteObj(directory, selected.name) ">
+                 <i class="fa fa-trash-o"></i> Delete... 
+                 <span ng-if="selected.type == 'Directory'" class="label label-danger pull-right">No API</span>
+              </a>
+            </li>
+            <li>
+              <a class="pointer" role="menuitem" tabindex="2"
+                 ng-click="editableName(directory, selected)">
+                 <i class="fa fa-edit"> Rename...</i>
+              </a>
+            </li>
+            <li>
+              <a class="pointer" role="menuitem" tabindex="3"
+                 ng-click="panel.expanded = true">
+                <i class="fa fa-cloud-download"></i> Download
+              </a>
+            </li>
+        </ul>
+    </div>
+
+    <md-progress-circular ng-if="loading" mode="indeterminate" diameter="40"></md-progress-circular>
+</div>
+
+<!--
+    0 ObjectID - a globally unique UUID assigned to very object that will never change
+    1 ObjectName - name selected for object in workspace
+    2 ObjectType - type of the object in the workspace
+    3 Timestamp creation_time - time when the object was created
+    4 WorkspaceReference - restful reference permitting retrieval of object in workspace
+    5 U=sername object_owner - name of object owner
+    6 WorkspaceID - UUID of workspace containing object
+    7 WorkspaceName - name of workspace containing object
+    8 WorkspacePath - full path to object in workspace
+    9 ObjectSize - size of the object in bytes
+    10 UserMetadata - arbitrary user metadata associated with object
+    11 AutoMetadata - automatically populated metadata generated from object data in automated way
+-->

@@ -1,7 +1,7 @@
 
 <br><br>
 <div class="col-md-4 col-md-offset-4">
-    <h3>Login to continue to {{$root.ui_name}}</h3>
+    <h3>Login to continue to the {{$root.ui_name}}</h3>
 
     <div ng-if="inValid" class="alert alert-danger" role="alert">
         <b>Try again.</b>
@@ -12,8 +12,7 @@
         <b>Oh snap!</b>
         {{failMsg}}
     </div>
-
-
+    
     <form>
         <md-text-float ng-model="user" label="Globus username"></md-text-float>
         <md-text-float ng-model="pass" label="Password" type="password"></md-text-float>

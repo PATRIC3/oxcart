@@ -3,9 +3,13 @@
 hr.skinny {
     margin: 10px 0px;
 }
-.pointer {
+.point {
     cursor: hand;
     cursor: pointer;
+}
+
+.hidden-table {
+    visibility: collapse !important;
 }
 
 .hover { 
@@ -22,30 +26,79 @@ hr.skinny {
 .link {
     color: #428bca;
 }
-.icon {
+
+.soft {
+    color: #aaa;
+}
+
+.table > thead > tr > th {
     color: #666;
 }
-.icon:hover {
-    color: #222;
+.table > tbody > tr > td { 
+    vertical-align: inherit;
 }
 
 .overflow {
     overflow-x: scroll;
 }
 
+
+/* navigation mods */
+.navbar-default {
+    background-color: #46A997;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.15);     
+}
+.navbar > li >a:hover {
+    color: #aaa !important;
+    background-color: #fff;
+}
+
+.navbar-top-links >li>a,
+.navbar-brand {
+    color: #fff !important;
+}
+
+.navbar-top-links > li > a:hover {
+    background-color: #46A997 !important; 
+}
+
+.sidebar {
+    z-index: 3000;
+    background-color: #F5f5f5;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+}
+
+.sidebar a >i {
+    color: #666;
+    font-size: 1.2em;
+}
+
 .sidebar-nav .nav > li > a {
+    color: #666;
+    font-weight: 500;
     padding: 10px 10px 10px 15px;
 }
 
 .sidebar-nav .nav > li > a.active{
-    padding-left: 11px;
-    border-left: 4px solid #40D4E7;
+    padding-left: 9px;
+    border-left: 6px solid #40D4E7;
+    -webkit-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
+    -moz-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
+    box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);    
 }
 
-.sidebar-collapse {
-    border-right: 1px solid #e7e7e7;
+.sidebar-collapse,
+.navbar-brand:hover {
+    color: #46A997 !important;
+    background-color: #444 !important;
+    border-right: 1px solid #444;   
+}
+.navbar-brand:hover {
+    color: #aaa !important;
 }
 
+
+/* page mods */
 .page-header {
     margin-top: 20px; /*override bootstrap*/
 }
@@ -55,7 +108,6 @@ hr.skinny {
 }
 
 /* app pages */
-
 .app-search {
     margin: 15px 0 0 0;
 }
@@ -63,6 +115,7 @@ hr.skinny {
 .app-list {
     margin: 20px 0 0 0;
 }
+
 .app-list a,
 .app-list span{
     display: block;
@@ -91,22 +144,18 @@ hr.skinny {
     color: #ccc;
 }
 
-
+/* task status stuff(ts) */
 .ts {
     padding-left: 5px;
 }
-
-.task-status-queued {
+.ts-queued {
     border-left: 5px solid #96e8ff;
 }
-
-
-.task-status-running {
+.ts-running {
     border-left: 5px solid #ffee93;
 }
-
-.task-status-completed {
-    border-left: 5px solid #a5ffa0;
+.ts-completed {
+    border-left: 5px solid #46A997;
 }
 .queued {
     /*color: #007fff;*/
@@ -121,6 +170,9 @@ hr.skinny {
     color: #a5ffa0;
 }
 
+.position-fixed {
+    position: fixed;
+}
 
 
 /* fixme -> bootstrap 3.3 */
@@ -128,16 +180,68 @@ hr.skinny {
     z-index: 9999;
 }
 
-/* polymer designing */
+/* workspaces */
 
+.select-opts {
+    position: absolute;
+    width: 100%;
+    top: 80px;
+    padding: 0 0 6px 0;
+    border-bottom: 2px solid #ddd;
+}
+.select-opts span {
+    margin: 0 25px 0 0;
+}
+
+#ws-table {
+    margin: 0px 0 0 0 !important; /* variable, set by js */
+}
+
+.fixed-header {
+    z-index: 1000;
+    position: fixed;
+    background-color: #fff; 
+    margin: -70px 30px 15px 0px;
+}
+.fixed-header table{
+    margin: 0;
+}
+.ws-opt {
+    color: #666;
+}
+.ws-opt .fa-folder-o {
+    font-weight: 700;
+}
+
+.ws-opt:hover {
+    color: #000;
+    cursor: hand;
+    cursor: pointer
+}
+.fa-folder-o {
+    color: #46A997;
+}
+
+#context-menu .dropdown-menu>li>a {
+    padding: 3px 15px;
+}
+
+/* polymer designing */
 md-input-group label {
     margin-bottom: 0;
 }
 md-input-group input {
     width: 100%;
 }
+md-backdrop {
+    z-index: 4000;
+}
+.md-dialog-container {
+    z-index: 4001;
+}
 
-
-
-
-
+/* context menu  */
+.highlight {
+    color: #fff;
+    background-color: #000;
+}

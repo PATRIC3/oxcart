@@ -1,0 +1,135 @@
+<div id="table-page-wrapper">
+    <div class="fixed-header" fixed-header="ws-table-header" fixed-table="ws-table">
+        <h3>Workspaces</h3>
+
+
+        <div ng-if="!loading" class="pull-right">
+            <span class="ws-opt" ng-click="newWSModal($event)">
+                <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="15" height="15"> 
+                new workspace
+            </span>
+
+            <!--
+            <span class="ws-opt" ng-click="rename(directory)">
+                <i class="fa fa-plus"></i>
+                new object
+            </span>    
+            -->
+        </div>
+
+        <table ng-if="!loading" id="ws-table-header" class="table">
+            <thead>
+                <tr ng-class="{'hidden-table': select == true}">
+                    <th class="empty-header"> </th>
+                    <th ng-click="predicate = 'name'; reverse=!reverse" class="point">Name
+                        <span ng-if="predicate == 'name'">
+                            <i ng-if="reverse" class="fa fa-caret-down"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                        </span>
+                    </th>
+                    <th ng-click="predicate = 'owner'; reverse=!reverse" class="point">Owner
+                        <span ng-if="predicate == 'owner'">
+                            <i ng-if="reverse" class="fa fa-caret-down"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                        </span>
+                    </th>        
+                    <th ng-click="predicate = 'timestamp'; reverse=!reverse" class="point">Mod Date
+                        <span ng-if="predicate == 'timestamp'">
+                            <i ng-if="reverse" class="fa fa-caret-down"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                        </span>
+                    </th>
+                    <th ng-click="predicate = 'objects'; reverse=!reverse" class="point">Objects
+                        <span ng-if="predicate == 'objects'">
+                            <i ng-if="reverse" class="fa fa-caret-down"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                        </span>
+                    </th>
+                    <!--<th ng-click="predicate = 'directories'; reverse=!reverse" class="point">Directories
+                        <span ng-if="predicate == 'directories'">
+                            <i ng-if="reverse" class="fa fa-caret-down"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                        </span>
+                    </th>-->
+                <tr>
+
+                <div class="select-opts" ng-if="select">
+                    <span>{{uiTools.trim(selected.name, 20)}}</span>
+                    <span class="ws-opt"><i class="fa fa-trash-o"></i> Delete</span>
+                    <span class="ws-opt"><i class="fa fa-edit"></i> Rename...</span>
+                    <span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>
+                </div>                      
+            </thead>
+
+        </table>
+
+
+
+    </div>
+
+
+
+    <table ng-if="!loading" id="ws-table" class="table table-hover">
+        <thead class="hidden-table">
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Owner</th>
+                <th>Mod Date</th>
+                <th>Objects</th>
+                <!--<th>Directories</th>-->
+            </tr>                                     
+        </thead>
+        <tbody>
+            <tr ng-repeat="ws in workspaces | orderBy:predicate:reverse"
+                ng-class="{active: selected.index == $index}"
+                context-menu="openMenu($event, $index, ws)"
+                context-menu-close="closeMenu($event, $index, ws)"
+                data-target="context-menu"
+                ng-click="selectRow($event, $index, ws)">
+
+                <td><img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="30" height="30"></td>
+                <td><a ng-click="prevent($event)" ui-sref='app.dir({dir: "/{{ws.owner}}/{{ws.name}}" })'>{{ws.name}}</a></td>
+                <td>{{ws.owner}}</td>
+                <td>{{relativeTime(ws.mod_date)}}</td>
+                <td>{{ws.objects}}</td>
+                <!--<td>{{ws.directories}}</td>-->
+                </a>      
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="dropdown position-fixed" id="context-menu">
+        <ul class="dropdown-menu" role="menu">
+            <li>
+              <a class="pointer" role="menuitem" tabindex="1"
+                 ng-click="deleteWS(selected.name) ">
+                 <i class="fa fa-trash-o"></i> Delete... 
+                 <span ng-if="selected.type == 'Directory'" class="label label-danger pull-right">No API</span>
+              </a>
+            </li>
+            <li>
+              <a class="pointer" role="menuitem" tabindex="2"
+                 ng-click="editableName(directory, selected)">
+                 <i class="fa fa-edit"> </i> Rename...
+              </a>
+            </li>
+            <li>
+              <a class="pointer" role="menuitem" tabindex="3"
+                 ng-click="panel.expanded = true">
+                <i class="fa fa-cloud-download"></i> Download
+              </a>
+            </li>
+        </ul>
+    </div>
+
+
+
+    <br>
+    <md-progress-circular ng-if="loading" mode="indeterminate" diameter="40">asdf</md-progress-circular>
+</div>
+
+<!--
+["D1853754-6AC2-11E4-931B-3E09B6286A07","tombrettin","public","2014-11-12T23:22:49",0,"o","a",0,{"owner":"brettin"}]
+-->
