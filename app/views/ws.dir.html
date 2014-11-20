@@ -1,6 +1,6 @@
 
 <div id="table-page-wrapper">
-    <div class="fixed-header"  fixed-header="ws-table-header" fixed-table="ws-table">
+    <div class="fixed-header" fixed-header fixed-table="ws-table">
         <h3>
             <a ui-sref="app.ws">Workspaces</a>
             <span ng-repeat="d in path | limitTo: path.length-1">
@@ -27,7 +27,7 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th ng-click="predicate = 'name'; reverse=!reverse" class="point">Name
+                    <th ng-click="predicate = 'name'; reverse=!reverse;" class="point">Name
                         <span ng-if="predicate == 'name'">
                             <i ng-if="reverse" class="fa fa-caret-down"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up"></i>
@@ -51,20 +51,20 @@
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
                         </span>
                     </th>     
-                <tr>
+                </tr>
             </thead>
         </table>
     </div>
 
-    <table ng-if="!loading" id="ws-table" class="table table-hover">
+    <table ng-if="!loading" id="ws-table" class="table">
         <thead>
             <tr>
-                <th></th>
+                <th> </th>
                 <th>Name</th>
                 <th>Type</th> 
                 <th>Mod Date</th>
                 <th>Size</th>     
-            <tr>
+            </tr>
         </thead>
 
         <tr ng-if="newFolder">

@@ -12,21 +12,21 @@ angular.module('appTasker')
 
     var self = this;
 
-    this.list = [];
-
 
     this.getWorkspaces = function() {
         return $http.rpc('ws', 'list_workspaces', {}).then(function(d) {
+            console.log('data', d)
             var data = [];
             for (var i in d) {
                 var ws = d[i];
                 data.push({name: ws[1],
                            owner: ws[2],
                            mod_date: ws[3],
-                           objects: ws[4],
-                           directories: ws[7],
+                           files: ws[4],
+                           folders: ws[7],
                            timestamp: uiTools.getTimestamp(ws[3])
                           });
+
             }             
             return data;
         })

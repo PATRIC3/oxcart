@@ -104,11 +104,13 @@ function($scope, $state, appUI, authService, $window, config) {
     }
     
     $scope.prevent = function(e) {
+        console.log('called prevent')
         e.stopPropagation();
     }
 
     // context menu open
     $scope.openMenu = function(e, i, item) {
+        console.log('called open row')
         $scope.selected = {type: item.type ? item.type : 'Workspace', 
                            name: item.name,
                            index: i};
@@ -117,6 +119,7 @@ function($scope, $state, appUI, authService, $window, config) {
 
     // context menu close
     $scope.closeMenu = function(e, i, item) {
+        console.log('called close')
         // if not editing something, remove selection
         if (!$scope.edit) {
             $scope.selected = undefined;
@@ -131,7 +134,7 @@ function($scope, $state, appUI, authService, $window, config) {
                 console.log('here')
                 $scope.$broadcast('editable');
             },
-            controller: function($scope, foo) {
+            controller: function($scope) {
                 $scope.cancel = function(){
                     $mdDialog.hide();
                 }
@@ -139,8 +142,7 @@ function($scope, $state, appUI, authService, $window, config) {
                     newWS(name);
                     $mdDialog.hide();
                 }
-            },
-            locals: {foo: 1},
+            }
         });
     }    
 
@@ -214,13 +216,14 @@ function($scope, $state, appUI, authService, $window, config) {
 
 
     $scope.selectRow = function(e, i, item) {
+        console.log('called select row')
         $scope.select = true;
         $scope.selected = {type: item.type ? item.type : 'Workspace', 
                            name: item.name,
                            index: i};
 
-        e.stopPropagation();
-        e.preventDefault();
+        //e.stopPropagation();
+        //e.preventDefault();
 
         // let template update
         $timeout(function() {
@@ -246,6 +249,7 @@ function($scope, $state, appUI, authService, $window, config) {
 
     // updates the view
     $scope.updateWorkspaces = function() {
+        console.log('update')
         ws.getWorkspaces().then(function(d) {
             $scope.workspaces = d;
             $scope.loading = false;

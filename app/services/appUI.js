@@ -16,7 +16,7 @@ angular.module('appTasker')
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = true;
+    var polling = false;
     var pollTasksMS = 5000;
     var pollStatusMS = 4000;    
     var taskDispCount = 50; 
@@ -92,6 +92,7 @@ angular.module('appTasker')
 
         return $http.rpc('app', 'enumerate_tasks', [0, taskDispCount])
                     .then(function(tasks) {
+                        console.log('tasks', tasks)
                         $log.debug('tasks', tasks)
 
                         var stash = {all: [],
