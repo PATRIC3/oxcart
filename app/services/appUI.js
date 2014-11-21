@@ -67,7 +67,6 @@ angular.module('appTasker')
         var params = [id, form_params, 'my_workspace'];
         $http.rpc('app', 'start_app', params)
              .then(function(resp) {
-                console.log('response', resp)
                 self.updateStatus();
              })
     }

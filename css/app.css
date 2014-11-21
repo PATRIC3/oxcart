@@ -9,7 +9,7 @@ hr.skinny {
 }
 
 .hidden-table {
-    visibility: collapse !important;
+    visibility: hidden !important;
 }
 
 .hover { 
@@ -186,6 +186,7 @@ hr.skinny {
 /* workspaces */
 
 .select-opts {
+    background-color: #fff;
     position: absolute;
     width: 100%;
     top: 80px;

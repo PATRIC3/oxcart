@@ -16,12 +16,7 @@ angular.module('appTasker')
     this.workspaces = [];
 
     this.getWorkspaces = function() {
-        console.log('called get workspaces')
         return $http.rpc('ws', 'list_workspaces', {}).then(function(d) {
-            console.log('data', d)
-
-        var d1 = new Date();
-        var t1 = d1.getTime();
 
             var data = [];
             for (var i in d) {
@@ -31,11 +26,6 @@ angular.module('appTasker')
 
             // update ui model
             self.workspaces = data;
-
-                        var d2 = new Date();
-                        var t2 = d2.getTime();
-                        var diff = (t2 - t1);
-                        console.log('finished updating status model', diff+' ms')
             return data;
         })
     }
@@ -52,12 +42,10 @@ angular.module('appTasker')
     }
 
     this.addToModel = function(ws) {
-        console.log('adding',ws, self.wsListToDict(ws) )
         self.workspaces.push(self.wsListToDict(ws))
     }
 
     this.rmFromModel = function(ws) {
-        console.log('workspace to remove from model', ws)
         for (var i in self.workspaces) {
             if (self.workspaces[i].id == ws[0]) {
                 console.log('removing ', self.workspaces[i].id, 'with index', i);
