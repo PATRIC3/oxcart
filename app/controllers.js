@@ -135,7 +135,7 @@ function($scope, $state, appUI, authService, $window, config) {
                 console.log('here')
                 $scope.$broadcast('editable');
             },
-            controller: function($scope) {
+            controller: ['$scope', function($scope) {
                 $scope.cancel = function(){
                     $mdDialog.hide();
                 }
@@ -146,7 +146,7 @@ function($scope, $state, appUI, authService, $window, config) {
                     });
                     $mdDialog.hide();
                 }
-            }
+            }]
         })
     }    
 

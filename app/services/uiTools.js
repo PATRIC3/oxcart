@@ -105,13 +105,13 @@ angular.module('appTasker')
         if (!datetime) return; 
         var ymd = datetime.split('T')[0].split('-');
         var hms = datetime.split('T')[1].split(':');
-        hms[2] = hms[2].split('.')[0];  
-        return Date.UTC(ymd[0],ymd[1]-1,ymd[2],hms[0],hms[1],hms[2]);  
+        hms[2] = hms[2].split('.')[0];
+        return Date.UTC(ymd[0],ymd[1]-1,ymd[2],hms[0],hms[1],hms[2])+21600000;
     }
 
     this.relativeTimeShock = function(datetime) {
         var timestamp = self.getTimestampShock(datetime);
-        var formated = self.formateDate(timestamp)
+        var formated = self.formateDate(timestamp);
         return formated;
     }
 
