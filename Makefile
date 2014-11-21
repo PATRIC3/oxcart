@@ -10,8 +10,16 @@ SERVICE_DIR  = oxcart
 WS_URL = https://kbase.us/services/ws
 FBA_URL = https://kbase.us/services/KBaseFBAModeling
 APP_NAME = "App Name"
+APP_URL = http://140.221.66.219:7124
+AUTH_URL = http://tutorial.theseed.org/Sessions/Login
+SHOCK_URL = http://tutorial.theseed.org/services/shock_api
 
-TPAGE_ARGS = --define ws_url=$(WS_URL) --define fba_url=$(FBA_URL) --define app_name=$(APP_NAME)
+TPAGE_ARGS = --define ws_url=$(WS_URL) \
+	--define fba_url=$(FBA_URL) \
+	--define app_name=$(APP_NAME) \
+	--define app_url=$(APP_URL) \
+	--define auth_url=$(AUTH_URL) \
+	--define shock_url=$(SHOCK_URL)
 
 default:
 
