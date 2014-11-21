@@ -161,6 +161,8 @@ angular.module('appTasker')
     }
 
     this.trim = function(name, num) {
+        if (!name) return;
+
         if (name.length <= num) return name;
         else return name.slice(0, num)+'...';
     }

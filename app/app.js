@@ -103,6 +103,7 @@ angular.module('appTasker',
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.ui_name = config.ui.name;
+    $rootScope.login_label = config.ui.user_login_label;
 
     $rootScope.user = authService.user;
     $rootScope.token = authService.token;

@@ -9,6 +9,16 @@
             / {{path[path.length-1]}}
         </h3>
 
+        <!--
+        <div class="pull-left" dd-filter
+             dd-id="input-apps" 
+             dd-title="Run apps..."
+             dd-placeholder="Filter apps..."
+             dd-default="apps"
+             dd-data="appUI.appList"
+             dd-change="doSomething()">
+        </div>-->
+
         <!-- workspace options -->
         <div ng-if="!loading" class="pull-right">
             <span class="ws-opt" ng-click="newPlaceholder(directory)">
@@ -20,12 +30,15 @@
                 <i class="fa fa-plus"></i>
                 new object
             </span> 
+            <!--<span>
+                <input type="text" class="form-control input-sm pull-right" ng-model="wsSearch" placeholder="search {{path[0]}}..." >
+            </span>-->
         </div>
 
 
         <table ng-show="!loading" class="table ws-table-header">
             <thead>
-                <tr>
+                <tr ng-class="{'hidden-table': select == true}">
                     <th></th>
                     <th ng-click="predicate = 'name'; reverse=!reverse;" class="point">Name
                         <span ng-if="predicate == 'name'">
@@ -51,6 +64,14 @@
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
                         </span>
                     </th>     
+
+                    <div class="select-opts" ng-if="select">
+                        <span>{{uiTools.trim(selected.name, 20)}}</span>
+                        <span class="ws-opt"><i class="fa fa-trash-o"></i> Delete</span>
+                        <span class="ws-opt"><i class="fa fa-edit"></i> Rename...</span>
+                        <span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>
+                    </div>
+
                 </tr>
             </thead>
         </table>
@@ -103,7 +124,7 @@
                            ng-model="edit.name" 
                            focus-on="editable"
                            ng-blur="mv(directory, selected.name, directory, edit.name)" required>
-                    <span ng-if="saving">saving...</span>                  
+                    <span ng-if="saving">saving...</span>
                 </form>
                 <a ng-if="edit.index != $index" ui-sref="app.dir({dir: '{{directory}}/{{item.name}}' })"
                    ng-click="prevent($event)">{{item.name}}</a>
@@ -127,7 +148,7 @@
             </li>
             <li>
               <a class="pointer" role="menuitem" tabindex="2"
-                 ng-click="editableName(directory, selected)">
+                 ng-click="editableName(selected)">
                  <i class="fa fa-edit"> Rename...</i>
               </a>
             </li>

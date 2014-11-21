@@ -2,16 +2,12 @@
 /* service configuration settings for UI */
 angular.module('appTasker').service('config', function() {
 
-    this.ui = {name: "App Tasker"};
+    this.ui = {name: "App Tasker",
+			   user_login_label: "Globus username"};
 
-    this.services = {app_url: "http://140.221.66.219:7124",
-                     ws_url: "http://140.221.66.219/services/workspace",
-                     //fba_url: "https://kbase.us/services/KBaseFBAModeling",
-                     auth_url: "https://kbase.us/services/authorization/Sessions/Login",
-  					 shock_url: "http://140.221.67.190:7078"};
-
+    this.services = {app_url: "http://p3.theseed.org/services/app_service",
+					 ws_url: "http://p3.theseed.org/services/Workspace",
+                     fba_url: "https://p3.theseed.org/services/KBaseFBAModeling",
+                     auth_url: "http://tutorial.theseed.org/Sessions/Login",
+                     shock_url: "http://p3.theseed.org/services/shock_api"};
 })
-
-//auth_url: "http://tutorial.theseed.org/Sessions/Login",
-//shock_url: "http://140.221.67.190:7078"
-//"http://140.221.67.190:7078"

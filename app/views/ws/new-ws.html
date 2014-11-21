@@ -10,11 +10,13 @@
             <br>
         </form>
 
-        <md-actions>
-            <md-button class="md-button" ng-click="cancel()" aria-label="Cancel">Cancel</md-button>
-            <md-button class="md-primary" ng-click="save(workspace)" aria-label="Save">Save</md-button>
-        </md-actions>
-    
     </md-content>
+        <md-button class="md-primary" ng-click="save(workspace)" aria-label="Save" hide>Save</md-button>
+
+    <div class="md-actions" layout="row">
+        <span flex></span>
+        <md-button class="md-button" ng-click="cancel()" aria-label="Cancel">Cancel</md-button>
+        <md-button class="md-primary" ng-click="save(workspace)" aria-label="Save">Save</md-button>
+    </div>    
 
 </md-dialog>

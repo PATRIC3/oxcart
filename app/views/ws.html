@@ -2,17 +2,19 @@
     <div class="fixed-header" fixed-header fixed-table="ws-table">
         <h3>Workspaces</h3>
 
-
         <div ng-if="!loading" class="pull-right">
-            <span class="ws-opt" ng-click="newWSModal($event)">
+            <span class="ws-opt pull-right" ng-click="newWSModal($event)">
                 <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="15" height="15"> 
                 new workspace
             </span>
+            <!--<span>
+                <input type="text" class="form-control input-sm" ng-model="wsSearch" placeholder="search {{path[0]}}..." >
+            </span>-->
         </div>
 
         <table ng-show="!loading" class="table">
             <thead>
-                <tr>
+                <tr ng-class="{'hidden-table': select == true}">
                     <th class="empty-header"> </th>
                     <th ng-click="predicate = 'name'; reverse=!reverse" class="point">Name
                         <span ng-if="predicate == 'name'">
@@ -38,6 +40,13 @@
                             <i ng-if="!reverse" class="fa fa-caret-up"></i>
                         </span>
                     </th>
+
+                    <div class="select-opts" ng-if="select">
+                        <span>{{uiTools.trim(selected.name, 20)}}</span>
+                        <span class="ws-opt"><i class="fa fa-trash-o"></i> Delete</span>
+                        <span class="ws-opt"><i class="fa fa-edit"></i> Rename...</span>
+                        <span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>
+                    </div>
                 </tr>
             </thead>
         </table>
@@ -55,17 +64,26 @@
             </tr>
         </thead>
 
-        <tr ng-repeat="ws in workspaces | orderBy:predicate:reverse"
+        <tr ng-repeat="ws in ws.workspaces | orderBy:predicate:reverse | limitTo: 50"
             ng-class="{active: selected.index == $index}"
             context-menu="openMenu($event, $index, ws)"
             context-menu-close="closeMenu($event, $index, ws)"
-            data-target="context-menu"> <!--selectRow($event, $index, ws)-->
+            data-target="context-menu"
+            ng-click="selectRow($event, $index, ws)">
 
             <td>
                 <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="30" height="30"/>
             </td>
             <td>
-                <a ng-click="prevent($event)" ui-sref='app.dir({dir: "/{{ws.owner}}/{{ws.name}}" })'>{{ws.name}}</a>
+                <form ng-if="edit.index == $index" ng-submit="mvWS(directory, selected.name, directory, edit.name)">
+                    <input ng-if="!saving"
+                           type="text"
+                           ng-model="edit.name" 
+                           focus-on="editable"
+                           ng-blur="mv(directory, selected.name, directory, edit.name)" required>
+                    <span ng-if="saving">saving...</span>
+                </form>
+                <a ng-if="edit.index != $index" ng-click="prevent($event)" ui-sref='app.dir({dir: "/{{ws.owner}}/{{ws.name}}" })'>{{ws.name}}</a>
             </td>
             <td>{{ws.owner}}</td>
             <td>{{relativeTime(ws.mod_date)}}</td>
@@ -80,7 +98,6 @@
               <a class="pointer" role="menuitem" tabindex="1"
                  ng-click="deleteWS(selected.name) ">
                  <i class="fa fa-trash-o"></i> Delete... 
-                 <span ng-if="selected.type == 'Directory'" class="label label-danger pull-right">No API</span>
               </a>
             </li>
             <li>

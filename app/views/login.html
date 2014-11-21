@@ -14,7 +14,7 @@
     </div>
     
     <form>
-        <md-text-float ng-model="user" label="Globus username"></md-text-float>
+        <md-text-float ng-model="user" label="{{$root.login_label}}"></md-text-float>
         <md-text-float ng-model="pass" label="Password" type="password"></md-text-float>
         <md-button ng-click="loginUser(user, pass)" type="submit" class="md-primary pull-left">
             Login

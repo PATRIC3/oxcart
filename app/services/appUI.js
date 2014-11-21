@@ -28,6 +28,7 @@ angular.module('appTasker')
     this.loadingApps = true;
     this.apps = [];
     this.appDict = {};
+    this.appList = []; // used for dropdowns
 
     // model for cells displayed (not in use)
     this.cells = [];
@@ -157,12 +158,15 @@ angular.module('appTasker')
 
             self.apps = apps;
 
-            var appDict = {}
+            var appDict = {};
+            var appList = [];
             for (var i=0; i<apps.length; i++) {
                 appDict[apps[i].id] = apps[i];
+                appList.push({id: apps[i].id, name: apps[i].label})
             }
 
             self.appDict = appDict;
+            self.appList = appList;
 
             self.appTable = getColumns(self.apps, 2);
             self.loadingApps = false;
