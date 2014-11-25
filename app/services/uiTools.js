@@ -7,7 +7,7 @@
 */
 
 
-angular.module('appTasker')
+angular.module('uiTools', [])
 .service('uiTools', function() {
     var self = this;
 

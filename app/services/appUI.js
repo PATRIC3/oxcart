@@ -6,17 +6,19 @@
  *
 */
 
-angular.module('appTasker')
-.service('appUI', ['$http', '$rootScope', '$log', 'uiTools', '$q', 'authService', 
-    function($http, $rootScope, $log, uiTools, $q, authService) {
+angular.module('appUI', ['uiTools', 'kbase-auth'])
+.service('appUI', ['$http', '$log', 'uiTools', 'authService', 
+    function($http, $log, uiTools, authService) {
 
     // if not logged in, don't bother using this
     if (!authService.user) return;
 
     var self = this;
 
+    this.test = 'HELLO';
+
     // how often to update tasks/status (in ms)
-    var polling = true;
+    var polling = false;
     var pollTasksMS = 5000;
     var pollStatusMS = 3000;    
     var taskDispCount = 50; 
@@ -73,10 +75,8 @@ angular.module('appTasker')
 
     // update status (queued, inprogress, completed) counts
     this.updateStatus = function() {
-        $http.rpc('app', 'query_task_summary')
+        return $http.rpc('app', 'query_task_summary')
             .then(function(res) {
-
-                console.log(res)
                 self.status = {queued: 'queued' in res ? res.queued : 0,
                                inprogress: 'in-progress' in res ? res['in-progress'] : 0,
                                completed: 'completed' in res ? res.completed : 0};
@@ -94,7 +94,6 @@ angular.module('appTasker')
 
         return $http.rpc('app', 'enumerate_tasks', [0, taskDispCount])
                     .then(function(tasks) {
-                        console.log('tasks', tasks)
                         $log.debug('tasks', tasks)
 
                         var stash = {all: [],
@@ -186,6 +185,7 @@ angular.module('appTasker')
         }
         return cols;
     }
+
 
 }]);
 

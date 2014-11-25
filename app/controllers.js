@@ -7,14 +7,14 @@
  *  
 */
 
-angular.module('appTasker')
+angular.module('controllers', [])
 .controller('MainCtrl', 
 ['$scope', '$state', 'appUI', 'authService', '$window', 'config',
 function($scope, $state, appUI, authService, $window, config) {
 
+    $scope.test = 'hello';
     // app and ws services
     $scope.appUI = appUI;   
-
 
     // selected workpsace
     $scope.selectedWS = appUI.current_ws;
@@ -141,8 +141,7 @@ function($scope, $state, appUI, authService, $window, config) {
                 }
                 $scope.save = function(name){
                     newWS(name).then(function() {
-                        console.log('calling')
-                        uiTools.notify('created workspace '+name, 'success', true)
+                        //uiTools.notify('created workspace '+name, 'success', true)
                     });
                     $mdDialog.hide();
                 }
@@ -410,7 +409,7 @@ function($scope, $state, appUI, authService, $window, config) {
                 if (status == 401) {
                     $scope.inValid = true;
                 } else {
-                    $scope.failMsg = "Coud not reach authentication service: "+e.error_msg;
+                    $scope.failMsg = "Could not reach authentication service: "+e.error_msg;
                 }
 
             })

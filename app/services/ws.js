@@ -6,7 +6,7 @@
  *
 */
 
-angular.module('appTasker')
+angular.module('workspace', ['uiTools'])
 .service('workspace', ['$http', '$rootScope', 'uiTools', '$log',
     function($http, $rootScope, uiTools, $log) {
 
@@ -33,7 +33,7 @@ angular.module('appTasker')
     this.wsListToDict = function(ws) {
         return {id: ws[0],
                 name: ws[1],
-                owner: ws[2],
+                owner: 'public',//ws[2],
                 mod_date: ws[3],
                 files: ws[4],
                 folders: ws[7],
@@ -70,9 +70,32 @@ angular.module('appTasker')
                                       });
                         }
                         return data;
+                    }).catch(function(e) {
+                        console.log('list_workspace_contents failed', e, directory)
+                    })
+    }
+
+    this.getFolders = function(directory) {
+        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, excludeObjects: 1})
+                    .then(function(d) {
+                        var data = [];
+                        for (var i in d) {  
+                            var ws = d[i];
+                            data.push({name: ws[1],
+                                       type: ws[2],
+                                       mod_date: ws[3],
+                                       size: ws[9],                                       
+                                       //owner: ws[5],
+                                       timestamp: uiTools.getTimestamp(ws[3])
+                                      });
+                        }
+                        return data;
+                    }).catch(function(e) {
+                        console.log('list_workspace_contents for folders failed', e, directory)
                     })
 
-    }
+    }  
+    //this.getFolders('/public/testworkspace');
 
     this.newWS = function(name) {
         return $http.rpc('ws', 'create_workspace', {workspace: name});

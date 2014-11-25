@@ -17,6 +17,7 @@
  *
  *
 */
+
 var INTEGER_REGEXP = /^\-?\d+$/;
 
 angular.module('directives', [])
@@ -76,7 +77,6 @@ angular.module('directives', [])
 
         var w = angular.element($window);
         w.bind('resize', function() {
-            console.log('called!')
             adjustHeader();
         })
 
@@ -127,7 +127,6 @@ angular.module('directives', [])
 .directive('focusOn', function() {
    return function(scope, elem, attr) {
       scope.$on(attr.focusOn, function(e) {
-            console.log('adding focus')
           elem[0].focus();
       });
    };

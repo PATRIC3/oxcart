@@ -1,7 +1,18 @@
 
 
 angular.module('appTasker', 
-['ui.router', 'seed-rpc', 'kbase-auth', 'directives', 'dd-filter', 'ngMaterial','ng-context-menu'])
+['ui.router', 
+ 'config',
+ 'seed-rpc', 
+ 'kbase-auth',
+ 'workspace',
+ 'directives',
+ 'controllers',
+ 'uiTools', 
+ 'dd-filter', 
+ 'ngMaterial',
+ 'ng-context-menu', 
+ 'appUI'])
 .config(['$locationProvider', '$stateProvider', 
          '$httpProvider', '$urlRouterProvider', '$logProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider, $logProvider) {

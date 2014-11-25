@@ -16,7 +16,7 @@ angular.module('kbase-auth', [])
 
     var auth = JSON.parse( localStorage.getItem('auth') );
 
-    // if authenticated, set user/token
+    // if previously authenticated, set user/token
     if (auth) {
         this.user = auth.user_id;
         this.token = auth.token;
@@ -24,6 +24,8 @@ angular.module('kbase-auth', [])
         this.user;
         this.token;
     }
+
+    console.log(this.token)
     console.log('using service:', config.services.auth_url)
 
     this.login = function(user, pass) {
