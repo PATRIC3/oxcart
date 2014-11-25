@@ -43,12 +43,12 @@ angular.module('appTasker',
             authenticate: true})
         .state('app.ws', {
             url: "/ws",
-            templateUrl: 'app/views/ws.html',
+            templateUrl: 'app/views/ws/ws.html',
             controller: 'WS',
             authenticate: true})
         .state('app.dir', {
             url: "/ws{dir:.*}",
-            templateUrl: 'app/views/ws.dir.html',
+            templateUrl: 'app/views/ws/ws.dir.html',
             controller: 'WS',
             authenticate: true})                 
         .state('app.apps', {
@@ -90,7 +90,16 @@ angular.module('appTasker',
             url: "/user-settings",
             templateUrl: 'app/views/user/settings.html',
             authenticate: false
+        })
+
+        // help/documentation
+        .state('app.help', {
+            url: "/help",
+            templateUrl: 'app/views/help/help.html',
+            authenticate: false
         });
+
+
 
     $urlRouterProvider.when('', '/app-tasker')
                       .when('/', '/app-tasker')
