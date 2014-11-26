@@ -230,6 +230,10 @@ hr.skinny {
     background-color: #fff; 
     margin: -60px 30px 15px 0px;
 }
+
+.fixed-header h4 {
+    margin: 20px 0 0 0;
+}
 .fixed-header table{
     margin: 0;
 }
