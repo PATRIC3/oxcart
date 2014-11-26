@@ -97,7 +97,13 @@ angular.module('appTasker',
             url: "/help",
             templateUrl: 'app/views/help/help.html',
             authenticate: false
+        }).state('app.proto', {
+            url: "/proto",
+            templateUrl: 'app/views/proto.html',
+            controller: 'Proto',
+            authenticate: false
         });
+
 
 
 

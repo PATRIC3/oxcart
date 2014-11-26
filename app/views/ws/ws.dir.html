@@ -1,13 +1,13 @@
 
 <div id="table-page-wrapper">
     <div class="fixed-header" fixed-header fixed-table="ws-table">
-        <h3>
+        <h4>
             <a ui-sref="app.ws">Workspaces</a>
             <span ng-repeat="d in path | limitTo: path.length-1">
                 / <a ui-sref="app.dir({dir: '{{getLink($index)}}' })">{{d}}</a>
             </span>
             / {{path[path.length-1]}}
-        </h3>
+        </h4>
 
         <!--
         <div class="pull-left" dd-filter

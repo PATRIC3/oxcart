@@ -42,6 +42,17 @@ hr.skinny {
     overflow-x: scroll;
 }
 
+.green {
+    color: #46A997;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.bold-hover:hover {
+    font-weight: 700;
+}
 
 /* navigation mods */
 .navbar-default {
@@ -53,12 +64,18 @@ hr.skinny {
     background-color: #fff;
 }
 
-.navbar-top-links >li>a,
+
+.navbar-top-links > li > a,
 .navbar-brand {
     color: #fff !important;
 }
 
 .navbar-top-links > li > a:hover {
+    color: #f2f2f2 !important;    
+    background-color: #46A997 !important; 
+}
+
+.nav .open>a {
     background-color: #46A997 !important; 
 }
 
@@ -87,14 +104,20 @@ hr.skinny {
     box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);    
 }
 
-.sidebar-collapse,
-.navbar-brand:hover {
+.sidebar-collapse {
     color: #46A997 !important;
     background-color: #444 !important;
     border-right: 1px solid #444;   
 }
+
+.sidebar-collapse:hover {
+    color: #222 !important;
+}
+
+
 .navbar-brand:hover {
-    color: #aaa !important;
+    color: #f2f2f2 !important;
+    background-color: #46A997;
 }
 
 
@@ -189,7 +212,7 @@ hr.skinny {
     background-color: #fff;
     position: absolute;
     width: 100%;
-    top: 80px;
+    top: 70px;
     padding: 0 0 6px 0;
     border-bottom: 2px solid #ddd;
 }
@@ -198,14 +221,14 @@ hr.skinny {
 }
 
 #ws-table {
-    margin: 0px 0 0 0 !important; /* variable, set by js */
+    margin: 0 0 0 0 !important; /* variable, set by js */
 }
 
 .fixed-header {
     z-index: 1000;
     position: fixed;
     background-color: #fff; 
-    margin: -70px 30px 15px 0px;
+    margin: -60px 30px 15px 0px;
 }
 .fixed-header table{
     margin: 0;
@@ -250,6 +273,13 @@ md-backdrop {
     background-color: #000;
 }
 
+
+/* mini file browser */
+
+.file-browser-loader {
+    margin: -20px -15px -20px -20px;
+    color: #666;
+}
 
 /* uiTools.css */
 

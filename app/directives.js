@@ -132,6 +132,20 @@ angular.module('directives', [])
    };
 })
 
+.directive('fileBrowser', ['$timeout', function($timeout) {
+   return function(scope, elem, attr) {
+
+        scope.openFolder = function(folder) {
+            scope.loading = true;
+
+            $timeout(function() {
+                scope.loading = false;  
+            }, 1000)
+
+        }
+   };
+}])
+
 // todo: use ngMaterial instead
 .directive('sidebarCollapse', function() {
     return {

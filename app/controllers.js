@@ -386,7 +386,24 @@ function($scope, $state, appUI, authService, $window, config) {
 
 }])
 
-// login controller. that's it.
+.controller('Proto', ['$scope',
+    function($scope) {
+ 
+        $scope.folders = [{name: 'folder1'},
+                          {name: 'genomes'},
+                          {name: 'fba '},
+                          {name: 'media'},
+                          {name: 'some uploads'},
+                          {name: 'contig sets'},
+                          {name: 'foo bar 7'}]
+
+
+
+    }
+])
+
+
+//  controller. that's it.
 .controller('Login', ['$scope', '$state', 'authService', '$window',
     function($scope, $state, authService, $window) {
 
