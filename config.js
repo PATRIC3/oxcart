@@ -3,7 +3,7 @@
 angular.module('config', []).service('config', function() {
 
     this.ui = {name: "App Tasker",
-			   user_login_label: "Globus username"};
+			   user_login_label: "Username"};
 
     this.services = {app_url: "http://p3.theseed.org/services/app_service",
 					 ws_url: "http://p3.theseed.org/services/Workspace",
