@@ -55,7 +55,7 @@ angular.module('appTasker',
             url: "/apps/",
             templateUrl: 'app/views/apps.html',
             controller: 'Apps',
-            authenticate: true})
+            authenticate: false})
         .state('app.id', {
             url: "/apps/:id",
             templateUrl: 'app/views/apps.id.html',
