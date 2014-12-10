@@ -1,22 +1,23 @@
 /* 
  * Workspace Model
  *
- *   This is responisble for the workspace related models and state.
+ *   This is responsible for the workspace-related models and state.
  *   Two way binding is used to update the view
  *
 */
 
 angular.module('workspace', ['uiTools'])
-.service('workspace', ['$http', '$rootScope', 'uiTools', '$log',
-    function($http, $rootScope, uiTools, $log) {
+.service('workspace', ['$http', 'uiTools', '$log', 'authService',
+    function($http, uiTools, $log, auth) {
 
     var self = this;
 
     // model for displayed workspaces
     this.workspaces = [];
 
-    this.getWorkspaces = function() {
-        return $http.rpc('ws', 'list_workspaces', {}).then(function(d) {
+    this.getMyWorkspaces = function() {
+        return $http.rpc('ws', 'list_workspaces', {owned_only: 1, no_public: 1})
+            .then(function(d) {
 
             var data = [];
             for (var i in d) {
@@ -29,6 +30,22 @@ angular.module('workspace', ['uiTools'])
             return data;
         })
     }
+
+    this.getPublicWorkspaces = function() {
+        return $http.rpc('ws', 'list_workspaces', {owned_only: 0})
+            .then(function(d) {
+
+            var data = [];
+            for (var i in d) {
+                var ws = d[i];
+                data.push( self.wsListToDict(ws) )
+            }
+
+            // update ui model
+            self.workspaces = data;
+            return data;
+        })
+    }    
 
     this.wsListToDict = function(ws) {
         return {id: ws[0],
@@ -52,7 +69,6 @@ angular.module('workspace', ['uiTools'])
                 self.workspaces[i].slice(i, 1);
             }
         }
-
     }    
 
     this.getDirectory = function(directory) {
@@ -155,16 +171,13 @@ angular.module('workspace', ['uiTools'])
 
     function makeSomeData(name, howmany) {
         for (var i=0; i<howmany; i++) {
-            self.saveObject('/public/newws', name+String(i), 'this is just some test data '+i, 'Genome')
+            self.saveObject('/'+auth.user+'/newws', name+String(i), 'this is just some test data '+i, 'Genome')
         }
     }
 
     //this.createNode({objects: [['/public/newws', 'newdata', 'Blah blah blah', 'String']]});
-
     //self.newWS('/nconrad/test')
-
     //self.saveObject('/public/newws', directory, 'this is just some test data '+i, 'Genome')
-
     //makeSomeData('somefile', 7);
     
 

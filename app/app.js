@@ -46,6 +46,11 @@ angular.module('appTasker',
             templateUrl: 'app/views/ws/ws.html',
             controller: 'WS',
             authenticate: true})
+        .state('app.public', {
+            url: "/public",
+            templateUrl: 'app/views/ws/public.html',
+            controller: 'WS',
+            authenticate: true})
         .state('app.dir', {
             url: "/ws{dir:.*}",
             templateUrl: 'app/views/ws/ws.dir.html',

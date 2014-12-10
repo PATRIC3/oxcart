@@ -97,7 +97,7 @@ function($scope, $state, appUI, authService, $window, config) {
 
         if (ws.workspaces.length == 0) {
             $scope.loading = true;
-            ws.getWorkspaces().then(function(d) {
+            ws.getMyWorkspaces().then(function(d) {
                 $scope.loading = false;
             })
         }
