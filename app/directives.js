@@ -80,7 +80,6 @@ angular.module('directives', [])
             adjustHeader();
         })
 
-
         function adjustHeader() {
             var headers = elem.find('th');
             var orig_headers = angular.element(table_id).find('th');
@@ -94,10 +93,8 @@ angular.module('directives', [])
         scope.$watch('loading', function() {
             $timeout(function() {
                 adjustHeader();
-            }) 
-        } )
-
-
+            });
+        });
    };
 }])
 

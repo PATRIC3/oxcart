@@ -33,7 +33,7 @@ angular.module('workspace', ['uiTools'])
     this.wsListToDict = function(ws) {
         return {id: ws[0],
                 name: ws[1],
-                owner: 'public',//ws[2],
+                owner: ws[2],
                 mod_date: ws[3],
                 files: ws[4],
                 folders: ws[7],
@@ -56,7 +56,8 @@ angular.module('workspace', ['uiTools'])
     }    
 
     this.getDirectory = function(directory) {
-        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories: true})
+        console.log(directory)
+        return $http.rpc('ws', 'list_workspace_contents', {directory: directory})
                     .then(function(d) {
                         var data = [];
                         for (var i in d) {  
@@ -142,18 +143,27 @@ angular.module('workspace', ['uiTools'])
                     {workspace: name}).then(function(res) {
                         console.log('deleted workspace', res)
                     })
+    }
+
+    this.createNode = function(params) {
+        console.log('creating upload node', name)
+        return $http.rpc('ws', 'create_upload_node', params).then(function(res) {
+                        console.log('created node', res)
+                    });
     }    
 
 
     function makeSomeData(name, howmany) {
         for (var i=0; i<howmany; i++) {
-            self.saveObject('/public/someworkspace', name+String(i), 'this is just some test data '+i, 'Genome')
+            self.saveObject('/public/newws', name+String(i), 'this is just some test data '+i, 'Genome')
         }
     }
 
+    //this.createNode({objects: [['/public/newws', 'newdata', 'Blah blah blah', 'String']]});
 
+    //self.newWS('/nconrad/test')
 
-    //self.saveObject('/public/someworkspace', directory, 'this is just some test data '+i, 'Genome')
+    //self.saveObject('/public/newws', directory, 'this is just some test data '+i, 'Genome')
 
     //makeSomeData('somefile', 7);
     
