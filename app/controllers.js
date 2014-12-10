@@ -320,7 +320,7 @@ function($scope, $state, appUI, authService, $window, config) {
             }
         }
     }
-    /*
+    
     $scope.getUploads = function() {
         $http.get(nodeURL+'?querynode&owner='+authService.user+'&limit=10000', header)
             .success(function(data) {
@@ -330,7 +330,7 @@ function($scope, $state, appUI, authService, $window, config) {
             }).error(function(e){
                 console.log('fail', e)
             })
-    }*/
+    }
 
     //$scope.shock = shock;
     $scope.loading = true;
