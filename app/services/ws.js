@@ -16,7 +16,7 @@ angular.module('workspace', ['uiTools'])
     this.workspaces = [];
 
     this.getMyWorkspaces = function() {
-        return $http.rpc('ws', 'list_workspaces', {owned_only: 1, no_public: 1})
+        return $http.rpc('ws', 'list_workspaces', {owner_only: 1, no_public: 1})
             .then(function(d) {
 
             var data = [];
@@ -114,6 +114,29 @@ angular.module('workspace', ['uiTools'])
     }  
     //this.getFolders('/public/testworkspace');
 
+
+    this.getObjs = function(directory) {
+        console.log('getting objects', directory)
+        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories: 0})
+                    .then(function(d) {
+                        var data = [];
+                        for (var i in d) {  
+                            var ws = d[i];
+                            data.push({name: ws[1],
+                                       type: ws[2],
+                                       mod_date: ws[3],
+                                       size: ws[9],                                       
+                                       //owner: ws[5],
+                                       timestamp: uiTools.getTimestamp(ws[3])
+                                      });
+                        }
+                        return data;
+                    }).catch(function(e) {
+                        console.log('list_workspace_contents for folders failed', e, directory)
+                    })
+
+    }      
+
     this.newWS = function(name) {
         return $http.rpc('ws', 'create_workspace', {workspace: name});
     }
@@ -129,6 +152,12 @@ angular.module('workspace', ['uiTools'])
         })
     }
 
+    this.getObject = function(directory, name) {
+        console.log('getting object', directory, name);
+        return $http.rpc('ws', 'get_objects', {objects: [[directory, name]]} ).then(function(res) {
+                    console.log('data download', res);
+                })
+    }
 
     this.mv = function(path, name, des_path, des_name) {
         console.log('move', path, name, des_path, des_name)
@@ -162,26 +191,27 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.createNode = function(params) {
-        console.log('creating upload node', name)
+        console.log('creating upload node', params)
         return $http.rpc('ws', 'create_upload_node', params).then(function(res) {
-                        console.log('created node', res)
-                    });
+                    console.log('response', res)
+                    return res;
+                });
     }    
 
 
     function makeSomeData(name, howmany) {
         for (var i=0; i<howmany; i++) {
-            self.saveObject('/'+auth.user+'/newws', name+String(i), 'this is just some test data '+i, 'Genome')
+            self.saveObject('/'+auth.user+'/new workspace', name+String(i), 'this is just some test data '+i, 'Genome')
         }
     }
 
-    //this.createNode({objects: [['/public/newws', 'newdata', 'Blah blah blah', 'String']]});
+    //this.createNode({objects: [['/'+auth.user+'/new workspace', 'newdata', 'String', {description: 'blah blah blah'}]]});
     //self.newWS('/nconrad/test')
     //self.saveObject('/public/newws', directory, 'this is just some test data '+i, 'Genome')
     //makeSomeData('somefile', 7);
     
 
-
+    //this.getObject('/nconrad/asdf', 'b99.ref.fablah')
 }]);
 
  

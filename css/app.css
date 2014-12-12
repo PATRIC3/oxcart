@@ -257,6 +257,12 @@ hr.skinny {
     padding: 3px 15px;
 }
 
+
+/* upload stuff */
+.upload-form {
+    margin: 0 0 20px 40px;
+}
+
 /* polymer designing */
 md-input-group label {
     margin-bottom: 0;
@@ -321,3 +327,5 @@ md-backdrop {
     color: #fff;
     background: #a93c3c;
 }
+
+

@@ -187,34 +187,13 @@
 	return SHOCK.upload(null, node, attr, ret);
     };
     
-    SHOCK.upload = function (input, node, attr, ret) {
+    SHOCK.upload = function (files, node, attr, ret) {
 	var url = SHOCK.url+'/node';
 	var promise = jQuery.Deferred();
 
 	// check if a file is uploaded
-	if (input != null) {
-	    if (typeof input == "string") {
-		input = document.getElementById(input);
-		if (input == null) {
-		    console.log("error: file element not found in DOM");
-		    return;
-		}
-	    }
-	    if ((typeof input != "object") || (! input.files)) {
-		console.log("error: input argument must be an input type file element or its id");
-		return;
-	    }
-	    
-	    var files = input.files;
-	    if (files.length > 1) {
-		console.log("error: you can only submit one file at a time");
-		return;
-	    }
-	    if (files.length == 0) {
-		console.log("error: no file selected");
-		return;
-	    }
-	    
+	if (files != null) {
+		console.log(files)
 	    // upload the file
 	    var chunkSize = 2097152;
 	    var file = files[0];

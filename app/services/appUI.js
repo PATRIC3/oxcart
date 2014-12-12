@@ -7,8 +7,8 @@
 */
 
 angular.module('appUI', ['uiTools', 'kbase-auth'])
-.service('appUI', ['$http', '$log', 'uiTools', 'authService', 
-    function($http, $log, uiTools, authService) {
+.service('appUI', ['$http', '$log', 'uiTools', 'authService', 'workspace', 
+    function($http, $log, uiTools, authService, ws) {
 
     // if not logged in, don't bother using this
     if (!authService.user) return;
@@ -16,13 +16,13 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = true;
+    var polling = false;
     var pollTasksMS = 5000;
     var pollStatusMS = 3000;    
     var taskDispCount = 50; 
 
     // default workspace; used at the start of the application
-    var default_ws = authService.user+":home";
+    var default_ws = 'Default folder goes here';
 
     // models for methods; two for faster retrieval and updating of templates
     this.loadingApps = true;
@@ -35,7 +35,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
     // model for ws objects in 'data' view
     this.current_ws = default_ws;
-    this.ws_objects;
+    this.wsObjects;
     this.wsObjsByType;
 
     // model for tasks; appears in 'running tasks'
@@ -182,6 +182,28 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
             cols.push(list.slice(i*col_length, (i+1)*col_length));
         }
         return cols;
+    }
+
+
+    this.updateWSObjs = function(workspace) {
+        console.log('updating objects for appUI')
+        return ws.getObjs(workspace).then(function(objs){
+                    console.log('objs', objs);
+
+                    self.wsObjects = objs;
+
+                    objsByType = {};
+                    for (var i=0; i < objs.length; i++) {
+                        var obj = objs[i];
+                        var type = obj.type;
+                        if (type in objsByType) objsByType[type].push(obj);
+                        else objsByType[type] = [];
+                    }
+
+                    // update model
+                    self.wsObjsByType = objsByType;
+                    return self.wsObjsByType;
+                })
     }
 
 

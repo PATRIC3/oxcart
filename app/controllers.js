@@ -9,23 +9,13 @@
 
 angular.module('controllers', [])
 .controller('MainCtrl', 
-['$scope', '$state', 'appUI', 'authService', '$window', 'config',
-function($scope, $state, appUI, authService, $window, config) {
+['$scope', '$state', 'appUI', 'authService', '$window', 'workspace',
+function($scope, $state, appUI, authService, $window, ws) {
 
     $scope.test = 'hello';
     // app and ws services
     $scope.appUI = appUI;   
 
-    // selected workpsace
-    $scope.selectedWS = appUI.current_ws;
-
-    // update workspace objects if dropdown changes
-    //$scope.$watch('ddDisplayed', function(new_ws) {
-    $scope.$on('ddChange', function(event, new_ws) {
-        if (new_ws) {
-            appUI.updateWSObjs(new_ws);
-        }
-    })
 
     $scope.logout = function() {
         authService.logout();
@@ -300,7 +290,6 @@ function($scope, $state, appUI, authService, $window, config) {
                     $scope.uploadingCount = 0;
                     $scope.uploadProgress = 0;
                     $scope.uploadComplete = true;
-                    $scope.getUploads(); 
                 })
             },
             error: function(e){
@@ -356,10 +345,26 @@ function($scope, $state, appUI, authService, $window, config) {
 
 // Controller for container of app form
 .controller('AppCell', 
-    ['$scope', '$stateParams', 'appUI',
-    function($scope, $stateParams, appUI) {
+    ['$scope', '$stateParams', 'appUI', 'workspace', 'GetObjs',
+    function($scope, $stateParams, appUI, ws) {
     // service for appUI state
     $scope.appUI = appUI;
+
+
+    ws.getMyWorkspaces().then(function(data) {
+        $scope.workspaces = data;
+        $scope.selectedWS = data[0].name;
+        appUI.updateWSObjs($scope.selectedWS).then(function(objs) {
+            $scope.selectedObj = objs['String'][0].name;
+        })
+    })
+
+    // update workspace objects if dropdown changes
+    //$scope.$watch('ddDisplayed', function(new_ws) {
+    $scope.$on('ddChange', function(event, new_ws) {
+        if (new_ws) appUI.updateWSObjs(new_ws);
+    })    
+
 
     // set 'app' as app (via URL)
     $scope.app = appUI.appDict[$stateParams.id];
@@ -377,6 +382,7 @@ function($scope, $state, appUI, authService, $window, config) {
 
 
     $scope.getDefault = function(type) {
+        console.log(appUI.wsObjsByType)
         return appUI.wsObjsByType[type][0].name
     }
 
@@ -395,9 +401,7 @@ function($scope, $state, appUI, authService, $window, config) {
                           {name: 'media'},
                           {name: 'some uploads'},
                           {name: 'contig sets'},
-                          {name: 'foo bar 7'}]
-
-
+                          {name: 'foo bar 7'}];
 
     }
 ])
@@ -432,4 +436,93 @@ function($scope, $state, appUI, authService, $window, config) {
             })
     }
 }])
+
+.controller('UploadCtrl', 
+    ['$scope', '$http', 'shock', 'config', 'authService', 'workspace', '$timeout',
+    function($scope, $http, shock, config, authService, ws, $timeout) {
+
+    var shockURL = config.services.shock_url;
+    console.log('shock url ?', shockURL)
+    ///var nodeURL= shockURL+'/node';
+    var auth = {Authorization: 'OAuth ' + authService.token};
+    var header = {headers:  auth }
+
+    $scope.createNode = function(files) {
+        var path = '/'+authService.user+'/'+$scope.selectedWS;
+        console.log('files and path', files, path);
+
+        var params = {objects: [[path, files[0].name+"blah", 'String', 
+                    {description: 'this is a description about a genome'}]]}        
+        ws.createNode(params).then(function(nodeURL){
+            console.log('node url is', nodeURL[0]);
+            $scope.uploadFile(files, nodeURL[0]);
+        })
+    }
+
+    $scope.uploadFile = function(files, nodeURL) {
+        console.log('uploading...', files, nodeURL)
+        $timeout(function() {
+
+        $scope.$apply( function() {
+            $scope.uploadingCount = 1;
+            $scope.uploadComplete = false;
+        })
+
+        var form = new FormData($('#upload-form')[0]);
+
+        $.ajax({
+            url: nodeURL,
+            type: 'PUT',
+            headers: auth,
+            xhr: function() { 
+                var myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){ 
+                    myXhr.upload.addEventListener('progress', updateProgress, false);
+                }
+                return myXhr;
+            },             
+            success: function(data) {
+                console.log('upload success', data)
+                $scope.$apply(function() {
+                    $scope.uploadingCount = 0;
+                    $scope.uploadProgress = 0;
+                    $scope.uploadComplete = true;
+                    $scope.getUploads(); 
+                })
+            },
+            error: function(e){
+                console.log('failed upload', e)
+            },
+            data: form,
+            contentType: false,
+            processData: false
+        });
+
+        function updateProgress (oEvent) {
+            if (oEvent.lengthComputable) {
+                var percent = oEvent.loaded / files[0].size;
+                $scope.$apply(function() {
+                    $scope.uploadProgress = Math.floor(percent*100);
+                })
+            }
+        }
+
+
+        })
+    
+    }
+
+    /*
+    $scope.uploadFile = function(files, nodeURL) {
+        var node = nodeURL.split('/')[6]
+        console.log('node!', node)
+        SHOCK.init({ token: authService.token, url: config.services.shock_url })
+        //var form = new FormData($('#upload-form')[0]);
+        SHOCK.upload(files, node, 'name', function(blah){
+            console.log('response', blah)
+        })
+    }*/
+
+}])
+
 
