@@ -124,12 +124,16 @@
         </div>
 
         <div class="col-md-3">
+            <br><br><br>
+            <b>Other apps:</b><br>
             <ul class="mini-app-list list-unstyled">
-                <li ng-repeat="app in appUI.apps">
-                    <a ui-sref="app.id({id: app.id})">{{app.label}}</a>
+                <li ng-repeat="a in appUI.apps">
+                    <a ui-sref="app.id({id: a.id})" ng-if="app.id != a.id">{{a.label}}</a>
                 </li>
             </ul>
+
             <br><br>
+
             <b>Test files:</b><br>
             contigs: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99.ref.fa" target="_blank">b99.ref.fa</a><br>
             pair1: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99_1.fq" target="_blank">b99_1.fq</a><br>
