@@ -59,11 +59,24 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     }
 
     // a task is of the form {name: cell.title, fields: scope.fields}
-    this.startApp = function(id, form_params) {
+    this.startApp = function(id, form_params, workspace) {
         // make the app appear more responsive
         self.status.queued = self.status.queued + 1;
 
+        // FIX: refactor, deal with workspace / directory issue on front-end and back
+        // iterate through ids, if type is 'wstype', add on workspace path
+        for (var i in self.appDict[id].parameters) {
+            var param = self.appDict[id].parameters[i];
 
+            for (var key in form_params) {
+                if (param.id == key && (param.type == 'wstype' || param.type == 'wsid') )  {
+                    form_params[key] = '/'+authService.user+'/'+
+                             workspace+'/'+form_params[key];
+                }
+            }
+        }
+
+        console.log('form_params', form_params)
         var params = [id, form_params, 'my_workspace'];
         $http.rpc('app', 'start_app', params)
              .then(function(resp) {
@@ -186,9 +199,19 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
 
     this.updateWSObjs = function(workspace) {
-        console.log('updating objects for appUI')
+        console.log('updating objects for appUI with:', workspace)
         return ws.getObjs(workspace).then(function(objs){
                     console.log('objs', objs);
+
+                    var objs = objs.sort(compare)
+
+                    function compare(a,b) {
+                        var t1 = b.timestamp
+                        var t2 = a.timestamp
+                        if (t1 < t2) return -1;
+                        if (t1 > t2) return 1;
+                        return 0;
+                    }
 
                     self.wsObjects = objs;
 
@@ -196,13 +219,17 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
                     for (var i=0; i < objs.length; i++) {
                         var obj = objs[i];
                         var type = obj.type;
+
                         if (type in objsByType) objsByType[type].push(obj);
-                        else objsByType[type] = [];
+                        else {
+                            objsByType[type] = [];
+                            objsByType[type].push(obj);
+                        }
                     }
 
                     // update model
                     self.wsObjsByType = objsByType;
-                    return self.wsObjsByType;
+                    return objsByType;
                 })
     }
 

@@ -116,7 +116,6 @@ angular.module('workspace', ['uiTools'])
 
 
     this.getObjs = function(directory) {
-        console.log('getting objects', directory)
         return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories: 0})
                     .then(function(d) {
                         var data = [];
@@ -130,6 +129,7 @@ angular.module('workspace', ['uiTools'])
                                        timestamp: uiTools.getTimestamp(ws[3])
                                       });
                         }
+
                         return data;
                     }).catch(function(e) {
                         console.log('list_workspace_contents for folders failed', e, directory)

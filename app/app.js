@@ -6,6 +6,7 @@ angular.module('appTasker',
  'seed-rpc', 
  'kbase-auth',
  'workspace',
+ 'upload',
  'directives',
  'controllers',
  'uiTools', 
@@ -68,8 +69,8 @@ angular.module('appTasker',
               'GetApps': ['appUI', function(appUI){
                 return appUI.getApps;
               }],
-              'GetObjs': ['appUI', function(appUI){
-                return appUI.getObjs;
+              'GetMyWorkspaces': ['workspace', function(workspace){
+                return workspace.getMyWorkspaces;
               }]
             },
             controller: 'AppCell',
