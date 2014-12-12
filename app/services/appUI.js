@@ -77,10 +77,10 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
         }
 
         var ws = '/'+authService.user+'/'+workspace
-        console.log('the workspace is ', ws)
 
-        console.log('form_params', form_params, ws)
-        var params = [id, form_params, workspace, ws];
+        var params = [id, form_params, ws];
+
+        console.log('form_params', params)        
         $http.rpc('app', 'start_app', params)
              .then(function(resp) {
                 console.log('app service response', resp)
@@ -205,7 +205,6 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     this.updateWSObjs = function(workspace) {
         console.log('updating objects for appUI with:', workspace)
         return ws.getObjs(workspace).then(function(objs){
-                    console.log('objs', objs);
 
                     var objs = objs.sort(compare)
 
