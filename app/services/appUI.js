@@ -72,14 +72,18 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
                 if (param.id == key && (param.type == 'wstype' || param.type == 'wsid') )  {
                     form_params[key] = '/'+authService.user+'/'+
                              workspace+'/'+form_params[key];
-                }
+                }             
             }
         }
 
-        console.log('form_params', form_params)
-        var params = [id, form_params, 'my_workspace'];
+        var ws = '/'+authService.user+'/'+workspace
+        console.log('the workspace is ', ws)
+
+        console.log('form_params', form_params, ws)
+        var params = [id, form_params, workspace, ws];
         $http.rpc('app', 'start_app', params)
              .then(function(resp) {
+                console.log('app service response', resp)
                 self.updateStatus();
              })
     }
