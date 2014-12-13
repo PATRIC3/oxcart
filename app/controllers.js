@@ -28,8 +28,9 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 
 .controller('WS', 
-    ['$scope', '$stateParams', 'workspace', 'uiTools', '$document', '$timeout', '$mdDialog',
-    function($scope, $stateParams, ws, uiTools, $document, $timeout,  $mdDialog) {
+    ['$scope', '$stateParams', 'workspace', '$log',
+     'uiTools', '$document', '$timeout', '$mdDialog', 
+    function($scope, $stateParams, ws, $log, uiTools, $document, $timeout,  $mdDialog) {
 
     $scope.ws = ws;
 
@@ -174,10 +175,11 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     // delete an workspace
     $scope.deleteWS = function(name) {
+        $log.debug('called deleteWS with name:', name)
         $scope.deleting = true;
         ws.deleteWS(name).then(function(d) {
             ws.rmFromModel(d);
-            //$scope.updateWorkspaces();
+
         })
     }
 

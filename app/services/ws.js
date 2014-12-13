@@ -183,7 +183,6 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.deleteWS = function(name) {
-        console.log('trying to delete workspace', name)
         return $http.rpc('ws', 'delete_workspace', 
                     {workspace: name}).then(function(res) {
                         console.log('deleted workspace', res)

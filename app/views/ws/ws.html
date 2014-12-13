@@ -1,12 +1,15 @@
 <div id="table-page-wrapper">
     <div class="fixed-header" fixed-header fixed-table="ws-table">
-        <h4>Workspaces</h4>
+        <h4>
+            <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="22" height="22"> 
+            My Data
+        </h4>
 
 
         <div ng-if="!loading" class="pull-right">
             <span class="ws-opt pull-right" ng-click="newWSModal($event)">
-                <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="15" height="15"> 
-                new workspace
+                <i class="fa fa-folder-o"></i>
+                new folder
             </span>
             <!--<span>
                 <input type="text" class="form-control input-sm" ng-model="wsSearch" placeholder="search {{path[0]}}..." >
@@ -73,7 +76,7 @@
             ng-click="selectRow($event, $index, ws)">
 
             <td>
-                <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="30" height="30"/>
+                <i class="fa fa-folder-o fa-2x"></i>
             </td>
             <td>
                 <form ng-if="edit.index == $index" ng-submit="mvWS(directory, selected.name, directory, edit.name)">
@@ -91,6 +94,11 @@
             <td>{{ws.files}}</td>     
         </tr>
     </table>
+
+    <div ng-if="ws.workspaces.length == 0" class="text-center no-data soft">
+        No data here.  
+        Drag files here to upload (coming soon).
+    </div>
 
 
     <div class="dropdown position-fixed" id="context-menu">

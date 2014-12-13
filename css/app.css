@@ -54,6 +54,11 @@ hr.skinny {
     font-weight: 700;
 }
 
+.no-data {
+    margin: 150px 0 0 0;
+}
+
+
 /* navigation mods */
 .navbar-default {
     background-color: #46A997;

@@ -2,7 +2,8 @@
 <div id="table-page-wrapper">
     <div class="fixed-header" fixed-header fixed-table="ws-table">
         <h4>
-            <a ui-sref="app.ws">Workspaces</a>
+            <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="22" height="22"> 
+            <a ui-sref="app.ws">My Data</a>
             <span ng-repeat="d in path | limitTo: path.length-1">
                 / <a ui-sref="app.dir({dir: '{{getLink($index)}}' })">{{d}}</a>
             </span>
