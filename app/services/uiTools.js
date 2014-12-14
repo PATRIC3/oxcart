@@ -53,7 +53,6 @@ angular.module('uiTools', [])
                   5:'June', 6: 'July', 7: 'Aug', 8: 'Sept', 9: 'Oct', 
                   10: 'Nov', 11: 'Dec'};
     this.relativeTime = function(timestamp) {
-        console.log('timestamp is ', timestamp)
         var date = new Date()
 
         var interval =  date.getTime() - timestamp;
