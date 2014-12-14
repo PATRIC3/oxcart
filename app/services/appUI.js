@@ -139,7 +139,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
                         var t2 = d.getTime();
                         var diff = (t2 - t1);
                         $log.debug('finished updating status model', diff+' ms')
-
+                         console.log('tasks', self.tasks)
                      }).catch(function(e){
                         $log.error(e)
                      })

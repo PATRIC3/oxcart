@@ -54,7 +54,7 @@ angular.module('workspace', ['uiTools'])
                 mod_date: ws[3],
                 files: ws[4],
                 folders: ws[7],
-                timestamp: uiTools.getTimestamp(ws[3])
+                timestamp: Date.parse(ws[3])
                };
     }
 
@@ -84,9 +84,10 @@ angular.module('workspace', ['uiTools'])
                                        mod_date: ws[3],
                                        size: ws[9],                                       
                                        //owner: ws[5],
-                                       timestamp: uiTools.getTimestamp(ws[3])
+                                       timestamp: Date.parse(ws[3])
                                       });
                         }
+
                         return data;
                     }).catch(function(e) {
                         console.log('list_workspace_contents failed', e, directory)
@@ -104,7 +105,7 @@ angular.module('workspace', ['uiTools'])
                                        mod_date: ws[3],
                                        size: ws[9],                                       
                                        //owner: ws[5],
-                                       timestamp: uiTools.getTimestamp(ws[3])
+                                       timestamp: Date.parse(ws[3])
                                       });
                         }
                         return data;
@@ -127,7 +128,7 @@ angular.module('workspace', ['uiTools'])
                                        mod_date: ws[3],
                                        size: ws[9],                                       
                                        //owner: ws[5],
-                                       timestamp: uiTools.getTimestamp(ws[3])
+                                       timestamp: Date.parse(ws[3])
                                       });
                         }
 

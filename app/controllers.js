@@ -35,7 +35,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.ws = ws;
 
     $scope.uiTools = uiTools;
-    $scope.relativeTime = uiTools.relativeTimeShock;
+    $scope.relativeTime = uiTools.relativeTime;
     $scope.readableSize = uiTools.readableSize;
 
     // let's sort by time first
@@ -327,7 +327,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.getUploads();
 
     $scope.nodeURL = nodeURL;
-    $scope.relativeTime = uiTools.relativeTimeShock;
+    $scope.relativeTime = uiTools.relativeTime;
     $scope.readableSize = uiTools.readableSize;
 }])
 
@@ -340,7 +340,9 @@ function($scope, $state, appUI, authService, $window, ws) {
             return id.split('-')[0]+'...';
         };
 
-        $scope.relativeTime = uiTools.relativeTimeShock;
+        $scope.relativeTime = function(iso) {
+            return uiTools.relativeTime(Date.parse(iso));
+        }
         $scope.readableSize = uiTools.readableSize;
 }])
 

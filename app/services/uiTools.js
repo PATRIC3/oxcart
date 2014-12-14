@@ -52,7 +52,8 @@ angular.module('uiTools', [])
     var months = {0: 'Jan', 1: 'Feb', 2: 'March', 3: 'April', 4: 'May',
                   5:'June', 6: 'July', 7: 'Aug', 8: 'Sept', 9: 'Oct', 
                   10: 'Nov', 11: 'Dec'};
-    this.formateDate = function(timestamp) {
+    this.relativeTime = function(timestamp) {
+        console.log('timestamp is ', timestamp)
         var date = new Date()
 
         var interval =  date.getTime() - timestamp;
@@ -89,36 +90,6 @@ angular.module('uiTools', [])
             var d = new Date(timestamp);
             return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear(); //check
         }
-    }
-
-    // takes mod date time (2014-03-24T22:20:23)
-    // and returns unix (epoch) time
-    this.getTimestamp = function(datetime){
-        if (!datetime) return; 
-        var ymd = datetime.split('T')[0].split('-');
-        var hms = datetime.split('T')[1].split(':');
-        hms[2] = hms[2].split('+')[0];  
-        return Date.UTC(ymd[0],ymd[1]-1,ymd[2],hms[0],hms[1],hms[2]);  
-    }
-
-    this.getTimestampShock = function(datetime){
-        if (!datetime) return; 
-        var ymd = datetime.split('T')[0].split('-');
-        var hms = datetime.split('T')[1].split(':');
-        hms[2] = hms[2].split('.')[0];
-        return Date.UTC(ymd[0],ymd[1]-1,ymd[2],hms[0],hms[1],hms[2])+21600000;
-    }
-
-    this.relativeTimeShock = function(datetime) {
-        var timestamp = self.getTimestampShock(datetime);
-        var formated = self.formateDate(timestamp);
-        return formated;
-    }
-
-    this.relativeTimeWS = function(datetime) {
-        var timestamp = self.getTimestamp(datetime);
-        var formated = self.formateDate(timestamp)
-        return formated;
     }
 
     // interesting solution from http://stackoverflow.com/questions

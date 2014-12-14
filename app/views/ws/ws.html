@@ -90,7 +90,7 @@
                 <a ng-if="edit.index != $index" ng-click="prevent($event)" ui-sref='app.dir({dir: "/{{ws.owner}}/{{ws.name}}" })'>{{ws.name}}</a>
             </td>
             <td>{{ws.owner}}</td>
-            <td>{{relativeTime(ws.mod_date)}}</td>
+            <td>{{relativeTime( ws.timestamp )}}</td>
             <td>{{ws.files}}</td>     
         </tr>
     </table>
@@ -127,7 +127,7 @@
 
 
     <br>
-    <md-progress-circular ng-if="loading" mode="indeterminate" diameter="40">asdf</md-progress-circular>
+    <md-progress-circular ng-if="loading" mode="indeterminate" diameter="40"></md-progress-circular>
 
 </div>
 
