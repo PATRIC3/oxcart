@@ -203,7 +203,6 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
 
     this.updateWSObjs = function(workspace) {
-        console.log('updating objects for appUI with:', workspace)
         return ws.getObjs(workspace).then(function(objs){
 
                     var objs = objs.sort(compare)

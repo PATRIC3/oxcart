@@ -361,7 +361,6 @@ function($scope, $state, appUI, authService, $window, ws) {
     // update workspace objects if dropdown changes
     //$scope.$watch('ddDisplayed', function(new_ws) {
     $scope.$on('wsChange', function(event, new_ws) {
-        console.log('workspace change')
         if (new_ws) updateObjDD(new_ws);
         $scope.selectedWS = new_ws
     })
@@ -383,11 +382,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     $scope.runCell = function(index, app) {
         $scope.run = true;
-        for (var i in app.parameters) {
-            var param = app.parameters[i];
-        }
         appUI.startApp(app.id, $scope.fields, $scope.selectedWS);
-
         $scope.appRunning = true;
     }
 
