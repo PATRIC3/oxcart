@@ -7,7 +7,7 @@
 
 
         <div ng-if="!loading" class="pull-right">
-            <span class="ws-opt pull-right" ng-click="newWSModal($event)">
+            <span class="ws-opt pull-right" ng-click="newPlaceholder()">  <!-- newWSModal($event)-->
                 <i class="fa fa-folder-o"></i>
                 new folder
             </span>
@@ -67,6 +67,23 @@
                 <th>Objects</th>
             </tr>
         </thead>
+
+        <tr ng-if="newFolder">
+            <td><i class="fa fa-folder-o fa-2x soft"></i></td>
+            <td>
+                <form ng-submit="saveFolder(null, folder.name)" name="new">
+                    <input type="text" 
+                           name="folder"
+                           ng-model="folder.name" 
+                           focus-on="placeholderAdded" 
+                           ng-blur="saveFolder(null, folder.name)">
+                </form>
+                <span ng-if="saving">saving...</span>
+            </td>
+            <td>Folder</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
 
         <tr ng-repeat="ws in ws.workspaces | orderBy:predicate:reverse | limitTo: 50"
             ng-class="{active: selected.index == $index}"

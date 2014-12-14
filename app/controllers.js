@@ -29,8 +29,8 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 .controller('WS', 
     ['$scope', '$stateParams', 'workspace', '$log',
-     'uiTools', '$document', '$timeout', '$mdDialog', 
-    function($scope, $stateParams, ws, $log, uiTools, $document, $timeout,  $mdDialog) {
+     'uiTools', '$document', '$timeout', '$mdDialog', 'authService',
+    function($scope, $stateParams, ws, $log, uiTools, $document, $timeout,  $mdDialog, auth) {
 
     $scope.ws = ws;
 
@@ -84,7 +84,7 @@ function($scope, $state, appUI, authService, $window, ws) {
             return links[i];
         }
     } else {        
-        $scope.directory = '/public';
+        $scope.directory = '/'+auth.user;
 
         if (ws.workspaces.length == 0) {
             $scope.loading = true;
@@ -144,7 +144,6 @@ function($scope, $state, appUI, authService, $window, ws) {
         return ws.newWS(name).then(function(res) {
             console.log('response', res)
             ws.addToModel(res)
-            //$scope.updateWorkspaces();
         })
     }
 
@@ -160,10 +159,18 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.saveFolder = function(path, name) {
         $scope.newFolder = false;
         $scope.saving = true;
-        ws.newFolder(path, name).then(function() {
-            $scope.saving = false;
-            $scope.updateDir();
-        })
+
+        if (path) {
+            console.log('calling new')
+            ws.newFolder(path, name).then(function() {
+                $scope.saving = false;
+                $scope.updateDir();
+            });
+        } else {
+            ws.newWS(name).then(function(res) {
+                ws.addToModel(res)
+            })            
+        }
     }
 
     // delete an object

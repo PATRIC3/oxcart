@@ -22,7 +22,7 @@
 
         <!-- workspace options -->
         <div ng-if="!loading" class="pull-right">
-            <span class="ws-opt" ng-click="newPlaceholder(directory)">
+            <span class="ws-opt" ng-click="newPlaceholder()">
                 <i class="fa fa-folder-o"></i>
                 new folder
             </span>
@@ -101,9 +101,9 @@
                 </form>
                 <span ng-if="saving">saving...</span>
             </td>
-            <td>Directory</td>
+            <td>Folder</td>
             <td>-</td>
-            <td>-</td>        
+            <td>-</td>
         </tr>
 
         <tr ng-repeat="item in dirData | orderBy:predicate:reverse" 
