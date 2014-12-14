@@ -168,6 +168,7 @@ function($scope, $state, appUI, authService, $window, ws) {
             });
         } else {
             ws.newWS(name).then(function(res) {
+                $scope.saving = false;                
                 ws.addToModel(res)
             })            
         }
