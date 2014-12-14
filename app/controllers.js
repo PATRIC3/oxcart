@@ -179,7 +179,6 @@ function($scope, $state, appUI, authService, $window, ws) {
         $scope.deleting = true;
         ws.deleteWS(name).then(function(d) {
             ws.rmFromModel(d);
-
         })
     }
 
@@ -369,7 +368,10 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     function updateObjDD(ws_name) {
         appUI.updateWSObjs(ws_name).then(function(objs) {
-            $scope.selectedObj = objs['String'][0].name;
+            if ('String' in objs) 
+                $scope.selectedObj = objs['String'][0].name;
+            else
+                $scope.selectedObj = false;
         })
     }
 
@@ -380,6 +382,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.fields = {};
 
     $scope.runCell = function(index, app) {
+        $scope.run = true;
         for (var i in app.parameters) {
             var param = app.parameters[i];
         }
@@ -401,6 +404,7 @@ function($scope, $state, appUI, authService, $window, ws) {
         upload.createNode(files, $scope.selectedWS)
     }
 
+    // update dropdown after upload
     $scope.$watch('upload.status', function(value) {
         if (value.complete == true) updateObjDD($scope.selectedWS);
         $scope.status = value;

@@ -63,10 +63,9 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.rmFromModel = function(ws) {
-        for (var i in self.workspaces) {
+        for (var i=0; i<self.workspaces.length; i++) {
             if (self.workspaces[i].id == ws[0]) {
-                console.log('removing ', self.workspaces[i].id, 'with index', i);
-                self.workspaces[i].slice(i, 1);
+                self.workspaces.slice(i, 1);
             }
         }
     }    
@@ -142,7 +141,7 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.newFolder = function(path, name) {
-        console.log('creating directory:', path,name)
+        console.log('creating folder:', path,name)
         return $http.rpc('ws', 'create_workspace_directory', {directory: path+'/'+name})
     }
 
@@ -186,6 +185,7 @@ angular.module('workspace', ['uiTools'])
         return $http.rpc('ws', 'delete_workspace', 
                     {workspace: name}).then(function(res) {
                         console.log('deleted workspace', res)
+                        return res;
                     })
     }
 
