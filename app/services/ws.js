@@ -64,10 +64,12 @@ angular.module('workspace', ['uiTools'])
 
     this.rmFromModel = function(ws) {
         for (var i=0; i<self.workspaces.length; i++) {
+            console.log(self.workspaces[i].id, ws[0])
             if (self.workspaces[i].id == ws[0]) {
-                self.workspaces.slice(i, 1);
+                self.workspaces.splice(i, 1);
             }
         }
+        console.log('new model', self.workspaces);
     }    
 
     this.getDirectory = function(directory) {
@@ -182,8 +184,8 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.deleteWS = function(name) {
-        return $http.rpc('ws', 'delete_workspace', 
-                    {workspace: name}).then(function(res) {
+        return $http.rpc('ws', 'delete_workspace', {workspace: name})
+                    .then(function(res) {
                         console.log('deleted workspace', res)
                         return res;
                     })
