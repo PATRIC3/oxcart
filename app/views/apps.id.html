@@ -109,7 +109,7 @@
 
                           <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                              <button ng-disabled="appForm.$invalid" ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">
+                              <button ng-disabled="appForm.$invalid || appRunning" ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">
                                 {{appRunning ? 'Running...' : 'Run'}}
                             </button>
                             </div>
