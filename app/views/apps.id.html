@@ -1,4 +1,5 @@
 
+    </div>
 <div id="page-header">
     <i class="fa fa-folder-o fa-2x pull-left"></i>
  
@@ -18,7 +19,7 @@
     <div ng-controller="UploadCtrl">
         <form id="upload-form" class="upload-form" >
             <b>Upload to <i>{{selectedWS}}</i></b>
-            <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />         
+            <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
         </form>
         <!--<md-progress-linear md-mode="determinate" ng-value="status.progress"></md-progress-linear>-->
 
@@ -32,8 +33,7 @@
     </div>
 </div>
 
-<div id="page-wrapper" class="">
-
+<div id="page-wrapper">
     <div class="row">
         <div class="col-md-9">
             <md-card app-cell>
@@ -45,57 +45,12 @@
                       <div class="form-group" ng-repeat="field in app.parameters">
                         <label class="col-sm-3 control-label">{{field.label}}</label>
 
-
                         <div class="col-sm-9">
-                            <input ng-if="field.type == 'string'"
-                                   id="input-{{field.id}}"
-                                   ng-model="fields[field.id]" 
-                                   name="{{field.id}}"                               
-                                   type="text" 
-                                   class="form-control" 
-                                   placeholder="{{field.default}}" 
-                                   ng-required="{{field.required}}">
-                                                                   
-                            <input ng-if="field.type == 'int'"
-                                   id="input-{{field.id}}"
-                                   ng-model="fields[field.id]" 
-                                   name="{{field.id}}"
-                                   type="number" 
-                                   class="form-control" 
-                                   placeholder="{{field.default}}"
-                                   ng-required="{{field.required}}">
-
-                            <input ng-if="field.type == 'wsid'"
-                                   id="input-{{field.id}}"
-                                   ng-model="fields[field.id]" 
-                                   name="{{field.id}}"
-                                   type="text" 
-                                   class="form-control" 
-                                   placeholder="{{field.default}}"
-                                   ng-required="{{field.required}}">
-                                   
-                            <div ng-if="field.type == 'wstype'"
-                                 dd-filter
-                                 dd-id="input-{{field.id}}" 
-                                 dd-title="selectedWS"
-                                 dd-placeholder="Filter files"
-                                 ng-model="fields[field.id]"
-                                 dd-default="selectedObj"
-                                 dd-data="appUI.wsObjsByType['String']"
-                                 dd-change="objChange"
-                                 dd-required="true"
-                                 dd-empty-notice="None Available">
+                            <div ng-if="field.type == 'group'">
+                                This is a group
                             </div>
 
-                            <select ng-if="field.type == 'enum'" 
-                                    ng-model="fields[field.id]" 
-                                    class="form-control" 
-                                    ng-options="x for x in field.enum" 
-                                    ng-init="fields[field.id] = field.enum[0]"
-                                    ng-required="{{field.required}}">
-                            </select>
-
-                            <span class="error" ng-show="run && appForm.{{field.id}}.$error.required">Required!</span>
+                            <div ng-include src="'./app/views/fields.html'"></div>
                         </div>
                       </div>
 

@@ -356,8 +356,9 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 // Controller for container of app form
 .controller('AppCell', 
-    ['$scope', '$stateParams', 'appUI', 'workspace', '$timeout', 'upload', 'GetMyWorkspaces',
-    function($scope, $stateParams, appUI, ws, $timeout, upload) {
+    ['$scope', '$stateParams', 'appUI', 'workspace', 
+    '$timeout', 'upload', '$http', 'GetMyWorkspaces',
+    function($scope, $stateParams, appUI, ws, $timeout, upload, $http) {
     // service for appUI state
     $scope.appUI = appUI;
 
@@ -385,7 +386,24 @@ function($scope, $state, appUI, authService, $window, ws) {
     }
 
     // set 'app' as app (via URL)
-    $scope.app = appUI.appDict[$stateParams.id];
+    if ($stateParams.file) {
+        /*
+        var url = 'https://api.github.com/repos/TheSEED/app_service/contents/app_specs/'+
+                    $stateParams.file+'.json';
+
+        $http.get(url).then(function(res) {
+                $scope.app =  angular.fromJson(window.atob(res.data.content ) )
+                console.log($scope.app)
+             });
+        */
+        $http.get('./tests/test-forms/assembly.json').then(function(res) {
+                $scope.app =  res.data;
+                console.log('test app', $scope.app)
+             });
+
+    } else {
+        $scope.app = appUI.appDict[$stateParams.id];
+    }
 
 
     $scope.fields = {};
@@ -414,7 +432,6 @@ function($scope, $state, appUI, authService, $window, ws) {
         if (value.complete == true) updateObjDD($scope.selectedWS);
         $scope.status = value;
     }, true);
-
 
 }])
 

@@ -75,6 +75,20 @@ angular.module('appTasker',
             },
             controller: 'AppCell',
             authenticate: true})
+
+        .state('app.test', {
+            url: "/apps/test/:file",
+            templateUrl: 'app/views/apps.id.html',
+            resolve: {
+              'GetApps': ['appUI', function(appUI){
+                return appUI.getApps;
+              }],
+              'GetMyWorkspaces': ['workspace', function(workspace){
+                return workspace.getMyWorkspaces;
+              }]
+            },
+            controller: 'AppCell',
+            authenticate: true})        
         .state('app.builder', {
             url: "/builder",
             templateUrl: 'app/views/app-builder.html',

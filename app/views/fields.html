@@ -1,0 +1,49 @@
+<input ng-if="field.type == 'string'"
+       id="input-{{field.id}}"
+       ng-model="fields[field.id]" 
+       name="{{field.id}}"
+       type="text" 
+       class="form-control" 
+       placeholder="{{field.default}}" 
+       ng-required="{{field.required}}">
+                                       
+<input ng-if="field.type == 'int'"
+       id="input-{{field.id}}"
+       ng-model="fields[field.id]" 
+       name="{{field.id}}"
+       type="number" 
+       class="form-control" 
+       placeholder="{{field.default}}"
+       ng-required="{{field.required}}">
+
+<input ng-if="field.type == 'wsid'"
+       id="input-{{field.id}}"
+       ng-model="fields[field.id]" 
+       name="{{field.id}}"
+       type="text" 
+       class="form-control" 
+       placeholder="{{field.default}}"
+       ng-required="{{field.required}}">
+       
+<div ng-if="field.type == 'wstype'"
+     dd-filter
+     dd-id="input-{{field.id}}" 
+     dd-title="selectedWS"
+     dd-placeholder="Filter files"
+     ng-model="fields[field.id]"
+     dd-default="selectedObj"
+     dd-data="appUI.wsObjsByType['String']"
+     dd-change="objChange"
+     dd-required="true"
+     dd-empty-notice="None Available">
+</div>
+
+<select ng-if="field.type == 'enum'" 
+        ng-model="fields[field.id]" 
+        class="form-control" 
+        ng-options="x for x in field.enum" 
+        ng-init="fields[field.id] = field.enum[0]"
+        ng-required="{{field.required}}">
+</select>
+
+<span class="error" ng-show="run && appForm.{{field.id}}.$error.required">Required!</span>

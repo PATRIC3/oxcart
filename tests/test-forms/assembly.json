@@ -1,0 +1,100 @@
+{
+	"id":"GenomeAssembly",
+	"script":"App-GenomeAssembly",
+	"label":"Assemble reads",
+	"description":"Assemble reads into a set of contigs",
+	"parameters":[
+		{
+		    "id": "paired_end_lib",
+		    "type": "group",
+		    "allow_multiple": true,
+		    "required": 0,
+		    "default" : null,
+		    "group":[
+			{
+			    "id": "read1",
+			    "required": 1,
+			    "label": "Read file 1",
+			    "desc": "FASTQ or FASTA file or reads",
+			    "wstype": "ReadFileHandle",
+			    "type": "wstype"
+			},
+			{
+			    "id": "read2",
+			    "required": 0,
+			    "label": "Read file 2",
+			    "desc": "FASTQ or FASTA file or reads",
+			    "wstype": "ReadFileHandle",
+			    "type": "wstype"
+			},
+			{
+			    "id": "interleaved",
+			    "label": "Are the paired end reads interleaved?",
+			    "required": 0,
+			    "default": 0,
+			    "type": "bool"
+			}
+		    ],
+		    "sub_group":[
+						{
+						    "id": "insert_size_mean",
+						    "label": "Average insert size",
+						    "required": 0,
+						    "default": null,
+						    "type": "int"
+						},
+						{
+						    "id": "insert_size_stdev",
+						    "label": "Average insert standard deviation",
+						    "required": 0,
+						    "default": null,
+						    "type": "float"
+						}
+		    ]
+		},
+		{
+		    "id": "single_end_lib",
+		    "type": "group",
+		    "allow_multiple": true,
+		    "required": 0,
+		    "default" : null,
+		    "wstype": "ReadFileHandle",
+		    "type": "wstype",
+		    "desc": "FASTQ or FASTA file or reads"
+		},
+		{
+			"id":"species",
+			"label":"Scientific Name",
+			"required":1,
+			"default":null,
+			"desc":"Scientific name of genome to be annotated",
+			"type":"string"
+		},
+		{
+			"id":"code",
+			"label":"Genetic Code",
+			"required":1,
+			"default":11,
+			"desc":"Genetic code used in translation of DNA sequences",
+			"type":"enum",
+			"enum":["11","4"]
+		},
+		{
+			"id":"domain",
+			"label":"Domain",
+			"required":1,
+			"default":"Bacteria",
+			"desc":"Domain of the submitted genome",
+			"type":"enum",
+			"enum":["Bacteria", "Archaea"]
+		},
+		{
+			"id":"contig_set",
+			"label":"Output file",
+			"required":1,
+			"default":null,
+			"desc":"Name of file the assembled contigs will be stored in",
+			"type":"wsid"
+		}
+	]
+}
