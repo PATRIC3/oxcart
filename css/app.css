@@ -58,6 +58,11 @@ hr.skinny {
     margin: 150px 0 0 0;
 }
 
+/* new styling */
+.btn {
+    border-radius: 0;
+}
+
 
 /* navigation mods */
 .navbar-default {
@@ -86,27 +91,43 @@ hr.skinny {
 
 .sidebar {
     z-index: 3000;
-    background-color: #f8f8f8;
+    background-color: #555;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
 }
 
-.sidebar a >i {
-    color: #666;
+.sidebar ul li {
+    border-bottom: none;
+}
+
+.sidebar a > i,
+ .sidebar a > img{
+    color: #f5f5f5;
     font-size: 1.2em;
 }
 
 .sidebar-nav .nav > li > a {
-    color: #666;
+    color: #fff;
     font-weight: 500;
     padding: 10px 10px 10px 15px;
+    border: none;
 }
 
 .sidebar-nav .nav > li > a.active{
+    color: #f5f5f5;
+    background-color: #777;
     padding-left: 9px;
-    border-left: 6px solid #40D4E7;
-    -webkit-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
+    border-left: 6px solid #46A997;
+    /*-webkit-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
     -moz-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
-    box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);    
+    box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);    */
+}
+
+.sidebar-nav .nav > li > a:hover {
+    background-color: #666;    
+}
+
+.sidebar-nav .nav > li > a.active:hover {
+    background-color: #777;    
 }
 
 .sidebar-collapse {
@@ -125,10 +146,33 @@ hr.skinny {
     background-color: #46A997;
 }
 
+/* forms */
+md-card {
+    background: #fafafa;
+    box-shadow: 0px 0px 4px 0 rgba(0, 0, 0, 0.20);
+    border: 1px solid #fdfdfd;
+    padding: 10px 20px;
+}
+
+
+
+
+.form-control {
+    border-radius: 0px;
+}
+
+
 
 /* page mods */
 .page-header {
     margin-top: 20px; /*override bootstrap*/
+}
+
+#page-header i {
+    margin: 3px 7px 0 0;
+}
+#page-header div{
+    display: inline-block;
 }
 
 .page-title {
@@ -163,7 +207,7 @@ hr.skinny {
 }
 
 #task-count {
-    background-color: #666;
+    background-color: #777;
 }
 
 #task-count-queued:after,
@@ -265,7 +309,12 @@ hr.skinny {
 
 /* upload stuff */
 .upload-form {
-    margin: 0 0 20px 40px;
+    display: inline-block;
+    margin: 0 0 0 40px;
+}
+
+.upload-form input {
+    display: inline-block;
 }
 
 /* polymer designing */

@@ -1,19 +1,141 @@
-<div id="page-wrapper">
+
+<div id="page-header">
+    <i class="fa fa-folder-o fa-2x pull-left"></i>
+ 
+    <div>
+        <b> Working Folder</b>
+        <span dd-filter
+            ng-model="somemodel"
+            dd-id="input-ws"
+            dd-change="wsChange"
+            dd-title="'Working Folder'"
+            dd-placeholder="Filter folders"
+            dd-default="selectedWS"
+            dd-data="workspaces">
+        </span>
+    </div>
+
+    <div ng-controller="UploadCtrl">
+        <form id="upload-form" class="upload-form" >
+            <b>Upload to <i>{{selectedWS}}</i></b>
+            <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />         
+        </form>
+        <!--<md-progress-linear md-mode="determinate" ng-value="status.progress"></md-progress-linear>-->
+
+        <span ng-if="status.count" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{status.progress}}%;">
+            <span class="pull-right">{{status.progress}}% Complete</span>
+        </span>
+
+        <span ng-if="status.complete">
+            complete.
+        </span>
+    </div>
+</div>
+
+<div id="page-wrapper" class="">
 
     <div class="row">
         <div class="col-md-9">
-            <b>Working Folder:</b>
-            <span dd-filter
-                  ng-model="somemodel"
-                  dd-id="input-ws"
-                  dd-change="wsChange"
-                  dd-title="'Working Folder'"
-                  dd-placeholder="Filter folders"
-                  dd-default="selectedWS"
-                  dd-data="workspaces">
-            </span>
-            <br><br>
+            <md-card app-cell>
+                <h4>{{app.label}}</h4>
+                <div class="overview">{{app.description}}</div>
+                <br>
+                    <form name="appForm" class="form-horizontal" role="form">
 
+                      <div class="form-group" ng-repeat="field in app.parameters">
+                        <label class="col-sm-3 control-label">{{field.label}}</label>
+
+
+                        <div class="col-sm-9">
+                            <input ng-if="field.type == 'string'"
+                                   id="input-{{field.id}}"
+                                   ng-model="fields[field.id]" 
+                                   name="{{field.id}}"                               
+                                   type="text" 
+                                   class="form-control" 
+                                   placeholder="{{field.default}}" 
+                                   ng-required="{{field.required}}">
+                                                                   
+                            <input ng-if="field.type == 'int'"
+                                   id="input-{{field.id}}"
+                                   ng-model="fields[field.id]" 
+                                   name="{{field.id}}"
+                                   type="number" 
+                                   class="form-control" 
+                                   placeholder="{{field.default}}"
+                                   ng-required="{{field.required}}">
+
+                            <input ng-if="field.type == 'wsid'"
+                                   id="input-{{field.id}}"
+                                   ng-model="fields[field.id]" 
+                                   name="{{field.id}}"
+                                   type="text" 
+                                   class="form-control" 
+                                   placeholder="{{field.default}}"
+                                   ng-required="{{field.required}}">
+                                   
+                            <div ng-if="field.type == 'wstype'"
+                                 dd-filter
+                                 dd-id="input-{{field.id}}" 
+                                 dd-title="selectedWS"
+                                 dd-placeholder="Filter files"
+                                 ng-model="fields[field.id]"
+                                 dd-default="selectedObj"
+                                 dd-data="appUI.wsObjsByType['String']"
+                                 dd-change="objChange"
+                                 dd-required="true"
+                                 dd-empty-notice="None Available">
+                            </div>
+
+                            <select ng-if="field.type == 'enum'" 
+                                    ng-model="fields[field.id]" 
+                                    class="form-control" 
+                                    ng-options="x for x in field.enum" 
+                                    ng-init="fields[field.id] = field.enum[0]"
+                                    ng-required="{{field.required}}">
+                            </select>
+
+                            <span class="error" ng-show="run && appForm.{{field.id}}.$error.required">Required!</span>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                          <button ng-disabled="appForm.$invalid || appRunning" ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">
+                            {{appRunning ? 'Running...' : 'Run'}}
+                        </button>
+                        </div>
+                      </div>
+                    </form>
+
+
+
+                </md-card>
+
+    
+            </div>
+
+            <div class="col-md-3">
+                <md-card>
+                <b>Other apps</b><br>
+                <ul class="mini-app-list list-unstyled">
+                    <li ng-repeat="a in appUI.apps">
+                        <a ui-sref="app.id({id: a.id})" ng-if="app.id != a.id">{{a.label}}</a>
+                    </li>
+                </ul>
+
+                <br>
+
+                <b>Test files</b><br>
+                contigs: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99.ref.fa" target="_blank">b99.ref.fa</a><br>
+                pair1: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99_1.fq" target="_blank">b99_1.fq</a><br>
+                pair2: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99_2.fq" target="_blank">b99_2.fq</a><br>
+                single: <a href="http://www.mcs.anl.gov/~fangfang/arast/se.fastq" target="_blank">se.fastq</a><br>
+                </md-card>
+            </div>
+
+        </div> <!-- end row -->
+            <!--
             <div class="panel panel-default" app-cell>
                 <div class="panel-heading">
                     <span class="panel-title pull-left">{{app.label}}</span> 
@@ -28,6 +150,7 @@
 
 
                 <div class="panel-body">
+
                     <figure class="front">
                         {{app.description}}<br><br>
                         <div class="upload-form" ng-controller="UploadCtrl">
@@ -118,31 +241,13 @@
 
                     </figure>
                     
-                    <!-- back side of cell / documentation -->
+
                     <figure class="back">
                     </figure>
                 </div>
-            </div> <!-- end panel -->
+            </div>
+        </div>-->
 
-        </div>
-
-        <div class="col-md-3">
-            <br><br><br>
-            <b>Other apps:</b><br>
-            <ul class="mini-app-list list-unstyled">
-                <li ng-repeat="a in appUI.apps">
-                    <a ui-sref="app.id({id: a.id})" ng-if="app.id != a.id">{{a.label}}</a>
-                </li>
-            </ul>
-
-            <br><br>
-
-            <b>Test files:</b><br>
-            contigs: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99.ref.fa" target="_blank">b99.ref.fa</a><br>
-            pair1: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99_1.fq" target="_blank">b99_1.fq</a><br>
-            pair2: <a href="http://www.mcs.anl.gov/~fangfang/arast/b99_2.fq" target="_blank">b99_2.fq</a><br>
-            single: <a href="http://www.mcs.anl.gov/~fangfang/arast/se.fastq" target="_blank">se.fastq</a><br>
-        </div>
     </div> <!-- end row -->
 
     <div>
