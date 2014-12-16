@@ -81,10 +81,11 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
         var params = [id, form_params, ws];
 
         console.log('form_params', params)        
-        $http.rpc('app', 'start_app', params)
+        return $http.rpc('app', 'start_app', params)
              .then(function(resp) {
                 console.log('app service response', resp)
                 self.updateStatus();
+                return resp;
              })
     }
 

@@ -410,8 +410,12 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     $scope.runCell = function(index, app) {
         $scope.run = true;
-        appUI.startApp(app.id, $scope.fields, $scope.selectedWS);
         $scope.appRunning = true;
+        appUI.startApp(app.id, $scope.fields, $scope.selectedWS)
+             .then(function(res) {
+                $scope.output = res
+                console.log('output', $scope.output)
+             })
     }
 
 
@@ -486,8 +490,6 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 .controller('UploadCtrl', 
     ['$scope', 'upload', 'appUI', function($scope, upload, appUI) {
-
-
 
 
 

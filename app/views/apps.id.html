@@ -1,37 +1,36 @@
-
-    </div>
 <div id="page-header">
-    <i class="fa fa-folder-o fa-2x pull-left"></i>
- 
-    <div>
-        <b> Working Folder</b>
-        <span dd-filter
-            ng-model="somemodel"
-            dd-id="input-ws"
-            dd-change="wsChange"
-            dd-title="'Working Folder'"
-            dd-placeholder="Filter folders"
-            dd-default="selectedWS"
-            dd-data="workspaces">
-        </span>
+    <i class="fa fa-folder-o fa-2x pull-left"></i>    
+
+    <b> Working Folder</b>
+    <div dd-filter
+        ng-model="somemodel"
+        dd-id="input-ws"
+        dd-change="wsChange"
+        dd-title="'Working Folder'"
+        dd-placeholder="Filter folders"
+        dd-default="selectedWS"
+        dd-data="workspaces"
+        class="page-header-item">
     </div>
 
-    <div ng-controller="UploadCtrl">
+
+    <div class="page-header-item" ng-controller="UploadCtrl">
         <form id="upload-form" class="upload-form" >
             <b>Upload to <i>{{selectedWS}}</i></b>
-            <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
+            <span class="btn btn-default btn-file">
+                Choose File... <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
+            </span>
         </form>
-        <!--<md-progress-linear md-mode="determinate" ng-value="status.progress"></md-progress-linear>-->
-
-        <span ng-if="status.count" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{status.progress}}%;">
-            <span class="pull-right">{{status.progress}}% Complete</span>
-        </span>
+    
+        <md-progress-linear ng-if="status.count" md-mode="determinate" ng-value="status.progress"></md-progress-linear>
 
         <span ng-if="status.complete">
             complete.
         </span>
     </div>
+
 </div>
+
 
 <div id="page-wrapper">
     <div class="row">
@@ -87,9 +86,11 @@
                             </div>
                         </div>
                     </form>
+                </md-card>
 
-
-
+                <md-card ng-if="output">
+                    <h4>{{app.label}} is running.</h4>
+                    <b>Parameters</b> {{output.parameters}}
                 </md-card>
 
     
@@ -114,126 +115,10 @@
                 </md-card>
             </div>
 
-        </div> <!-- end row -->
-            <!--
-            <div class="panel panel-default" app-cell>
-                <div class="panel-heading">
-                    <span class="panel-title pull-left">{{app.label}}</span> 
-                    
-                    <div class="pull-right text-muted">
-                        <a ng-click="flip($event)">
-                            <i class="fa fa-question"></i>
-                        </a>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
+        </div> 
+           
+    </div> <!-- end page wrapper -->
 
-
-                <div class="panel-body">
-
-                    <figure class="front">
-                        {{app.description}}<br><br>
-                        <div class="upload-form" ng-controller="UploadCtrl">
-                            <b>Upload to folder: <i>{{selectedWS}}</i></b>
-
-                            <form id="upload-form">
-                                <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
-                            </form>
-
-                            <div ng-if="status.count" class="progress">
-                              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{status.progress}}%;">
-                                <span class="pull-right">{{status.progress}}% Complete</span>
-                              </div>
-                            </div>
-
-                            <div ng-if="status.complete">
-                                complete.
-                            </div>
-                        </div>
-
-                        <form name="appForm" class="form-horizontal" role="form">
-
-                          <div class="form-group" ng-repeat="field in app.parameters">
-                            <label class="col-sm-3 control-label">{{field.label}}</label>
-
-
-                            <div class="col-sm-9">
-                                <input ng-if="field.type == 'string'"
-                                       id="input-{{field.id}}"
-                                       ng-model="fields[field.id]" 
-                                       name="{{field.id}}"                               
-                                       type="text" 
-                                       class="form-control" 
-                                       placeholder="{{field.default}}" 
-                                       ng-required="{{field.required}}">
-                                                                       
-                                <input ng-if="field.type == 'int'"
-                                       id="input-{{field.id}}"
-                                       ng-model="fields[field.id]" 
-                                       name="{{field.id}}"
-                                       type="number" 
-                                       class="form-control" 
-                                       placeholder="{{field.default}}"
-                                       ng-required="{{field.required}}">
-
-                                <input ng-if="field.type == 'wsid'"
-                                       id="input-{{field.id}}"
-                                       ng-model="fields[field.id]" 
-                                       name="{{field.id}}"
-                                       type="text" 
-                                       class="form-control" 
-                                       placeholder="{{field.default}}"
-                                       ng-required="{{field.required}}">
-                                       
-                                <div ng-if="field.type == 'wstype'"
-                                     dd-filter
-                                     dd-id="input-{{field.id}}" 
-                                     dd-title="selectedWS"
-                                     dd-placeholder="Filter files"
-                                     ng-model="fields[field.id]"
-                                     dd-default="selectedObj"
-                                     dd-data="appUI.wsObjsByType['String']"
-                                     dd-change="objChange"
-                                     dd-required="true"
-                                     dd-empty-notice="None Available">
-                                </div>
-
-                                <select ng-if="field.type == 'enum'" 
-                                        ng-model="fields[field.id]" 
-                                        class="form-control" 
-                                        ng-options="x for x in field.enum" 
-                                        ng-init="fields[field.id] = field.enum[0]"
-                                        ng-required="{{field.required}}">
-                                </select>
-
-                                <span class="error" ng-show="run && appForm.{{field.id}}.$error.required">Required!</span>
-                            </div>
-                          </div>
-
-                          <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                              <button ng-disabled="appForm.$invalid || appRunning" ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">
-                                {{appRunning ? 'Running...' : 'Run'}}
-                            </button>
-                            </div>
-                          </div>
-                        </form>
-
-                    </figure>
-                    
-
-                    <figure class="back">
-                    </figure>
-                </div>
-            </div>
-        </div>-->
-
-    </div> <!-- end row -->
-
-    <div>
-
-
-    </div>
 </div>
 
 
