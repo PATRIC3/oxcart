@@ -26,16 +26,15 @@
 			    "desc": "FASTQ or FASTA file or reads",
 			    "wstype": "ReadFileHandle",
 			    "type": "wstype"
-			},
-			{
-			    "id": "interleaved",
-			    "label": "Are the paired end reads interleaved?",
-			    "required": 0,
-			    "default": 0,
-			    "type": "bool"
 			}
 		    ],
-		    "sub_group":[
+		    "sub_group":[{
+						    "id": "interleaved",
+						    "label": "Are the paired end reads interleaved?",
+						    "required": 0,
+						    "default": 0,
+						    "type": "bool"
+						},
 						{
 						    "id": "insert_size_mean",
 						    "label": "Average insert size",
@@ -48,7 +47,7 @@
 						    "label": "Average insert standard deviation",
 						    "required": 0,
 						    "default": null,
-						    "type": "float"
+						    "type": "int"
 						}
 		    ]
 		},

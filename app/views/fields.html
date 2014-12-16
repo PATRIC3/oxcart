@@ -1,3 +1,5 @@
+
+
 <input ng-if="field.type == 'string'"
        id="input-{{field.id}}"
        ng-model="fields[field.id]" 
@@ -43,6 +45,14 @@
         class="form-control" 
         ng-options="x for x in field.enum" 
         ng-init="fields[field.id] = field.enum[0]"
+        ng-required="{{field.required}}">
+</select>
+
+<select ng-if="field.type == 'bool'" 
+        ng-model="fields[field.id]" 
+        class="form-control" 
+        ng-options="x for x in ['Yes', 'No']" 
+        ng-init="fields[field.id] = 'Yes'"
         ng-required="{{field.required}}">
 </select>
 

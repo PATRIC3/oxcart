@@ -42,25 +42,50 @@
                 <br>
                     <form name="appForm" class="form-horizontal" role="form">
 
-                      <div class="form-group" ng-repeat="field in app.parameters">
-                        <label class="col-sm-3 control-label">{{field.label}}</label>
+                        <div class="form-group" ng-repeat="field in app.parameters">
 
-                        <div class="col-sm-9">
+
+
                             <div ng-if="field.type == 'group'">
-                                This is a group
+                                <div ng-repeat="field in field.group">
+                                    <div class="row">
+                                        <label class="col-sm-3 control-label">{{field.label}}</label>
+
+                                        <div class="col-sm-9">
+                                            <div ng-include src="'./app/views/fields.html'"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-repeat="field in field.sub_group">
+                                    <div class="row">
+                                        <label class="col-sm-3 control-label">{{field.label}}</label>
+                                        <div class="col-sm-9">
+                                            <div ng-include src="'./app/views/fields.html'"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
+  
+                            <label class="col-sm-3 control-label">{{field.label}}</label>
 
-                            <div ng-include src="'./app/views/fields.html'"></div>
+                            <div class="col-sm-9">
+                                <div ng-include src="'./app/views/fields.html'"></div>
+                            </div>
                         </div>
-                      </div>
 
-                      <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                          <button ng-disabled="appForm.$invalid || appRunning" ng-click="runCell($index, app)" type="submit" class="btn btn-primary pull-right">
-                            {{appRunning ? 'Running...' : 'Run'}}
-                        </button>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button ng-disabled="appForm.$invalid || appRunning" 
+                                        ng-click="runCell($index, app)" 
+                                        type="submit" 
+                                        class="btn btn-primary pull-right">
+                                    {{appRunning ? 'Running...' : 'Run'}}
+                                </button>
+                            </div>
                         </div>
-                      </div>
                     </form>
 
 

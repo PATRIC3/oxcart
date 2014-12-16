@@ -27,6 +27,7 @@ angular.module('workspace', ['uiTools'])
 
             // update ui model
             self.workspaces = data;
+            console.log(self.workspaces)
             return data;
         })
     }
