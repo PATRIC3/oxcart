@@ -70,7 +70,7 @@ angular.module('appTasker',
                 return appUI.getApps;
               }],
               'GetMyWorkspaces': ['workspace', function(workspace){
-                return workspace.getMyWorkspaces;
+                return workspace.getWS;
               }]
             },
             controller: 'AppCell',

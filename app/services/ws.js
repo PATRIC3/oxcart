@@ -7,8 +7,8 @@
 */
 
 angular.module('workspace', ['uiTools'])
-.service('workspace', ['$http', 'uiTools', '$log', 'authService',
-    function($http, uiTools, $log, auth) {
+.service('workspace', ['$http', 'uiTools', '$log', 'authService', 'config',
+    function($http, uiTools, $log, auth, config) {
 
     var self = this;
 
@@ -75,7 +75,7 @@ angular.module('workspace', ['uiTools'])
 
     this.getDirectory = function(directory) {
         console.log(directory)
-        return $http.rpc('ws', 'list_workspace_contents', {directory: directory})
+        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories:0})
                     .then(function(d) {
                         var data = [];
                         for (var i in d) {  
@@ -88,7 +88,7 @@ angular.module('workspace', ['uiTools'])
                                        timestamp: Date.parse(ws[3])
                                       });
                         }
-
+                        console.log('folders!', data);
                         return data;
                     }).catch(function(e) {
                         console.log('list_workspace_contents failed', e, directory)
@@ -109,6 +109,7 @@ angular.module('workspace', ['uiTools'])
                                        timestamp: Date.parse(ws[3])
                                       });
                         }
+
                         return data;
                     }).catch(function(e) {
                         console.log('list_workspace_contents for folders failed', e, directory)
@@ -141,17 +142,19 @@ angular.module('workspace', ['uiTools'])
     }      
 
     this.newWS = function(name) {
+        console.log('called new workspace with name:', name)
         return $http.rpc('ws', 'create_workspace', {workspace: name});
     }
 
     this.newFolder = function(path, name) {
-        console.log('creating folder:', path,name)
-        return $http.rpc('ws', 'create_workspace_directory', {directory: path+'/'+name})
+        console.log('creating folder with path/name', path, name)      
+        return $http.rpc('ws', 'create_workspace_directory', params)
     }
 
     this.saveObject = function(directory, name, data, type) {
-        $http.rpc('ws', 'save_objects', {objects: [[directory, name, data, type]]}).then(function(res) {
-
+        return $http.rpc('ws', 'save_objects', {objects: [[directory, name, data, type]]}).then(function(res) {
+            console.log('response', res)
+            return res;
         })
     }
 
@@ -208,13 +211,23 @@ angular.module('workspace', ['uiTools'])
         }
     }
 
+    this.getWS = this.getMyWorkspaces();
+
     //this.createNode({objects: [['/'+auth.user+'/new workspace', 'newdata', 'String', {description: 'blah blah blah'}]]});
     //self.newWS('/nconrad/test')
     //self.saveObject('/public/newws', directory, 'this is just some test data '+i, 'Genome')
     //makeSomeData('somefile', 7);
-    
 
-    //this.getObject('/nconrad/asdf', 'b99.ref.fablah')
+    //var shockURL = config.services.shock_url;
+    //var token = {Authorization: 'OAuth ' + auth.token};
+    //var header = {headers:  token }
+
+    //$http.get('http://p3.theseed.org/services/shock_api/node/d883fbb2-2d97-4d81-aa1b-dec113c9c0a6?download', header)
+    //        .success(function(data) {
+    //            console.log('data', data)
+    //        })
+
+    //this.getObject('/nconrad/new folder', 'test14.fa')
 }]);
 
  

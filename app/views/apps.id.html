@@ -1,32 +1,45 @@
 <div id="page-header">
     <i class="fa fa-folder-o fa-2x pull-left"></i>    
 
-    <b> Working Folder</b>
-    <div dd-filter
-        ng-model="somemodel"
-        dd-id="input-ws"
-        dd-change="wsChange"
-        dd-title="'Working Folder'"
-        dd-placeholder="Filter folders"
-        dd-default="selectedWS"
-        dd-data="workspaces"
-        class="page-header-item">
+    <div ng-if="!workspaces.length">
+        First create a folder to store data in.
+        <form ng-submit="saveFolder(folder.name);" name="new">
+            <input type="text" 
+                   name="folder"
+                   ng-model="folder.name" 
+                   focus-on="placeholderAdded">
+            <input type="submit" class="btn btn-primary btn-xs">
+        </form>
     </div>
 
+    <div ng-if="workspaces.length">
+        <b> Working Folder</b>
+        <div dd-filter
+            ng-model="somemodel"
+            dd-id="input-ws"
+            dd-change="wsChange"
+            dd-title="'Working Folder'"
+            dd-placeholder="Filter folders"
+            dd-default="selectedWS"
+            dd-data="workspaces"
+            class="page-header-item">
+        </div>
 
-    <div class="page-header-item" ng-controller="UploadCtrl">
-        <form id="upload-form" class="upload-form" >
-            <b>Upload to <i>{{selectedWS}}</i></b>
-            <span class="btn btn-default btn-file">
-                Choose File... <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
+
+        <div class="page-header-item">
+            <form id="upload-form" class="upload-form" >
+                <b>Upload to <i>{{selectedWS}}</i></b>
+                <span class="btn btn-default btn-file">
+                    Choose File... <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
+                </span>
+            </form>
+        
+            <md-progress-linear ng-if="status.count" md-mode="determinate" ng-value="status.progress"></md-progress-linear>
+
+            <span ng-if="status.complete">
+                complete.
             </span>
-        </form>
-    
-        <md-progress-linear ng-if="status.count" md-mode="determinate" ng-value="status.progress"></md-progress-linear>
-
-        <span ng-if="status.complete">
-            complete.
-        </span>
+        </div>
     </div>
 
 </div>

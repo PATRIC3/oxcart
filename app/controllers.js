@@ -12,10 +12,8 @@ angular.module('controllers', [])
 ['$scope', '$state', 'appUI', 'authService', '$window', 'workspace',
 function($scope, $state, appUI, authService, $window, ws) {
 
-    $scope.test = 'hello';
     // app and ws services
     $scope.appUI = appUI;   
-
 
     $scope.logout = function() {
         authService.logout();
@@ -162,12 +160,12 @@ function($scope, $state, appUI, authService, $window, ws) {
 
         if (path) {
             console.log('calling new')
-            ws.newFolder(path, name).then(function() {
+            return ws.newFolder(path, name).then(function() {
                 $scope.saving = false;
                 $scope.updateDir();
             });
         } else {
-            ws.newWS(name).then(function(res) {
+            return ws.newWS(name).then(function(res) {
                 $scope.saving = false;                
                 ws.addToModel(res)
             })            
@@ -357,20 +355,19 @@ function($scope, $state, appUI, authService, $window, ws) {
 // Controller for container of app form
 .controller('AppCell', 
     ['$scope', '$stateParams', 'appUI', 'workspace', 
-    '$timeout', 'upload', '$http', 'GetMyWorkspaces',
+    '$timeout', 'upload', '$http', 
     function($scope, $stateParams, appUI, ws, $timeout, upload, $http) {
     // service for appUI state
     $scope.appUI = appUI;
 
-    ws.getMyWorkspaces().then(function(data) {
-        $scope.workspaces = data;
-        $scope.selectedWS = data[0].name;
-
+    if (ws.workspaces.length) {
+        $scope.workspaces = ws.workspaces;
+        $scope.selectedWS = ws.workspaces[0].name;
         updateObjDD($scope.selectedWS);
-    })
+    }
 
     // update workspace objects if dropdown changes
-    //$scope.$watch('ddDisplayed', function(new_ws) {
+    // $scope.$watch('ddDisplayed', function(new_ws) {
     $scope.$on('wsChange', function(event, new_ws) {
         if (new_ws) updateObjDD(new_ws);
         $scope.selectedWS = new_ws
@@ -383,6 +380,21 @@ function($scope, $state, appUI, authService, $window, ws) {
             else
                 $scope.selectedObj = false;
         })
+    }
+
+    // saves the folder; fixme: make this a util
+    $scope.saveFolder = function(name) {
+        $scope.newFolder = false;
+        $scope.saving = true;
+
+        return ws.newWS(name).then(function(res) {
+            $scope.saving = false;                
+            ws.addToModel(res);
+            $scope.workspaces = ws.workspaces;
+            $scope.selectedWS = ws.workspaces[0].name;
+
+            updateObjDD($scope.selectedWS);            
+        })                    
     }
 
     // set 'app' as app (via URL)
@@ -424,7 +436,6 @@ function($scope, $state, appUI, authService, $window, ws) {
         return appUI.wsObjsByType[type][0].name
     }
 
-
     $scope.upload = upload;
 
     $scope.createNode = function(files) {
@@ -433,8 +444,20 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     // update dropdown after upload
     $scope.$watch('upload.status', function(value) {
-        if (value.complete == true) updateObjDD($scope.selectedWS);
+        if (value.complete == true) {
+            updateObjDD($scope.selectedWS);
+
+            // clear uploader; fix
+            document.getElementById('upload-form').innerHTML =
+            document.getElementById('upload-form').innerHTML;
+
+            $timeout(function() {
+                $scope.status.complete = false;
+            }, 2000)
+        }
+
         $scope.status = value;
+
     }, true);
 
 }])
