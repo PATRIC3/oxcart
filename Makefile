@@ -1,3 +1,6 @@
+# totrack variables added herein
+VARS_OLD := $(.VARIABLES)
+
 TOP_DIR = ../..
 DEPLOY_RUNTIME ?= /kb/runtime
 TARGET ?= /kb/deployment
@@ -23,7 +26,7 @@ TPAGE_ARGS = --define ws_url=$(WS_URL) \
 
 default:
 
-deploy: deploy-client
+deploy: deploy-client vars
 
 deploy-client: deploy-configs
 	rsync --exclude '.git' -arv . $(TARGET)/services/$(SERVICE_DIR)/webroot/.
@@ -36,5 +39,10 @@ build-configs:
 	$(TPAGE) $(TPAGE_ARGS) templates/config.js.tt > config.js
 
 
+vars:
+	@echo "nothing to do for default"
+	$(foreach v,                                      \
+	$(filter-out $(VARS_OLD) VARS_OLD,$(.VARIABLES)), \
+	$(info $(v) = $($(v))))
 
 include $(TOP_DIR)/tools/Makefile.common.rules
