@@ -1,14 +1,15 @@
 <div id="page-header">
-    <i class="fa fa-folder-o fa-2x pull-left"></i>    
+    <i ng-if="workspaces.length" class="fa fa-folder-o fa-2x pull-left"></i>
 
     <div ng-if="!workspaces.length">
-        First create a folder to store data in.
+        <b>Oh no!  First create a folder to store data in.</b>
         <form ng-submit="saveFolder(folder.name);" name="new">
-            <input type="text" 
+            <input type="text"
                    name="folder"
-                   ng-model="folder.name" 
-                   focus-on="placeholderAdded">
-            <input type="submit" class="btn btn-primary btn-xs">
+                   ng-model="folder.name"
+                   focus-on="placeholderAdded"
+                   placeholder="Folder name">
+            <input type="submit" class="btn btn-primary btn-xs" value="Create">
         </form>
     </div>
 
@@ -33,7 +34,7 @@
                     Choose File... <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
                 </span>
             </form>
-        
+
             <md-progress-linear ng-if="status.count" md-mode="determinate" ng-value="status.progress"></md-progress-linear>
 
             <span ng-if="status.complete">
@@ -80,7 +81,7 @@
 
 
                             </div>
-  
+
                             <label class="col-sm-3 control-label">{{field.label}}</label>
 
                             <div class="col-sm-9">
@@ -90,9 +91,9 @@
 
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                                <button ng-disabled="appForm.$invalid || appRunning" 
-                                        ng-click="runCell($index, app)" 
-                                        type="submit" 
+                                <button ng-disabled="appForm.$invalid || appRunning"
+                                        ng-click="runCell($index, app)"
+                                        type="submit"
                                         class="btn btn-primary pull-right">
                                     {{appRunning ? 'Running...' : 'Run'}}
                                 </button>
@@ -106,7 +107,7 @@
                     <b>Parameters</b> {{output.parameters}}
                 </md-card>
 
-    
+
             </div>
 
             <div class="col-md-3">
@@ -128,8 +129,8 @@
                 </md-card>
             </div>
 
-        </div> 
-           
+        </div>
+
     </div> <!-- end page wrapper -->
 
 </div>
