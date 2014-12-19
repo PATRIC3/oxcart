@@ -1,4 +1,4 @@
-/* 
+/*
  * Workspace Model
  *
  *   This is responsible for the workspace-related models and state.
@@ -46,7 +46,7 @@ angular.module('workspace', ['uiTools'])
             self.workspaces = data;
             return data;
         })
-    }    
+    }
 
     this.wsListToDict = function(ws) {
         return {id: ws[0],
@@ -71,19 +71,19 @@ angular.module('workspace', ['uiTools'])
             }
         }
         console.log('new model', self.workspaces);
-    }    
+    }
 
     this.getDirectory = function(directory) {
         console.log(directory)
-        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories:0})
+        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories:1})
                     .then(function(d) {
                         var data = [];
-                        for (var i in d) {  
+                        for (var i in d) {
                             var ws = d[i];
                             data.push({name: ws[1],
                                        type: ws[2],
                                        mod_date: ws[3],
-                                       size: ws[9],                                       
+                                       size: ws[9],
                                        //owner: ws[5],
                                        timestamp: Date.parse(ws[3])
                                       });
@@ -99,12 +99,12 @@ angular.module('workspace', ['uiTools'])
         return $http.rpc('ws', 'list_workspace_contents', {directory: directory, excludeObjects: 1})
                     .then(function(d) {
                         var data = [];
-                        for (var i in d) {  
+                        for (var i in d) {
                             var ws = d[i];
                             data.push({name: ws[1],
                                        type: ws[2],
                                        mod_date: ws[3],
-                                       size: ws[9],                                       
+                                       size: ws[9],
                                        //owner: ws[5],
                                        timestamp: Date.parse(ws[3])
                                       });
@@ -115,7 +115,7 @@ angular.module('workspace', ['uiTools'])
                         console.log('list_workspace_contents for folders failed', e, directory)
                     })
 
-    }  
+    }
     //this.getFolders('/public/testworkspace');
 
 
@@ -123,12 +123,12 @@ angular.module('workspace', ['uiTools'])
         return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories: 0})
                     .then(function(d) {
                         var data = [];
-                        for (var i in d) {  
+                        for (var i in d) {
                             var ws = d[i];
                             data.push({name: ws[1],
                                        type: ws[2],
                                        mod_date: ws[3],
-                                       size: ws[9],                                       
+                                       size: ws[9],
                                        //owner: ws[5],
                                        timestamp: Date.parse(ws[3])
                                       });
@@ -139,7 +139,7 @@ angular.module('workspace', ['uiTools'])
                         console.log('list_workspace_contents for folders failed', e, directory)
                     })
 
-    }      
+    }
 
     this.newWS = function(name) {
         console.log('called new workspace with name:', name)
@@ -147,7 +147,8 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.newFolder = function(path, name) {
-        console.log('creating folder with path/name', path, name)      
+        var params = {directory: path+'/'+name}
+        console.log('creating folder with params', params)
         return $http.rpc('ws', 'create_workspace_directory', params)
     }
 
@@ -167,7 +168,7 @@ angular.module('workspace', ['uiTools'])
 
     this.mv = function(path, name, des_path, des_name) {
         console.log('move', path, name, des_path, des_name)
-        return $http.rpc('ws', 'move_objects', 
+        return $http.rpc('ws', 'move_objects',
                     {objects: [[path, name, des_path, des_name]] }).then(function(res) {
                         console.log('res', res);
                })
@@ -175,14 +176,14 @@ angular.module('workspace', ['uiTools'])
 
     this.deleteFolder = function(path, name) {
         console.log('attempting to delete folder', path, name)
-        return $http.rpc('ws', 'delete_workspace_directory', 
+        return $http.rpc('ws', 'delete_workspace_directory',
                     {directory: path+'/'+name, force: 1}).then(function(res) {
                         console.log('deleted directory', res)
                     })
     }
 
     this.deleteObj = function(path, name) {
-        return $http.rpc('ws', 'delete_objects', 
+        return $http.rpc('ws', 'delete_objects',
                     {objects: [[path, name]]}).then(function(res) {
                         console.log('deleted object', res)
                     })
@@ -202,7 +203,7 @@ angular.module('workspace', ['uiTools'])
                     console.log('response', res)
                     return res;
                 });
-    }    
+    }
 
 
     function makeSomeData(name, howmany) {
@@ -230,5 +231,5 @@ angular.module('workspace', ['uiTools'])
     //this.getObject('/nconrad/new folder', 'test14.fa')
 }]);
 
- 
+
 
