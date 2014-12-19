@@ -1,10 +1,9 @@
 <div id="table-page-wrapper">
     <div class="fixed-header" fixed-header fixed-table="ws-table">
         <h4>
-            <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="22" height="22"> 
+            <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="22" height="22">
             My Data
         </h4>
-
 
         <div ng-if="!loading" class="pull-right">
             <span class="ws-opt pull-right" ng-click="newPlaceholder()">  <!-- newWSModal($event)-->
@@ -31,7 +30,7 @@
                             <i ng-if="reverse" class="fa fa-caret-down"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up"></i>
                         </span>
-                    </th>        
+                    </th>
                     <th ng-click="predicate = 'timestamp'; reverse=!reverse" class="point">Mod Date
                         <span ng-if="predicate == 'timestamp'">
                             <i ng-if="reverse" class="fa fa-caret-down"></i>
@@ -72,10 +71,10 @@
             <td><i class="fa fa-folder-o fa-2x soft"></i></td>
             <td>
                 <form ng-submit="saveFolder(null, folder.name)" name="new">
-                    <input type="text" 
+                    <input type="text"
                            name="folder"
-                           ng-model="folder.name" 
-                           focus-on="placeholderAdded" 
+                           ng-model="folder.name"
+                           focus-on="placeholderAdded"
                            ng-blur="saveFolder(null, folder.name)">
                 </form>
                 <span ng-if="saving">saving...</span>
@@ -99,7 +98,7 @@
                 <form ng-if="edit.index == $index" ng-submit="mvWS(directory, selected.name, directory, edit.name)">
                     <input ng-if="!saving"
                            type="text"
-                           ng-model="edit.name" 
+                           ng-model="edit.name"
                            focus-on="editable"
                            ng-blur="mv(directory, selected.name, directory, edit.name)" required>
                     <span ng-if="saving">saving...</span>
@@ -108,12 +107,12 @@
             </td>
             <td>{{ws.owner}}</td>
             <td>{{relativeTime( ws.timestamp )}}</td>
-            <td>{{ws.files}}</td>     
+            <td>{{ws.files}}</td>
         </tr>
     </table>
 
     <div ng-if="ws.workspaces.length == 0" class="text-center no-data soft">
-        No data here.  
+        No data here.
         Drag files here to upload (coming soon).
     </div>
 
@@ -123,7 +122,7 @@
             <li>
               <a class="pointer" role="menuitem" tabindex="1"
                  ng-click="deleteWS(selected.name) ">
-                 <i class="fa fa-trash-o"></i> Delete... 
+                 <i class="fa fa-trash-o"></i> Delete...
               </a>
             </li>
             <li>

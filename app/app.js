@@ -1,20 +1,20 @@
 
 
-angular.module('appTasker', 
-['ui.router', 
+angular.module('appTasker',
+['ui.router',
  'config',
- 'seed-rpc', 
+ 'seed-rpc',
  'kbase-auth',
  'workspace',
  'upload',
  'directives',
  'controllers',
- 'uiTools', 
- 'dd-filter', 
+ 'uiTools',
+ 'dd-filter',
  'ngMaterial',
- 'ng-context-menu', 
+ 'ng-context-menu',
  'appUI'])
-.config(['$locationProvider', '$stateProvider', 
+.config(['$locationProvider', '$stateProvider',
          '$httpProvider', '$urlRouterProvider', '$logProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider, $logProvider) {
 
@@ -36,7 +36,7 @@ angular.module('appTasker',
             url: "/upload",
             templateUrl: 'app/views/upload.html',
             controller: 'Upload',
-            authenticate: true})  
+            authenticate: true})
         .state('app.tasks', {
             url: "/tasks",
             templateUrl: 'app/views/tasks.html',
@@ -56,7 +56,7 @@ angular.module('appTasker',
             url: "/ws{dir:.*}",
             templateUrl: 'app/views/ws/ws.dir.html',
             controller: 'WS',
-            authenticate: true})                 
+            authenticate: true})
         .state('app.apps', {
             url: "/apps/",
             templateUrl: 'app/views/apps.html',
@@ -69,7 +69,7 @@ angular.module('appTasker',
               'GetApps': ['appUI', function(appUI){
                 return appUI.getApps;
               }],
-              'GetMyWorkspaces': ['workspace', function(workspace){
+              'GetWS': ['workspace', function(workspace){
                 return workspace.getWS;
               }]
             },
@@ -83,12 +83,12 @@ angular.module('appTasker',
               'GetApps': ['appUI', function(appUI){
                 return appUI.getApps;
               }],
-              'GetMyWorkspaces': ['workspace', function(workspace){
-                return workspace.getMyWorkspaces;
+              'GetWS': ['workspace', function(workspace){
+                return workspace.getWS;
               }]
             },
             controller: 'AppCell',
-            authenticate: true})        
+            authenticate: true})
         .state('app.builder', {
             url: "/builder",
             templateUrl: 'app/views/app-builder.html',
@@ -132,7 +132,7 @@ angular.module('appTasker',
                       .when('#', '/app-tasker');
 
     // Send to login if the URL was not found
-    $urlRouterProvider.otherwise("/login");                      
+    $urlRouterProvider.otherwise("/login");
 
 }])
 
@@ -142,7 +142,7 @@ angular.module('appTasker',
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
         if (toState.authenticate && !authService.isAuthenticated()){
             $state.go('login');
-            event.preventDefault(); 
+            event.preventDefault();
         }
     })
 

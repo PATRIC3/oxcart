@@ -26,11 +26,12 @@
                 <i class="fa fa-folder-o"></i>
                 new folder
             </span>
-
+            <!--
             <span class="ws-opt" >
                 <i class="fa fa-plus"></i>
                 new object
             </span>
+            -->
             <!--<span>
                 <input type="text" class="form-control input-sm pull-right" ng-model="wsSearch" placeholder="search {{path[0]}}..." >
             </span>-->
@@ -137,7 +138,7 @@
         </tr>
     </table>
 
-    <div ng-if="dirData.length == 0" class="text-center no-data soft">
+    <div ng-if="!dirData" class="text-center no-data soft">
         No data here.
         Drag files here to upload (coming soon).
     </div>

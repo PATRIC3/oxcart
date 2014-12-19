@@ -69,8 +69,6 @@ function($scope, $state, appUI, authService, $window, ws) {
         links.reverse();
         links = links.slice(1, links.length);
 
-        // model for data to be displayed
-        $scope.dirData = [];
 
         $scope.loading = true;
         ws.getDirectory($scope.directory).then(function(data) {
