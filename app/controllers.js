@@ -1,19 +1,19 @@
-/*  
+/*
  *  Controllers
  *  See: https://docs.angularjs.org/guide/controller
  *
  *  Analysis - State goes across upload, data, apps, and tasks, using the service
  *             appUI
- *  
+ *
 */
 
 angular.module('controllers', [])
-.controller('MainCtrl', 
+.controller('MainCtrl',
 ['$scope', '$state', 'appUI', 'authService', '$window', 'workspace',
 function($scope, $state, appUI, authService, $window, ws) {
 
     // app and ws services
-    $scope.appUI = appUI;   
+    $scope.appUI = appUI;
 
     $scope.logout = function() {
         authService.logout();
@@ -25,7 +25,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 }])
 
 
-.controller('WS', 
+.controller('WS',
     ['$scope', '$stateParams', 'workspace', '$log',
      'uiTools', '$document', '$timeout', '$mdDialog', 'authService',
     function($scope, $stateParams, ws, $log, uiTools, $document, $timeout,  $mdDialog, auth) {
@@ -81,7 +81,7 @@ function($scope, $state, appUI, authService, $window, ws) {
         $scope.getLink = function(i) {
             return links[i];
         }
-    } else {        
+    } else {
         $scope.directory = '/'+auth.user;
 
         if (ws.workspaces.length == 0) {
@@ -92,7 +92,7 @@ function($scope, $state, appUI, authService, $window, ws) {
         }
 
     }
-    
+
     $scope.prevent = function(e) {
         console.log('called prevent')
         e.stopPropagation();
@@ -101,7 +101,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     // context menu open
     $scope.openMenu = function(e, i, item) {
         console.log('called open row')
-        $scope.selected = {type: item.type ? item.type : 'Workspace', 
+        $scope.selected = {type: item.type ? item.type : 'Workspace',
                            name: item.name,
                            index: i};
                            console.log($scope.selected)
@@ -136,7 +136,7 @@ function($scope, $state, appUI, authService, $window, ws) {
                 }
             }]
         })
-    }    
+    }
 
     function newWS(name) {
         return ws.newWS(name).then(function(res) {
@@ -156,26 +156,27 @@ function($scope, $state, appUI, authService, $window, ws) {
     // saves the folder name, updates view
     $scope.saveFolder = function(path, name) {
         $scope.newFolder = false;
+        if (!name) return;
+
         $scope.saving = true;
 
         if (path) {
-            console.log('calling new')
             return ws.newFolder(path, name).then(function() {
                 $scope.saving = false;
                 $scope.updateDir();
             });
         } else {
             return ws.newWS(name).then(function(res) {
-                $scope.saving = false;                
+                $scope.saving = false;
                 ws.addToModel(res)
-            })            
+            })
         }
     }
 
     // delete an object
     $scope.deleteObj = function(path, name) {
         ws.deleteObj(path,name).then(function() {
-            $scope.updateDir();           
+            $scope.updateDir();
         })
     }
 
@@ -206,7 +207,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 
         $scope.saving = true;
         ws.mv(path, name, new_path, new_name).then(function( ){
-            $scope.saving = false;            
+            $scope.saving = false;
             $scope.edit = false;
             $scope.updateDir();
         }).catch(function(e) {
@@ -221,7 +222,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.selectRow = function(e, i, item) {
         console.log('called select row')
         $scope.select = true;
-        $scope.selected = {type: item.type ? item.type : 'Workspace', 
+        $scope.selected = {type: item.type ? item.type : 'Workspace',
                            name: item.name,
                            index: i};
 
@@ -246,7 +247,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     // updates the view
     $scope.updateDir = function() {
         ws.getDirectory($scope.directory).then(function(data) {
-            $scope.dirData = data;            
+            $scope.dirData = data;
         })
     }
 
@@ -263,7 +264,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 }])
 
 
-.controller('Upload', 
+.controller('Upload',
     ['$scope', '$http', 'uiTools', 'config', 'authService',
     function($scope, $http, uiTools, config, authService) {
 
@@ -271,7 +272,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     var nodeURL= shockURL+'/node';
     var auth = {Authorization: 'OAuth ' + authService.token};
     var header = {headers:  auth }
-    
+
     $scope.uploadFile = function(files) {
 
         $scope.$apply( function() {
@@ -283,13 +284,13 @@ function($scope, $state, appUI, authService, $window, ws) {
         $.ajax({
             url: nodeURL,
             type: 'POST',
-            xhr: function() { 
+            xhr: function() {
                 var myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload){ 
+                if(myXhr.upload){
                     myXhr.upload.addEventListener('progress', updateProgress, false);
                 }
                 return myXhr;
-            },            
+            },
             headers: auth,
             success: function(data) {
                 console.log('upload success', data)
@@ -316,7 +317,7 @@ function($scope, $state, appUI, authService, $window, ws) {
             }
         }
     }
-    
+
     $scope.getUploads = function() {
         $http.get(nodeURL+'?querynode&owner='+authService.user+'&limit=10000', header)
             .success(function(data) {
@@ -338,7 +339,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 }])
 
 // controller for Task Status view
-.controller('TaskStatus', 
+.controller('TaskStatus',
     ['$scope', '$stateParams', 'uiTools',
     function($scope, $stateParams, uiTools) {
 
@@ -353,9 +354,9 @@ function($scope, $state, appUI, authService, $window, ws) {
 }])
 
 // Controller for container of app form
-.controller('AppCell', 
-    ['$scope', '$stateParams', 'appUI', 'workspace', 
-    '$timeout', 'upload', '$http', 
+.controller('AppCell',
+    ['$scope', '$stateParams', 'appUI', 'workspace',
+    '$timeout', 'upload', '$http',
     function($scope, $stateParams, appUI, ws, $timeout, upload, $http) {
     // service for appUI state
     $scope.appUI = appUI;
@@ -375,7 +376,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     function updateObjDD(ws_name) {
         appUI.updateWSObjs(ws_name).then(function(objs) {
-            if ('String' in objs) 
+            if ('String' in objs)
                 $scope.selectedObj = objs['String'][0].name;
             else
                 $scope.selectedObj = false;
@@ -385,16 +386,18 @@ function($scope, $state, appUI, authService, $window, ws) {
     // saves the folder; fixme: make this a util
     $scope.saveFolder = function(name) {
         $scope.newFolder = false;
+        if (!name) return;
+
         $scope.saving = true;
 
         return ws.newWS(name).then(function(res) {
-            $scope.saving = false;                
+            $scope.saving = false;
             ws.addToModel(res);
             $scope.workspaces = ws.workspaces;
             $scope.selectedWS = ws.workspaces[0].name;
 
-            updateObjDD($scope.selectedWS);            
-        })                    
+            updateObjDD($scope.selectedWS);
+        })
     }
 
     // set 'app' as app (via URL)
@@ -468,7 +471,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 .controller('Proto', ['$scope',
     function($scope) {
- 
+
         $scope.folders = [{name: 'folder1'},
                           {name: 'genomes'},
                           {name: 'fba '},
@@ -492,12 +495,12 @@ function($scope, $state, appUI, authService, $window, ws) {
 
                 // see https://github.com/angular-ui/ui-router/issues/582
                 $state.transitionTo('app.apps', {}, {reload: true, inherit: true, notify: false})
-                      .then(function() {               
+                      .then(function() {
                         setTimeout(function(){
                             $window.location.reload();
                         }, 0);
                       });
-                      
+
             }).error(function(e, status){
                 console.log('error', e)
                 $scope.loading = false;
@@ -511,7 +514,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     }
 }])
 
-.controller('UploadCtrl', 
+.controller('UploadCtrl',
     ['$scope', 'upload', 'appUI', function($scope, upload, appUI) {
 
 
