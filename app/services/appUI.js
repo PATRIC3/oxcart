@@ -1,4 +1,4 @@
-/* 
+/*
  * App Tasker Model (appUI service)
  *
  *   This is responisble for the state of the app tasker model
@@ -7,7 +7,7 @@
 */
 
 angular.module('appUI', ['uiTools', 'kbase-auth'])
-.service('appUI', ['$http', '$log', 'uiTools', 'authService', 'workspace', 
+.service('appUI', ['$http', '$log', 'uiTools', 'authService', 'workspace',
     function($http, $log, uiTools, authService, ws) {
 
     // if not logged in, don't bother using this
@@ -16,10 +16,10 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = true;
+    var polling = false;
     var pollTasksMS = 5000;
-    var pollStatusMS = 3000;    
-    var taskDispCount = 50; 
+    var pollStatusMS = 3000;
+    var taskDispCount = 50;
 
     // default workspace; used at the start of the application
     var default_ws = 'Default folder goes here';
@@ -41,8 +41,8 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     // model for tasks; appears in 'running tasks'
     this.loadingTasks = true;       // models are loading at runtime
     this.tasks = {all: [],
-                  queued: [], 
-                  in_progress: [], 
+                  queued: [],
+                  in_progress: [],
                   completed: []};
     this.status = {};
 
@@ -65,22 +65,24 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
         // FIX: refactor, deal with workspace / directory issue on front-end and back
         // iterate through ids, if type is 'wstype', add on workspace path
+
         for (var i in self.appDict[id].parameters) {
             var param = self.appDict[id].parameters[i];
+            console.log('param!', param)
 
             for (var key in form_params) {
-                if (param.id == key && (param.type == 'wstype' || param.type == 'wsid') )  {
+                if (param.id == key && (param.type == 'folder') )  {
                     form_params[key] = '/'+authService.user+'/'+
                              workspace+'/'+form_params[key];
-                }             
+                }
             }
         }
 
-        var ws = '/'+authService.user+'/'+workspace
+        //var ws = '/'+authService.user+'/'+workspace
 
-        var params = [id, form_params, ws];
+        var params = [id, form_params];
 
-        console.log('form_params', params)        
+        console.log('form_params', params)
         return $http.rpc('app', 'start_app', params)
              .then(function(resp) {
                 console.log('app service response', resp)
@@ -88,6 +90,40 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
                 return resp;
              })
     }
+
+    // a task is of the form {name: cell.title, fields: scope.fields}
+    this.startAppTest = function(id, form_params, workspace, spec) {
+        // make the app appear more responsive
+        self.status.queued = self.status.queued + 1;
+
+        // FIX: refactor, deal with workspace / directory issue on front-end and back
+        // iterate through ids, if type is 'wstype', add on workspace path
+
+        for (var i in self.appDict[id].parameters) {
+            var param = spec.parameters[i];
+            console.log('param!', param)
+
+            for (var key in form_params) {
+                if (param.id == key && (param.type == 'folder') )  {
+                    form_params[key] = '/'+authService.user+'/'+
+                             workspace+'/'+form_params[key];
+                }
+            }
+        }
+
+        //var ws = '/'+authService.user+'/'+workspace
+
+        var params = [id, form_params];
+
+        console.log('form_params', params)
+        return $http.rpc('app', 'start_app', params)
+             .then(function(resp) {
+                console.log('app service response', resp)
+                self.updateStatus();
+                return resp;
+             })
+    }
+
 
     // update status (queued, inprogress, completed) counts
     this.updateStatus = function() {
@@ -106,15 +142,15 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     this.updateTasks = function() {
         var d = new Date();
         var t1 = d.getTime();
-        $log.debug('updating tasks model');        
+        $log.debug('updating tasks model');
 
         return $http.rpc('app', 'enumerate_tasks', [0, taskDispCount])
                     .then(function(tasks) {
                         $log.debug('tasks', tasks)
 
                         var stash = {all: [],
-                                     queued: [], 
-                                     in_progress: [], 
+                                     queued: [],
+                                     in_progress: [],
                                      completed: []};
 
                         for (var i in tasks) {
@@ -156,15 +192,15 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     this.autoUpdateStatus = function() {
         console.log('updating status model every '+pollStatusMS+ ' ms...');
         setInterval(self.updateStatus, pollStatusMS);
-    }    
+    }
 
     // run auto updater on load
-    this.updateTasks();    
-    this.updateStatus();    
+    this.updateTasks();
+    this.updateStatus();
 
     if (polling) {
         this.autoUpdateTasks();
-        this.autoUpdateStatus();    
+        this.autoUpdateStatus();
     }
 
     // used in 'Run Apps' pages
@@ -238,5 +274,5 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
 }]);
 
- 
+
 

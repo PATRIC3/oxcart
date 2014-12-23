@@ -2,34 +2,34 @@
 
 <input ng-if="field.type == 'string'"
        id="input-{{field.id}}"
-       ng-model="fields[field.id]" 
+       ng-model="fields[field.id]"
        name="{{field.id}}"
-       type="text" 
-       class="form-control" 
-       placeholder="{{field.default}}" 
+       type="text"
+       class="form-control"
+       placeholder="{{field.default}}"
        ng-required="{{field.required}}">
-                                       
+
 <input ng-if="field.type == 'int'"
        id="input-{{field.id}}"
-       ng-model="fields[field.id]" 
+       ng-model="fields[field.id]"
        name="{{field.id}}"
-       type="number" 
-       class="form-control" 
+       type="number"
+       class="form-control"
        placeholder="{{field.default}}"
        ng-required="{{field.required}}">
 
 <input ng-if="field.type == 'wsid'"
        id="input-{{field.id}}"
-       ng-model="fields[field.id]" 
+       ng-model="fields[field.id]"
        name="{{field.id}}"
-       type="text" 
-       class="form-control" 
+       type="text"
+       class="form-control"
        placeholder="{{field.default}}"
        ng-required="{{field.required}}">
-       
+
 <div ng-if="field.type == 'wstype'"
      dd-filter
-     dd-id="input-{{field.id}}" 
+     dd-id="input-{{field.id}}"
      dd-title="selectedWS"
      dd-placeholder="Filter files"
      ng-model="fields[field.id]"
@@ -40,18 +40,29 @@
      dd-empty-notice="None Available">
 </div>
 
-<select ng-if="field.type == 'enum'" 
-        ng-model="fields[field.id]" 
-        class="form-control" 
-        ng-options="x for x in field.enum" 
+<div dd-filter
+     ng-if="field.type == 'folder'"
+     ng-model="fields[field.id]"
+     dd-title="'Output Folder'"
+     dd-placeholder="Filter folders"
+     dd-default="selectedWS"
+     dd-data="workspaces"
+     dd-required="true">
+</div>
+
+
+<select ng-if="field.type == 'enum'"
+        ng-model="fields[field.id]"
+        class="form-control"
+        ng-options="x for x in field.enum"
         ng-init="fields[field.id] = field.enum[0]"
         ng-required="{{field.required}}">
 </select>
 
-<select ng-if="field.type == 'bool'" 
-        ng-model="fields[field.id]" 
-        class="form-control" 
-        ng-options="x for x in ['Yes', 'No']" 
+<select ng-if="field.type == 'bool'"
+        ng-model="fields[field.id]"
+        class="form-control"
+        ng-options="x for x in ['Yes', 'No']"
         ng-init="fields[field.id] = 'Yes'"
         ng-required="{{field.required}}">
 </select>

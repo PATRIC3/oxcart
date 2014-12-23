@@ -27,8 +27,10 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 .controller('WS',
     ['$scope', '$stateParams', 'workspace', '$log',
-     'uiTools', '$document', '$timeout', '$mdDialog', 'authService',
-    function($scope, $stateParams, ws, $log, uiTools, $document, $timeout,  $mdDialog, auth) {
+     'uiTools', '$document', '$timeout', '$mdDialog', 'authService', 'appUI',
+    function($scope, $stateParams, ws, $log, uiTools, $document, $timeout,  $mdDialog, auth, appUI) {
+
+    $scope.appUI = appUI;
 
     $scope.ws = ws;
 
@@ -39,6 +41,17 @@ function($scope, $state, appUI, authService, $window, ws) {
     // let's sort by time first
     $scope.predicate = 'timestamp';
     $scope.reverse = true;
+
+    $scope.limit = 100;
+
+    $scope.limiter = function() {
+        $scope.limit = 100; // reset display
+    }
+
+    $scope.sorter = function(name) {
+        $scope.predicate = name;
+        $scope.reverse = !$scope.reverse;
+    }
 
     // model for row selection data
     $scope.selected;
@@ -72,7 +85,15 @@ function($scope, $state, appUI, authService, $window, ws) {
 
         $scope.loading = true;
         ws.getDirectory($scope.directory).then(function(data) {
-            $scope.dirData = data;
+            $scope.items = data;
+            //$scope.items = data.slice(0, 99);
+
+
+            $scope.loadMore = function() {
+                $scope.limit = $scope.limit + 100;
+            };
+
+
             $scope.loading = false;
         })
 
@@ -245,7 +266,7 @@ function($scope, $state, appUI, authService, $window, ws) {
     // updates the view
     $scope.updateDir = function() {
         ws.getDirectory($scope.directory).then(function(data) {
-            $scope.dirData = data;
+            $scope.items = data;
         })
     }
 
@@ -260,6 +281,7 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 
 }])
+
 
 
 .controller('Upload',
@@ -399,24 +421,14 @@ function($scope, $state, appUI, authService, $window, ws) {
     }
 
     // set 'app' as app (via URL)
-    if ($stateParams.file) {
-        /*
-        var url = 'https://api.github.com/repos/TheSEED/app_service/contents/app_specs/'+
-                    $stateParams.file+'.json';
-
-        $http.get(url).then(function(res) {
-                $scope.app =  angular.fromJson(window.atob(res.data.content ) )
-                console.log($scope.app)
-             });
-        */
-        $http.get('./tests/test-forms/assembly.json').then(function(res) {
+    if ($stateParams.file)
+        $http.get('./tests/test-forms/'+$stateParams.file+'.json')
+             .then(function(res) {
                 $scope.app =  res.data;
                 console.log('test app', $scope.app)
              });
-
-    } else {
+    else
         $scope.app = appUI.appDict[$stateParams.id];
-    }
 
 
     $scope.fields = {};
@@ -424,11 +436,19 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.runCell = function(index, app) {
         $scope.run = true;
         $scope.appRunning = true;
-        appUI.startApp(app.id, $scope.fields, $scope.selectedWS)
-             .then(function(res) {
-                $scope.output = res
-                console.log('output', $scope.output)
-             })
+
+        if ($stateParams.file)
+            appUI.startAppTest(app.id, $scope.fields, $scope.selectedWS, $scope.app)
+                 .then(function(res) {
+                    $scope.output = res
+                    console.log('output', $scope.output)
+                 })
+        else
+            appUI.startApp(app.id, $scope.fields, $scope.selectedWS)
+                 .then(function(res) {
+                    $scope.output = res
+                    console.log('output', $scope.output)
+                 })
     }
 
 
@@ -520,3 +540,8 @@ function($scope, $state, appUI, authService, $window, ws) {
 }])
 
 
+.controller('DDFilter', ['$scope', function($scope) {
+
+
+
+}])

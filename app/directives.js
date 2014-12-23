@@ -1,9 +1,6 @@
 /*
  * App Runner directives
- *  - narrativeCell : extends functionality of a cell 
- *  - kbWidget : wrapper for kbase jquery output widgets
- *  - ddFilter : searchable angular, bootstrapifyed dropdown used 
- *                 for selectors
+ *  - appCell : extends functionality of a cell
  *
  * Controllers:  (See Analysis in js/controllers.js)
  *
@@ -25,8 +22,8 @@ angular.module('directives', [])
     return {
         link: function(scope, ele, attrs) {
 
-            // dictionary for fields in form.  Here, keys are the ui_name 
-            //scope.fields = {};  
+            // dictionary for fields in form.  Here, keys are the ui_name
+            //scope.fields = {};
 
             scope.flip = function($event) {
                 $($event.target).parents('.panel').find('.narrative-cell').toggleClass('flipped')
@@ -60,9 +57,26 @@ angular.module('directives', [])
     };
 }])*/
 
+.directive('whenScrolled', function() {
+    return function(scope, elm, attr) {
+        console.log('HERE!')
+        var raw = elm[0];
+
+        $(elm).on('scroll', function() {
+            console.log('scroll', raw.scrollTop + raw.offsetHeight, raw.scrollHeight)
+            if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight){
+                scope.$apply(attr.whenScrolled);
+                console.log('doing something!')
+            }
+
+        });
+    };
+})
+
+
 .directive('tooltip', function() {
     return {
-        link: function(scope, element, attr) { 
+        link: function(scope, element, attr) {
             var title = attr.tooltip;
             $(element).tooltip({title: title});
         }
@@ -86,9 +100,9 @@ angular.module('directives', [])
 
             angular.forEach(orig_headers, function(v, k) {
                 // .css is the jquery
-                $(headers[k]).css({width: orig_headers[k].clientWidth}); 
+                $(headers[k]).css({width: orig_headers[k].clientWidth});
             })
-        }   
+        }
 
         scope.$watch('loading', function() {
             $timeout(function() {
@@ -136,7 +150,7 @@ angular.module('directives', [])
             scope.loading = true;
 
             $timeout(function() {
-                scope.loading = false;  
+                scope.loading = false;
             }, 1000)
 
         }
@@ -162,25 +176,25 @@ angular.module('directives', [])
                     var caret = $('<span class="fa fa-caret-right">').hide().fadeIn();
                     element.append(' ', caret);
 
-                    // animation for 
+                    // animation for
                     $('.sidebar-nav, .sidebar').hide('slide', {
                             direction: 'left'
                         }, 350, function() {
                             $('.sidebar').show();
                             $('.sidebar').css('width', new_w)
-                        });   
+                        });
 
                     // animation for margin of page view
                     if ($(page_id).length) var id = page_id;
                     else var id = page_id2;
-                    
+
                     $(id).animate({
                             marginLeft: new_w,
                         }, 400, function() {
                             $('.sidebar-nav-small').fadeIn('fast');
                             collapsed = true
-                        });                             
-                   
+                        });
+
                 } else {
                     element.find('.fa-caret-right').fadeOut(function() {
                         $(this).remove();
@@ -189,7 +203,7 @@ angular.module('directives', [])
                     element.prepend(caret, ' ')
 
                     $('.sidebar-nav-small').fadeOut('fast');
-                    
+
                     if ($(page_id).length) var id = page_id;
                     else var id = page_id2;
 
@@ -199,10 +213,10 @@ angular.module('directives', [])
                             $('.sidebar').css('width', original_w)
                             $('.sidebar-nav').fadeIn('fast')
                             collapsed = false
-                        }); 
+                        });
                 }
-                 
-                
+
+
             })
 
         }

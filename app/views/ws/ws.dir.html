@@ -1,23 +1,30 @@
 
-<div id="table-page-wrapper">
+<div id="table-page-wrapper" when-scrolled="loadMore()" style="height:100vh;overflow:auto;">
     <div class="fixed-header" fixed-header fixed-table="ws-table">
         <h4>
-            <img src="img/file-cabinet-icon.svg" style="opacity: .4;" width="22" height="22">
+            <img src="img/file-cabinet-icon.svg" style="opacity: .5;" width="22" height="22">
             <a ui-sref="app.ws">My Data</a>
             <span ng-repeat="d in path | limitTo: path.length-1">
                 / <a ui-sref="app.dir({dir: '{{getLink($index)}}' })">{{d}}</a>
             </span>
             / {{path[path.length-1]}}
         </h4>
-
         <!--
-        <div class="pull-left" dd-filter
-             dd-id="input-apps"
-             dd-title="Run apps..."
-             dd-placeholder="Filter apps..."
-             dd-default="apps"
-             dd-data="appUI.appList"
-             dd-change="doSomething()">
+        <div style="margin: 10px 0 0 0;">
+
+            <div dd-filter
+                ng-model="test23"
+                dd-id="input-apps"
+                dd-title="'Select an app to run'"
+                dd-placeholder="Filter apps"
+                dd-default="'Apps'"
+                dd-data="appUI.appList"
+                dd-class="input-sm"
+                class="pull-left">
+            </div>
+            <div class="col-md-5 pull-left">
+                <input ng-model="query" id="{{ddID}}" type="text" class="form-control input-sm" placeholder="Search my data">
+            </div>
         </div>-->
 
         <!-- workspace options -->
@@ -42,25 +49,25 @@
             <thead>
                 <tr ng-class="{'hidden-table': select == true}">
                     <th></th>
-                    <th ng-click="predicate = 'name'; reverse=!reverse;" class="point">Name
+                    <th ng-click="limiter(); sorter('name');" class="point">Name
                         <span ng-if="predicate == 'name'">
                             <i ng-if="reverse" class="fa fa-caret-down"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up"></i>
                         </span>
                     </th>
-                    <th ng-click="predicate = 'type'; reverse=!reverse" class="point">Type
+                    <th ng-click="limit=50; predicate = 'type'; reverse=!reverse;" class="point">Type
                         <span ng-if="predicate == 'type'">
                             <i ng-if="reverse" class="fa fa-caret-down mute"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
                         </span>
                     </th>
-                    <th ng-click="predicate = 'timestamp'; reverse=!reverse" class="point">Mod Date
+                    <th ng-click="limit=50; predicate = 'timestamp'; reverse=!reverse;" class="point">Mod Date
                         <span ng-if="predicate == 'timestamp'">
                             <i ng-if="reverse" class="fa fa-caret-down mute"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
                         </span>
                     </th>
-                    <th ng-click="predicate = 'size'; reverse=!reverse" class="point">Size
+                    <th ng-click="predicate = 'size'; reverse=!reverse; limit=50;" class="point">Size
                         <span ng-if="predicate == 'size'">
                             <i ng-if="reverse" class="fa fa-caret-down mute"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
@@ -107,7 +114,7 @@
             <td>-</td>
         </tr>
 
-        <tr ng-repeat="item in dirData | orderBy:predicate:reverse"
+        <tr ng-repeat="item in items | orderBy:predicate:reverse | limitTo: limit"
             ng-class="{active: selected.index == $index}"
             context-menu="openMenu($event, $index, item)"
             context-menu-close="closeMenu($event, $index, item)"
@@ -138,7 +145,7 @@
         </tr>
     </table>
 
-    <div ng-if="!dirData" class="text-center no-data soft">
+    <div ng-if="!items" class="text-center no-data soft">
         No data here.
         Drag files here to upload (coming soon).
     </div>

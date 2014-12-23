@@ -88,7 +88,7 @@ angular.module('workspace', ['uiTools'])
                                        timestamp: Date.parse(ws[3])
                                       });
                         }
-                        console.log('folders!', data);
+
                         return data;
                     }).catch(function(e) {
                         console.log('list_workspace_contents failed', e, directory)
@@ -208,7 +208,7 @@ angular.module('workspace', ['uiTools'])
 
     function makeSomeData(name, howmany) {
         for (var i=0; i<howmany; i++) {
-            self.saveObject('/'+auth.user+'/new workspace', name+String(i), 'this is just some test data '+i, 'Genome')
+            self.saveObject('/'+auth.user+'/new folder', name+String(i), 'this is just some test data '+i, 'Genome')
         }
     }
 
@@ -217,7 +217,7 @@ angular.module('workspace', ['uiTools'])
     //this.createNode({objects: [['/'+auth.user+'/new workspace', 'newdata', 'String', {description: 'blah blah blah'}]]});
     //self.newWS('/nconrad/test')
     //self.saveObject('/public/newws', directory, 'this is just some test data '+i, 'Genome')
-    //makeSomeData('somefile', 7);
+    //makeSomeData('somefile', 5000);
 
     //var shockURL = config.services.shock_url;
     //var token = {Authorization: 'OAuth ' + auth.token};

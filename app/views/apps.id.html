@@ -14,12 +14,12 @@
     </div>
 
     <div ng-if="workspaces.length">
-        <b> Working Folder</b>
+        <b>Input Folder</b>
         <div dd-filter
             ng-model="somemodel"
             dd-id="input-ws"
             dd-change="wsChange"
-            dd-title="'Working Folder'"
+            dd-title="'Input Folder'"
             dd-placeholder="Filter folders"
             dd-default="selectedWS"
             dd-data="workspaces"
@@ -82,7 +82,9 @@
 
                             </div>
 
-                            <label class="col-sm-3 control-label">{{field.label}}</label>
+                            <label class="col-sm-3 control-label">
+                                {{field.label}}{{(field.required ? '*' : '')}}
+                            </label>
 
                             <div class="col-sm-9">
                                 <div ng-include src="'./app/views/fields.html'"></div>

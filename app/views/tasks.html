@@ -21,16 +21,16 @@
                 <div class="h1">{{appUI.status.completed}}</div>
                 <div class="h4">Completed</div>
             </div>
-        </div>   
+        </div>
     </div>
 
     <br><br>
     <div ng-if="!appUI.loading">
         <div class="row">
-            <div class="col-md-12"> 
+            <div class="col-md-12">
                 <!--
                 <div class="app-filter btn-group">
-                    <label class="btn btn-primary active" ng-model="checkModel.all" btn-checkbox>All</label>                
+                    <label class="btn btn-primary active" ng-model="checkModel.all" btn-checkbox>All</label>
                     <label class="btn btn-primary" ng-model="checkModel.queued" btn-checkbox>Queued</label>
                     <label class="btn btn-primary" ng-model="checkModel.running" btn-checkbox>Running</label>
                     <label class="btn btn-primary" ng-model="checkModel.completed" btn-checkbox>Complete</label>
@@ -41,7 +41,7 @@
                         <th><b>App</b></th>
                         <th><b>ID (Result)</b></th>
                         <th><b>Status</b></th>
-                        <th><b>Submit Time</b></th>                    
+                        <th><b>Submit Time</b></th>
                         <th><b>Start Time</b></th>
                         <th><b>End Time</b></th>
                     <tr>
@@ -56,12 +56,12 @@
                         </td>
                         <td>
                             <span tooltip="{{task.start_time}}">
-                                {{task.start_time == '0001-01-01T00:00:00Z' ? 'running...' : relativeTime(task.start_time)}}
+                                {{task.start_time == '0001-01-01T00:00:00Z' ? '--' : relativeTime(task.start_time)}}
                             </span>
                         </td>
                         <td>
                             <span tooltip="{{task.completed_time}}">
-                                {{task.completed_time == '0001-01-01T00:00:00Z' ? 'running...' : relativeTime(task.completed_time)}}
+                                {{task.completed_time == '0001-01-01T00:00:00Z' ? '--' : relativeTime(task.completed_time)}}
                             </span>
                         </td>
                     </tr>
@@ -74,7 +74,7 @@
     <md-progress-circular ng-if="appUI.loading" mode="indeterminate" diameter="40"></md-progress-circular>
 
     <div ng-if="!appUI.loading && appUI.tasks.length == 0">
-        You have no tasks.  You may want to run tasks (analysis) via the 
+        You have no tasks.  You may want to run tasks (analysis) via the
         <a ui-sref="app.apps">Apps</a> tab.
     </div>
 </div>

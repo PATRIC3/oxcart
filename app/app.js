@@ -55,6 +55,11 @@ angular.module('appTasker',
         .state('app.dir', {
             url: "/ws{dir:.*}",
             templateUrl: 'app/views/ws/ws.dir.html',
+            resolve: {
+              'GetApps': ['appUI', function(appUI){
+                return appUI.getApps;
+              }],
+            },
             controller: 'WS',
             authenticate: true})
         .state('app.apps', {
