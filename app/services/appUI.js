@@ -16,7 +16,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = false;
+    var polling = true;
     var pollTasksMS = 5000;
     var pollStatusMS = 3000;
     var taskDispCount = 50;
