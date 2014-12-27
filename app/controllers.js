@@ -42,16 +42,16 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.predicate = 'timestamp';
     $scope.reverse = true;
 
+    /*
     $scope.limit = 100;
-
     $scope.limiter = function() {
-        $scope.limit = 100; // reset display
+        $scope.limit = 100;
     }
 
     $scope.sorter = function(name) {
         $scope.predicate = name;
         $scope.reverse = !$scope.reverse;
-    }
+    }*/
 
     // model for row selection data
     $scope.selected;
@@ -119,11 +119,12 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     // context menu open
     $scope.openMenu = function(e, i, item) {
-        console.log('called open row')
+        console.log('called open row', e, i, item)
         $scope.selected = {type: item.type ? item.type : 'Workspace',
                            name: item.name,
                            index: i};
-                           console.log($scope.selected)
+        console.log('selected item is ', $scope.selected)
+
     }
 
     // context menu close
@@ -209,8 +210,8 @@ function($scope, $state, appUI, authService, $window, ws) {
     }
 
     // used to create editable name
-    $scope.editableName = function(path, selected) {
-        console.log('called editable name', path, selected)
+    $scope.editableName = function(selected) {
+        console.log('called editable name', selected)
         $scope.edit = {index: selected.index};
         console.log($scope.edit.index)
 
@@ -487,9 +488,14 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 }])
 
-.controller('Proto', ['$scope',
-    function($scope) {
+.controller('Proto',
+    ['$scope', 'workspace',
+    function($scope, ws) {
 
+
+        ws.getFolders().then(function(data) {
+            console.log('here', data)
+        })
         $scope.folders = [{name: 'folder1'},
                           {name: 'genomes'},
                           {name: 'fba '},

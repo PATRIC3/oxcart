@@ -337,6 +337,7 @@ md-card {
 
 #context-menu .dropdown-menu>li>a {
     padding: 3px 15px;
+    width: 175px;
 }
 
 

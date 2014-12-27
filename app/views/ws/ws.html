@@ -47,8 +47,8 @@
                     <div class="select-opts" ng-if="select">
                         <span>{{uiTools.trim(selected.name, 20)}}</span>
                         <span ng-click="deleteWS(selected.name)" class="ws-opt"><i class="fa fa-trash-o"></i> Delete</span>
-                        <span class="ws-opt"><i class="fa fa-edit"></i> Rename...</span>
-                        <span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>
+                        <!--<span class="ws-opt"><i class="fa fa-edit"></i> Rename...</span>
+                        <span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>-->
                     </div>
                 </tr>
             </thead>
@@ -129,12 +129,14 @@
               <a class="pointer" role="menuitem" tabindex="2"
                  ng-click="editableName(directory, selected)">
                  <i class="fa fa-edit"> </i> Rename...
+                <span class="label label-danger pull-right">No API</span>
               </a>
             </li>
             <li>
               <a class="pointer" role="menuitem" tabindex="3"
                  ng-click="panel.expanded = true">
                 <i class="fa fa-cloud-download"></i> Download
+                <span class="label label-danger pull-right">No API</span>
               </a>
             </li>
         </ul>

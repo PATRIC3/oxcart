@@ -1,5 +1,7 @@
 
-<div id="table-page-wrapper" when-scrolled="loadMore()" style="height:100vh;overflow:auto;">
+<div id="table-page-wrapper">
+    <!-- when-scrolled="loadMore()" style="height:100vh;overflow:auto;" -->
+
     <div class="fixed-header" fixed-header fixed-table="ws-table">
         <h4>
             <img src="img/file-cabinet-icon.svg" style="opacity: .5;" width="22" height="22">
@@ -9,6 +11,7 @@
             </span>
             / {{path[path.length-1]}}
         </h4>
+
         <!--
         <div style="margin: 10px 0 0 0;">
 
@@ -49,25 +52,25 @@
             <thead>
                 <tr ng-class="{'hidden-table': select == true}">
                     <th></th>
-                    <th ng-click="limiter(); sorter('name');" class="point">Name
+                    <th ng-click="predicate = 'name'; reverse=!reverse;" class="point">Name
                         <span ng-if="predicate == 'name'">
                             <i ng-if="reverse" class="fa fa-caret-down"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up"></i>
                         </span>
                     </th>
-                    <th ng-click="limit=50; predicate = 'type'; reverse=!reverse;" class="point">Type
+                    <th ng-click="predicate = 'type'; reverse=!reverse;" class="point">Type
                         <span ng-if="predicate == 'type'">
                             <i ng-if="reverse" class="fa fa-caret-down mute"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
                         </span>
                     </th>
-                    <th ng-click="limit=50; predicate = 'timestamp'; reverse=!reverse;" class="point">Mod Date
+                    <th ng-click="predicate = 'timestamp'; reverse=!reverse;" class="point">Mod Date
                         <span ng-if="predicate == 'timestamp'">
                             <i ng-if="reverse" class="fa fa-caret-down mute"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
                         </span>
                     </th>
-                    <th ng-click="predicate = 'size'; reverse=!reverse; limit=50;" class="point">Size
+                    <th ng-click="predicate = 'size'; reverse=!reverse;" class="point">Size
                         <span ng-if="predicate == 'size'">
                             <i ng-if="reverse" class="fa fa-caret-down mute"></i>
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
@@ -76,9 +79,9 @@
 
                     <div class="select-opts" ng-if="select">
                         <span>{{uiTools.trim(selected.name, 20)}}</span>
-                        <span class="ws-opt"><i class="fa fa-trash-o"></i> Delete</span>
+                        <!--<span class="ws-opt"><i class="fa fa-trash-o"></i> Delete</span>-->
                         <span class="ws-opt"><i class="fa fa-edit"></i> Rename...</span>
-                        <span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>
+                        <!--<span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>-->
                     </div>
 
                 </tr>
@@ -114,11 +117,12 @@
             <td>-</td>
         </tr>
 
-        <tr ng-repeat="item in items | orderBy:predicate:reverse | limitTo: limit"
+        <tr ng-repeat="item in items | orderBy:predicate:reverse"
             ng-class="{active: selected.index == $index}"
             context-menu="openMenu($event, $index, item)"
             context-menu-close="closeMenu($event, $index, item)"
-            data-target="context-menu">
+            data-target="context-menu"
+            ng-click="selectRow($event, $index, ws)">
 
             <td ng-if="item.type == 'Directory'">
                 <i class="fa fa-folder-o fa-2x soft"></i>
@@ -171,6 +175,7 @@
               <a class="pointer" role="menuitem" tabindex="3"
                  ng-click="panel.expanded = true">
                 <i class="fa fa-cloud-download"></i> Download
+                <span class="label label-danger pull-right">No API</span>
               </a>
             </li>
         </ul>

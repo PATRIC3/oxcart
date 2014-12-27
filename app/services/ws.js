@@ -19,15 +19,14 @@ angular.module('workspace', ['uiTools'])
         return $http.rpc('ws', 'list_workspaces', {owner_only: 1, no_public: 1})
             .then(function(d) {
 
+            // parse into list of dicts
             var data = [];
-            for (var i in d) {
-                var ws = d[i];
-                data.push( self.wsListToDict(ws) )
-            }
+            for (var i in d)
+                data.push( self.wsListToDict(d[i]) );
 
             // update ui model
             self.workspaces = data;
-            console.log(self.workspaces)
+
             return data;
         })
     }
@@ -36,11 +35,10 @@ angular.module('workspace', ['uiTools'])
         return $http.rpc('ws', 'list_workspaces', {owned_only: 0})
             .then(function(d) {
 
+            // parse into list of dicts
             var data = [];
-            for (var i in d) {
-                var ws = d[i];
-                data.push( self.wsListToDict(ws) )
-            }
+            for (var i in d)
+                data.push( self.wsListToDict(d[i]) );
 
             // update ui model
             self.workspaces = data;
@@ -49,6 +47,7 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.wsListToDict = function(ws) {
+        // takes workspace info array, returns dict.
         return {id: ws[0],
                 name: ws[1],
                 owner: ws[2],
@@ -60,16 +59,17 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.addToModel = function(ws) {
-        self.workspaces.push(self.wsListToDict(ws))
+        self.workspaces.push( self.wsListToDict(ws) );
     }
 
     this.rmFromModel = function(ws) {
         for (var i=0; i<self.workspaces.length; i++) {
             console.log(self.workspaces[i].id, ws[0])
-            if (self.workspaces[i].id == ws[0]) {
+
+            if (self.workspaces[i].id == ws[0])
                 self.workspaces.splice(i, 1);
-            }
         }
+
         console.log('new model', self.workspaces);
     }
 
@@ -116,7 +116,6 @@ angular.module('workspace', ['uiTools'])
                     })
 
     }
-    //this.getFolders('/public/testworkspace');
 
 
     this.getObjs = function(directory) {
@@ -206,29 +205,36 @@ angular.module('workspace', ['uiTools'])
     }
 
 
+    // views wait on this request
+    this.getWS = this.getMyWorkspaces();
+
+
+    //
+    // some code for testing
+    //
     function makeSomeData(name, howmany) {
+        var folder = "new folder";
+
+        self.newWS(folder).then(function(res) {
+            console.log(res)
+            for (var i=0; i<howmany; i++) {
+                self.saveObject(path+'/'+folder, name+String(i), 'this is just some test data '+i, 'Genome')
+            }
+        })
+    }
+
+    function makeSomeFolders(folder ,name, howmany) {
+        var path = '/'+auth.user+'/'+folder;
+
         for (var i=0; i<howmany; i++) {
-            self.saveObject('/'+auth.user+'/new folder', name+String(i), 'this is just some test data '+i, 'Genome')
+            self.newFolder(path, name+String(i));
         }
     }
 
-    this.getWS = this.getMyWorkspaces();
-
-    //this.createNode({objects: [['/'+auth.user+'/new workspace', 'newdata', 'String', {description: 'blah blah blah'}]]});
-    //self.newWS('/nconrad/test')
-    //self.saveObject('/public/newws', directory, 'this is just some test data '+i, 'Genome')
-    //makeSomeData('somefile', 5000);
-
-    //var shockURL = config.services.shock_url;
-    //var token = {Authorization: 'OAuth ' + auth.token};
-    //var header = {headers:  token }
-
-    //$http.get('http://p3.theseed.org/services/shock_api/node/d883fbb2-2d97-4d81-aa1b-dec113c9c0a6?download', header)
-    //        .success(function(data) {
-    //            console.log('data', data)
-    //        })
-
+    //makeSomeData('somefile', 20);
+    //makeSomeFolders('new folder', 'folder ', 20);
     //this.getObject('/nconrad/new folder', 'test14.fa')
+
 }]);
 
 
