@@ -96,7 +96,8 @@ angular.module('workspace', ['uiTools'])
     }
 
     this.getFolders = function(directory) {
-        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, excludeObjects: 1})
+        var path = '/'+auth.user+'/'+directory;
+        return $http.rpc('ws', 'list_workspace_contents', {directory: path, excludeObjects: 1})
                     .then(function(d) {
                         var data = [];
                         for (var i in d) {
@@ -232,7 +233,7 @@ angular.module('workspace', ['uiTools'])
     }
 
     //makeSomeData('somefile', 20);
-    //makeSomeFolders('new folder', 'folder ', 20);
+    //makeSomeFolders('top level', 'test', 5);
     //this.getObject('/nconrad/new folder', 'test14.fa')
 
 }]);

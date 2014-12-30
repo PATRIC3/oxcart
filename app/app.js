@@ -11,6 +11,7 @@ angular.module('appTasker',
  'controllers',
  'uiTools',
  'dd-filter',
+ 'ng-browse',
  'ngMaterial',
  'ng-context-menu',
  'appUI'])
@@ -125,7 +126,6 @@ angular.module('appTasker',
         }).state('app.proto', {
             url: "/proto",
             templateUrl: 'app/views/proto.html',
-            controller: 'Proto',
             authenticate: false
         });
 

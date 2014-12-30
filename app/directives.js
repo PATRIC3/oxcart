@@ -6,7 +6,7 @@
  *
  *
  * Authors:
- *  Neal Conrad <nconrad@cels.anl.gov>
+ *  Neal Conrad <nconrad@anl.gov>
  *
  * Todo:
  *  - Use models instead of DOM ids inputs for appCell and ddSelector.
@@ -17,7 +17,7 @@
 
 var INTEGER_REGEXP = /^\-?\d+$/;
 
-angular.module('directives', [])
+angular.module('directives', ['controllers'])
 .directive('appCell', ['appUI', function(appUI) {
     return {
         link: function(scope, ele, attrs) {
@@ -143,19 +143,6 @@ angular.module('directives', [])
    };
 })
 
-.directive('fileBrowser', ['$timeout', function($timeout) {
-   return function(scope, elem, attr) {
-
-        scope.openFolder = function(folder) {
-            scope.loading = true;
-
-            $timeout(function() {
-                scope.loading = false;
-            }, 1000)
-
-        }
-   };
-}])
 
 // todo: use ngMaterial instead
 .directive('sidebarCollapse', function() {

@@ -492,17 +492,16 @@ function($scope, $state, appUI, authService, $window, ws) {
     ['$scope', 'workspace',
     function($scope, ws) {
 
-
-        ws.getFolders().then(function(data) {
-            console.log('here', data)
+        // top level of tree
+        ws.getMyWorkspaces().then(function(data) {
+            $scope.tree = data;
         })
-        $scope.folders = [{name: 'folder1'},
-                          {name: 'genomes'},
-                          {name: 'fba '},
-                          {name: 'media'},
-                          {name: 'some uploads'},
-                          {name: 'contig sets'},
-                          {name: 'foo bar 7'}];
+
+        $scope.getFolder = function(path) {
+            return ws.getFolders(path).then(function(data) {
+                return data;
+            })
+        }
 
     }
 ])
