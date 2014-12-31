@@ -1,3 +1,6 @@
+[submodule "lib/ng-browse"]
+	path = lib/ng-browse
+	url = https://github.com/nconrad/ng-browse
 [submodule "lib/dd-filter"]
 	path = lib/dd-filter
-	url = https://github.com/nconrad/dd-filter.git
+	url = https://github.com/nconrad/dd-filter
