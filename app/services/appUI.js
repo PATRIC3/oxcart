@@ -71,14 +71,12 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
             console.log('param!', param)
 
             for (var key in form_params) {
-                if (param.id == key && (param.type == 'folder') )  {
+                if (param.id == key && (param.type == 'folder' || param.type == 'wstype') )  {
                     form_params[key] = '/'+authService.user+'/'+
                              workspace+'/'+form_params[key];
                 }
             }
         }
-
-        //var ws = '/'+authService.user+'/'+workspace
 
         var params = [id, form_params];
 
@@ -101,21 +99,17 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
         for (var i in self.appDict[id].parameters) {
             var param = spec.parameters[i];
-            console.log('param!', param)
 
             for (var key in form_params) {
-                if (param.id == key && (param.type == 'folder') )  {
+                if (param.id == key && (param.type == 'folder' || param.type == 'wstype') )  {
                     form_params[key] = '/'+authService.user+'/'+
                              workspace+'/'+form_params[key];
                 }
             }
         }
 
-        //var ws = '/'+authService.user+'/'+workspace
-
         var params = [id, form_params];
 
-        console.log('form_params', params)
         return $http.rpc('app', 'start_app', params)
              .then(function(resp) {
                 console.log('app service response', resp)
