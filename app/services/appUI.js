@@ -1,17 +1,16 @@
 /*
  * App Tasker Model (appUI service)
  *
- *   This is responisble for the state of the app tasker model
- *   Two way binding is used to update the view
+ *   This is responsible for the state of the app tasker model
  *
 */
 
 angular.module('appUI', ['uiTools', 'kbase-auth'])
 .service('appUI', ['$http', '$log', 'uiTools', 'authService', 'workspace',
-    function($http, $log, uiTools, authService, ws) {
+    function($http, $log, uiTools, auth, ws) {
 
     // if not logged in, don't bother using this
-    if (!authService.user) return;
+    if (!auth.user) return;
 
     var self = this;
 
@@ -72,7 +71,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
             for (var key in form_params) {
                 if (param.id == key && (param.type == 'folder' || param.type == 'wstype') )  {
-                    form_params[key] = '/'+authService.user+'/'+
+                    form_params[key] = '/'+auth.user+'/'+
                              workspace+'/'+form_params[key];
                 }
             }
@@ -102,7 +101,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
             for (var key in form_params) {
                 if (param.id == key && (param.type == 'folder' || param.type == 'wstype') )  {
-                    form_params[key] = '/'+authService.user+'/'+
+                    form_params[key] = '/'+auth.user+'/'+
                              workspace+'/'+form_params[key];
                 }
             }
@@ -188,7 +187,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
         setInterval(self.updateStatus, pollStatusMS);
     }
 
-    // run auto updater on load
+    // run updater on load
     this.updateTasks();
     this.updateStatus();
 
@@ -232,9 +231,10 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     }
 
 
-    this.updateWSObjs = function(workspace) {
-        return ws.getObjs(workspace).then(function(objs){
-
+    this.updateWSObjs = function(path) {
+        console.log('appUI updating objects', path)
+        return ws.getMyData(path).then(function(objs){
+                    console.log('the objects are ',objs)
                     var objs = objs.sort(compare)
 
                     function compare(a,b) {

@@ -5,11 +5,20 @@
     <div class="fixed-header" fixed-header fixed-table="ws-table">
         <h4>
             <img src="img/file-cabinet-icon.svg" style="opacity: .5;" width="22" height="22">
-            <a ui-sref="app.ws">My Data</a>
-            <span ng-repeat="d in path | limitTo: path.length-1">
-                / <a ui-sref="app.dir({dir: '{{getLink($index)}}' })">{{d}}</a>
+
+            <span ng-if="!path.length">
+                My Data
             </span>
-            / {{path[path.length-1]}}
+
+            <span ng-if="path.length">
+                <a ui-sref="app.ws({dir: myDataPath})">My Data</a>
+                <span ng-repeat="d in path | limitTo: path.length-1">
+                    / <a ui-sref="app.ws({dir: '{{getLink($index)}}' })">{{d}}</a>
+                </span>
+                / {{path[path.length-1]}}
+            </span>
+
+
         </h4>
 
         <!--
@@ -76,11 +85,24 @@
                             <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
                         </span>
                     </th>
+                    <th ng-click="predicate = 'files'; reverse=!reverse;" class="point">Files
+                        <span ng-if="predicate == 'files'">
+                            <i ng-if="reverse" class="fa fa-caret-down mute"></i>
+                            <i ng-if="!reverse" class="fa fa-caret-up mute"></i>
+                        </span>
+                    </th>
 
                     <div class="select-opts" ng-if="select">
-                        <span>{{uiTools.trim(selected.name, 20)}}</span>
-                        <!--<span class="ws-opt"><i class="fa fa-trash-o"></i> Delete</span>-->
-                        <span class="ws-opt"><i class="fa fa-edit"></i> Rename...</span>
+                        <span>
+                            <b>{{uiTools.trim(selected.name, 20)}}</b>
+                        </span>
+
+                        <span class="ws-opt" ng-click="deleteObj(selected.name)">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </span>
+                        <span class="ws-opt">
+                            <i class="fa fa-edit"></i> Rename...
+                        </span>
                         <!--<span class="ws-opt"><i class="fa fa-cloud-download"></i> Download...</span>-->
                     </div>
 
@@ -97,22 +119,24 @@
                 <th>Type</th>
                 <th>Mod Date</th>
                 <th>Size</th>
+                <th>Files</th>
             </tr>
         </thead>
 
-        <tr ng-if="newFolder">
+        <tr ng-if="placeHolder">
             <td><i class="fa fa-folder-o fa-2x soft"></i></td>
             <td>
-                <form ng-submit="saveFolder(directory, folder.name)" name="new">
+                <form ng-submit="createFolder(newFolder.name)">
                     <input type="text"
-                           name="folder"
-                           ng-model="folder.name"
+                           name="newFolder"
+                           ng-model="newFolder.name"
                            focus-on="placeholderAdded"
-                           ng-blur="saveFolder(directory, folder.name)">
+                           ng-blur="createFolder(newFolder.name)">
                 </form>
                 <span ng-if="saving">saving...</span>
             </td>
             <td>Folder</td>
+            <td>-</td>
             <td>-</td>
             <td>-</td>
         </tr>
@@ -122,56 +146,62 @@
             context-menu="openMenu($event, $index, item)"
             context-menu-close="closeMenu($event, $index, item)"
             data-target="context-menu"
-            ng-click="selectRow($event, $index, ws)">
+            ng-click="selectRow($event, $index, item)">
 
-            <td ng-if="item.type == 'Directory'">
+            <td ng-if="item.type == 'folder'">
                 <i class="fa fa-folder-o fa-2x soft"></i>
             </td>
-            <td ng-if="item.type != 'Directory'">
+            <td ng-if="item.type != 'folder'">
                 <i class="fa fa-file-text-o fa-2x soft"></i>
             </td>
+
             <td>
-                <form ng-if="edit.index == $index" ng-submit="mv(directory, selected.name, directory, edit.name)">
+                <form ng-if="edit.index == $index" ng-submit="rename(selected.name, edit.name)">
                     <input ng-if="!saving"
                            type="text"
                            ng-model="edit.name"
                            focus-on="editable"
-                           ng-blur="mv(directory, selected.name, directory, edit.name)" required>
+                           ng-blur="rename(selected.name, edit.name)" required>
                     <span ng-if="saving">saving...</span>
                 </form>
-                <a ng-if="item.type == 'Directory' && edit.index != $index" ui-sref="app.dir({dir: '{{directory}}/{{item.name}}' })" ng-click="prevent($event)">{{item.name}}</a>
+
+                <a ng-if="item.type == 'folder' && edit.index != $index"
+                   ui-sref="app.ws({dir: '{{folder}}/{{item.name}}' })"
+                   ng-click="prevent($event)">
+                    {{item.name}}
+                </a>
                 <span ng-if="deleting">deleting...</span>
-                <span ng-if="item.type != 'Directory' && edit.index != $index" ng-click="prevent($event)">{{item.name}}</span>
+
+                <span ng-if="item.type != 'folder' && edit.index != $index"
+                      ng-click="prevent($event)">
+                    {{item.name}}
+
+                </span>
             </td>
             <td>{{item.type}}</td>
             <td>{{relativeTime(item.mod_date)}}</td>
-            <td>{{item.type != 'Directory' ? readableSize(item.size) : '-'}}</td>
+            <td>{{item.type != 'folder' ? readableSize(item.size) : '-'}}</td>
+            <td>{{item.type == 'folder' ? item.files : '-'}}</td>
         </tr>
     </table>
-
-    <div ng-if="!items" class="text-center no-data soft">
-        No data here.
-        Drag files here to upload (coming soon).
-    </div>
-
-
 
     <div class="dropdown position-fixed" id="context-menu">
         <ul class="dropdown-menu" role="menu">
             <li>
               <a class="pointer" role="menuitem" tabindex="1"
-                 ng-click="selected.type == 'Directory' ? ws.deleteFolder(directory, selected.name) : deleteObj(directory, selected.name) ">
+                 ng-click="deleteObj(selected.name) ">
                  <i class="fa fa-trash-o"></i> Delete...
-                 <span ng-if="selected.type == 'Directory'" class="label label-danger pull-right">No API</span>
               </a>
             </li>
             <li>
               <a class="pointer" role="menuitem" tabindex="2"
                  ng-click="editableName(selected)">
                  <i class="fa fa-edit"> Rename...</i>
+                 <span ng-if="selected.type == 'folder'" class="label label-danger pull-right">No API</span>
               </a>
             </li>
-            <li>
+
+            <li ng-if="selected.type != 'folder'">
               <a class="pointer" role="menuitem" tabindex="3"
                  ng-click="panel.expanded = true">
                 <i class="fa fa-cloud-download"></i> Download
@@ -181,7 +211,17 @@
         </ul>
     </div>
 
-    <md-progress-circular ng-if="loading" mode="indeterminate" diameter="40"></md-progress-circular>
+
+    <div ng-if="!items.length" class="text-center no-data soft">
+        No data here.
+        Drag files here to upload (coming soon).
+    </div>
+
+    <md-progress-circular ng-if="loading"
+                          mode="indeterminate"
+                          class="text-center"
+                          diameter="40">
+   </md-progress-circular>
 </div>
 
 <!--

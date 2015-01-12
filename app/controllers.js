@@ -10,7 +10,9 @@
 angular.module('controllers', [])
 .controller('MainCtrl',
 ['$scope', '$state', 'appUI', 'authService', '$window', 'workspace',
-function($scope, $state, appUI, authService, $window, ws) {
+function($scope, $state, appUI, auth, $window, ws) {
+
+    $scope.myDataPath = '/'+auth.user;
 
     // app and ws services
     $scope.appUI = appUI;
@@ -38,82 +40,61 @@ function($scope, $state, appUI, authService, $window, ws) {
     $scope.relativeTime = uiTools.relativeTime;
     $scope.readableSize = uiTools.readableSize;
 
-    // let's sort by time first
+    // sort by time first
     $scope.predicate = 'timestamp';
     $scope.reverse = true;
 
-    /*
-    $scope.limit = 100;
-    $scope.limiter = function() {
-        $scope.limit = 100;
-    }
-
-    $scope.sorter = function(name) {
-        $scope.predicate = name;
-        $scope.reverse = !$scope.reverse;
-    }*/
-
-    // model for row selection data
+    // model: row selection data
     $scope.selected;
 
-    // model for when in edit mode
+    // model: when in edit mode
     $scope.edit = false;
 
-    // model for primary click on row
+    // model: primary click on row
     $scope.select = false;
 
-
-    // if navigating directories, get the data
-    if ($stateParams.dir) {
-        $scope.directory = $stateParams.dir;
-
-        // get path in list form
-        var depth = $scope.directory.split('/').length -2
-        $scope.path = $scope.directory.split('/').splice(2, depth)
-
-        // get path strings for parent directories
-        var dir_names = $scope.directory.split('/').splice(1, depth)
-        var links = [];
-        for (var i=0; i < depth; i++) {
-            var link = '/'+dir_names.join('/');
-            links.push(link);
-            dir_names.pop();
-        }
-        links.reverse();
-        links = links.slice(1, links.length);
+    // model: items in folder that is being viewed
+    $scope.items;
 
 
-        $scope.loading = true;
-        ws.getDirectory($scope.directory).then(function(data) {
-            $scope.items = data;
-            //$scope.items = data.slice(0, 99);
+    // If there is a path in the url, use it.
+    // Otherwise, use "/username"
+    if ($stateParams.dir)
+        $scope.folder = $stateParams.dir;
+    else
+        $scope.folder = '/'+auth.user;
+
+    // get path in list form
+    var depth = $scope.folder.split('/').length -2;
+    $scope.path = $scope.folder.split('/').splice(2, depth);
+
+    // get path strings for parent folders
+    var dir_names = $scope.folder.split('/').splice(1, depth);
+    var links = [];
+    for (var i=0; i < depth; i++) {
+        var link = '/'+dir_names.join('/');
+        links.push(link);
+        dir_names.pop();
+    }
+    links.reverse();
+    links = links.slice(1, links.length);
 
 
-            $scope.loadMore = function() {
-                $scope.limit = $scope.limit + 100;
-            };
+    // load data
+    $scope.loading = true;
+    ws.getMyData($scope.folder).then(function(data) {
+        console.log('init data', data)
+        $scope.items = data;
 
+        $scope.loading = false;
+    })
 
-            $scope.loading = false;
-        })
-
-        $scope.getLink = function(i) {
-            return links[i];
-        }
-    } else {
-        $scope.directory = '/'+auth.user;
-
-        if (ws.workspaces.length == 0) {
-            $scope.loading = true;
-            ws.getMyWorkspaces().then(function(d) {
-                $scope.loading = false;
-            })
-        }
-
+    // method for retrieving links of all parent folders
+    $scope.getLink = function(i) {
+        return links[i];
     }
 
     $scope.prevent = function(e) {
-        console.log('called prevent')
         e.stopPropagation();
     }
 
@@ -124,7 +105,6 @@ function($scope, $state, appUI, authService, $window, ws) {
                            name: item.name,
                            index: i};
         console.log('selected item is ', $scope.selected)
-
     }
 
     // context menu close
@@ -136,84 +116,44 @@ function($scope, $state, appUI, authService, $window, ws) {
         }
     }
 
-    // new workspace creation
-    $scope.newWSModal = function(ev, path) {
-        $mdDialog.show({
-            templateUrl: 'app/views/ws/new-ws.html',
-            onComplete: function() {
-                console.log('here')
-                $scope.$broadcast('editable');
-            },
-            controller: ['$scope', function($scope) {
-                $scope.cancel = function(){
-                    $mdDialog.hide();
-                }
-                $scope.save = function(name){
-                    newWS(name).then(function() {
-                        //uiTools.notify('created workspace '+name, 'success', true)
-                    });
-                    $mdDialog.hide();
-                }
-            }]
-        })
-    }
-
-    function newWS(name) {
-        return ws.newWS(name).then(function(res) {
-            console.log('response', res)
-            ws.addToModel(res)
-        })
-    }
-
     // used for creating new folder, maybe other things later
     $scope.newPlaceholder = function() {
-        $scope.newFolder = true;
+        console.log('creating new place holder')
+        $scope.placeHolder = true;
         $timeout(function() {
             $scope.$broadcast('placeholderAdded');
         })
     }
 
     // saves the folder name, updates view
-    $scope.saveFolder = function(path, name) {
-        $scope.newFolder = false;
+    $scope.createFolder = function(name) {
+        console.log('creating folder', path(name))
+        $scope.placeHolder = false;
+
+        // if nothing entered, return
         if (!name) return;
 
         $scope.saving = true;
-
-        if (path) {
-            return ws.newFolder(path, name).then(function() {
-                $scope.saving = false;
-                $scope.updateDir();
-            });
-        } else {
-            return ws.newWS(name).then(function(res) {
-                $scope.saving = false;
-                ws.addToModel(res)
-            })
-        }
+        return ws.createFolder( path(name) ).then(function() {
+                   $scope.saving = false;
+                   $scope.updateDir();
+               }).catch(function(e){
+                    console.log('there was an error', e)
+                    $scope.saving = false;
+               })
     }
 
     // delete an object
-    $scope.deleteObj = function(path, name) {
-        ws.deleteObj(path,name).then(function() {
+    $scope.deleteObj = function(name) {
+        ws.deleteObj( path(name) ).then(function(res) {
+            ws.rmFromModel(res[0]);
             $scope.updateDir();
-        })
-    }
-
-    // delete an workspace
-    $scope.deleteWS = function(name) {
-        $log.debug('called deleteWS with name:', name)
-        $scope.deleting = true;
-        ws.deleteWS(name).then(function(d) {
-            ws.rmFromModel(d);
         })
     }
 
     // used to create editable name
     $scope.editableName = function(selected) {
-        console.log('called editable name', selected)
         $scope.edit = {index: selected.index};
-        console.log($scope.edit.index)
 
         $timeout(function() {
             $scope.$broadcast('editable');
@@ -221,26 +161,34 @@ function($scope, $state, appUI, authService, $window, ws) {
     }
 
     // used for rename and move, update view
-    $scope.mv = function(path, name, new_path, new_name) {
-        console.log('calling mv ', path, name, new_path, new_name)
+    $scope.mv = function(src, dest) {
         $scope.selected = undefined;
 
         $scope.saving = true;
-        ws.mv(path, name, new_path, new_name).then(function( ){
+        ws.mv(src, dest).then(function( ){
             $scope.saving = false;
             $scope.edit = false;
             $scope.updateDir();
         }).catch(function(e) {
-            console.log('could not save', e)
+            console.error('could not save', e)
             $scope.saving = false;
             $scope.edit = false;
         });
+    }
 
+    // used for rename and move, update view
+    $scope.rename = function(name, new_name) {
+        $scope.selected = undefined;
+
+        $scope.saving = true;
+        $scope.mv( path(name), path(new_name) );
     }
 
 
+
+
     $scope.selectRow = function(e, i, item) {
-        console.log('called select row')
+        console.log('called select row', e, i, item)
         $scope.select = true;
         $scope.selected = {type: item.type ? item.type : 'Workspace',
                            name: item.name,
@@ -266,18 +214,21 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     // updates the view
     $scope.updateDir = function() {
-        ws.getDirectory($scope.directory).then(function(data) {
+        ws.getMyData($scope.folder).then(function(data) {
             $scope.items = data;
         })
     }
 
     // updates the view
     $scope.updateWorkspaces = function() {
-        console.log('update')
         ws.getWorkspaces().then(function(d) {
             $scope.workspaces = d;
             $scope.loading = false;
         })
+    }
+
+    function path(name) {
+        return $scope.folder+'/'+name;
     }
 
 
@@ -377,10 +328,14 @@ function($scope, $state, appUI, authService, $window, ws) {
 // Controller for container of app form
 .controller('AppCell',
     ['$scope', '$stateParams', 'appUI', 'workspace',
-    '$timeout', 'upload', '$http',
-    function($scope, $stateParams, appUI, ws, $timeout, upload, $http) {
+    '$timeout', 'upload', '$http', 'authService', '$mdDialog',
+    function($scope, $stateParams, appUI, ws, $timeout, upload, $http, auth, $dialog) {
+    var $self = $scope;
+
     // service for appUI state
     $scope.appUI = appUI;
+
+
 
     if (ws.workspaces.length) {
         $scope.workspaces = ws.workspaces;
@@ -396,29 +351,33 @@ function($scope, $state, appUI, authService, $window, ws) {
     })
 
     function updateObjDD(ws_name) {
-        appUI.updateWSObjs(ws_name).then(function(objs) {
-            if ('String' in objs)
-                $scope.selectedObj = objs['String'][0].name;
+        appUI.updateWSObjs( path(ws_name) ).then(function(objs) {
+            if ('string' in objs)
+                $scope.selectedObj = objs['string'][0].name;
             else
                 $scope.selectedObj = false;
         })
     }
 
     // saves the folder; fixme: make this a util
-    $scope.saveFolder = function(name) {
-        $scope.newFolder = false;
+    $scope.createFolder = function(name) {
+        $scope.placeHolder = false;
+
+        // if nothing entered, return
         if (!name) return;
 
         $scope.saving = true;
+        return ws.createFolder( path(name) ).then(function(res) {
+                  $scope.saving = false;
+                  ws.addToModel(res[0]);
+                  $scope.workspaces = ws.workspaces;
+                  $scope.selectedWS = ws.workspaces[0].name;
 
-        return ws.newWS(name).then(function(res) {
-            $scope.saving = false;
-            ws.addToModel(res);
-            $scope.workspaces = ws.workspaces;
-            $scope.selectedWS = ws.workspaces[0].name;
-
-            updateObjDD($scope.selectedWS);
-        })
+                  updateObjDD($scope.selectedWS);
+               }).catch(function(e){
+                    console.error('error creating folder', e)
+                    $scope.saving = false;
+               })
     }
 
     // set 'app' as app (via URL)
@@ -426,7 +385,6 @@ function($scope, $state, appUI, authService, $window, ws) {
         $http.get('./tests/test-forms/'+$stateParams.file+'.json')
              .then(function(res) {
                 $scope.app =  res.data;
-                console.log('test app', $scope.app)
              });
     else
         $scope.app = appUI.appDict[$stateParams.id];
@@ -454,15 +412,65 @@ function($scope, $state, appUI, authService, $window, ws) {
 
 
     $scope.getDefault = function(type) {
-        console.log(appUI.wsObjsByType)
         return appUI.wsObjsByType[type][0].name
     }
 
     $scope.upload = upload;
 
-    $scope.createNode = function(files) {
-        upload.createNode(files, $scope.selectedWS)
+    $scope.createNode = function(files, overwrite) {
+        upload.createNode('/'+auth.user+'/'+$scope.selectedWS, files, overwrite)
+              .catch(function(e){
+                  if (e.data.error.code == -32603) {
+                      $dialog.show({
+                          templateUrl: 'app/views/ws/confirm.html',
+                          onComplete: function() {
+
+                          },
+                          controller: ['$scope', function($scope) {
+                              $scope.cancel = function(){
+                                  $dialog.hide();
+                              }
+                              $scope.overwrite = function(name){
+                                  $self.createNode(files, true);
+                                  $dialog.hide();
+                              }
+                              $scope.keep = function(name){
+                                  $self.createNode(files, true);
+                                  $dialog.hide();
+                              }
+                          }]
+                      })
+                  } else {
+                      alert('Server error! Could not upload node.')
+                  }
+
+              })
     }
+
+    $scope.openBrowser = function() {
+        $dialog.show({
+            templateUrl: 'app/views/ws/mini-browser.html',
+            onComplete: function() {
+
+            },
+            controller: ['$scope', function($scope) {
+                $scope.cancel = function(){
+                    $dialog.hide();
+                }
+                $scope.overwrite = function(name){
+                    $self.createNode(files, true);
+                    $dialog.hide();
+                }
+                $scope.keep = function(name){
+                    $self.createNode(files, true);
+                    $dialog.hide();
+                }
+            }]
+        })
+    }
+
+
+
 
     // update dropdown after upload
     $scope.$watch('upload.status', function(value) {
@@ -482,6 +490,10 @@ function($scope, $state, appUI, authService, $window, ws) {
 
     }, true);
 
+    function path(name) {
+        return '/'+$scope.user+'/'+name;
+    }
+
 }])
 
 .controller('Apps', ['$scope', 'appUI', function($scope, appUI) {
@@ -489,16 +501,19 @@ function($scope, $state, appUI, authService, $window, ws) {
 }])
 
 .controller('Proto',
-    ['$scope', 'workspace',
-    function($scope, ws) {
+    ['$scope', 'workspace', 'authService',
+    function($scope, ws, auth) {
 
         // top level of tree
-        ws.getMyWorkspaces().then(function(data) {
+        ws.getMyData('/'+auth.user).then(function(data) {
+            console.log('data', data)
             $scope.tree = data;
         })
 
         $scope.getFolder = function(path) {
-            return ws.getFolders(path).then(function(data) {
+            console.log('getting data!', path)
+            return ws.getMyData('/'+auth.user+'/'+path).then(function(data) {
+                console.log('data is', data)
                 return data;
             })
         }
