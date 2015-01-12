@@ -83,7 +83,6 @@ function($scope, $state, appUI, auth, $window, ws) {
     // load data
     $scope.loading = true;
     ws.getMyData($scope.folder).then(function(data) {
-        console.log('init data', data)
         $scope.items = data;
 
         $scope.loading = false;
@@ -396,6 +395,8 @@ function($scope, $state, appUI, auth, $window, ws) {
         $scope.run = true;
         $scope.appRunning = true;
 
+        console.log('the fields', $scope.fields)
+
         if ($stateParams.file)
             appUI.startAppTest(app.id, $scope.fields, $scope.selectedWS, $scope.app)
                  .then(function(res) {
@@ -506,14 +507,12 @@ function($scope, $state, appUI, auth, $window, ws) {
 
         // top level of tree
         ws.getMyData('/'+auth.user).then(function(data) {
-            console.log('data', data)
             $scope.tree = data;
         })
 
         $scope.getFolder = function(path) {
             console.log('getting data!', path)
             return ws.getMyData('/'+auth.user+'/'+path).then(function(data) {
-                console.log('data is', data)
                 return data;
             })
         }

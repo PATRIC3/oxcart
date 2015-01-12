@@ -58,22 +58,25 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     }
 
     // a task is of the form {name: cell.title, fields: scope.fields}
-    this.startApp = function(id, form_params, workspace) {
+    this.startApp = function(id, form_params, folder) {
+        console.log('starting app', id, form_params, folder)
+
         // make the app appear more responsive
         self.status.queued = self.status.queued + 1;
 
         // FIX: refactor, deal with workspace / directory issue on front-end and back
         // iterate through ids, if type is 'wstype', add on workspace path
-
         for (var i in self.appDict[id].parameters) {
             var param = self.appDict[id].parameters[i];
-            console.log('param!', param)
 
             for (var key in form_params) {
-                if (param.id == key && (param.type == 'folder' || param.type == 'wstype') )  {
+                if (param.id == key && (param.type == 'wstype') )
                     form_params[key] = '/'+auth.user+'/'+
-                             workspace+'/'+form_params[key];
-                }
+                             folder+'/'+form_params[key];
+
+                // temporary hack for using only top level directories
+                if (param.id == key && param.type == 'folder')
+                    form_params[key] = '/'+auth.user+'/'+form_params[key];
             }
         }
 
@@ -232,9 +235,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
 
     this.updateWSObjs = function(path) {
-        console.log('appUI updating objects', path)
         return ws.getMyData(path).then(function(objs){
-                    console.log('the objects are ',objs)
                     var objs = objs.sort(compare)
 
                     function compare(a,b) {
