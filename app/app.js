@@ -59,7 +59,7 @@ angular.module('appTasker',
             controller: 'WS',
             authenticate: true})
         .state('app.apps', {
-            url: "/apps/",
+            url: "/apps",
             templateUrl: 'app/views/apps.html',
             controller: 'Apps',
             authenticate: false})

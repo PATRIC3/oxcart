@@ -18,7 +18,7 @@ function($scope, $state, appUI, auth, $window, ws) {
     $scope.appUI = appUI;
 
     $scope.logout = function() {
-        authService.logout();
+        auth.logout();
         $state.transitionTo('login', {}, { reload: true, inherit: true, notify: false })
               .then(function() {
                   $window.location.reload();
