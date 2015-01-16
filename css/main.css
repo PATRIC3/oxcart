@@ -11,7 +11,7 @@ html, body {
     -moz-animation: fadein .5s; /* Firefox < 16 */
     -ms-animation: fadein .5s; /* Internet Explorer */
     -o-animation: fadein .5s; /* Opera < 12.1 */
-    animation: fadein .5s;    
+    animation: fadein .5s;
 }
 
 h1,h2,h3,h4,h5,
@@ -84,10 +84,10 @@ a {
 
 @media(min-width:768px) {
     #page-header {
-        padding: 15px 20px 10px 20px;
+        padding: 15px 20px 5px 20px;
         margin: 0 0 0 200px;
         background-color: #EAEAEA;
-        border-bottom: 2px solid #ddd;     
+        border-bottom: 2px solid #ddd;
     }
 
     #page-wrapper {
@@ -99,11 +99,11 @@ a {
         position: inherit;
         margin: 0 0 0 200px;
         padding-bottom: 80px;
-    }    
+    }
 }
 
 #page-wrapper > .row {
-    margin: 0; 
+    margin: 0;
 }
 
 #content {
@@ -117,7 +117,7 @@ a {
     bottom:0;
     left:0;
     background: #f8f8f8;
-    border-top: 1px solid #e7e7e7;    
+    border-top: 1px solid #e7e7e7;
 }
 
 #footer span {
@@ -255,7 +255,7 @@ a {
         position: fixed;
         width: 200px;
         height: 100%;
-        border-right: 1px solid #e7e7e7;        
+        border-right: 1px solid #e7e7e7;
     }
 
     .navbar-top-links .dropdown-messages,

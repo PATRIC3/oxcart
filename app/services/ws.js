@@ -15,44 +15,36 @@ angular.module('workspace', ['uiTools'])
     // model for displayed workspaces
     this.workspaces = [];
 
-    this.getMyWorkspaces = function() {
-        return $http.rpc('ws', 'list_workspaces', {owner_only: 1, no_public: 1})
-            .then(function(d) {
+    this.getMyData = function(path, opts) {
+        var params = {paths: [path]};
+        angular.extend(params, opts);
 
-            // parse into list of dicts
-            var data = [];
-            for (var i in d)
-                data.push( self.wsListToDict(d[i]) );
+        return $http.rpc('ws', 'ls', params)
+                    .then(function(d) {
+                        var d = d[path];
 
-            // update ui model
-            self.workspaces = data;
+                        // parse into list of dicts
+                        var data = [];
+                        for (var i in d)
+                            data.push( self.wsListToDict(d[i]) );
 
-            return data;
-        })
+                        return data;
+                    })
     }
 
-    this.getPublicWorkspaces = function() {
-        return $http.rpc('ws', 'list_workspaces', {owned_only: 0})
-            .then(function(d) {
-
-            // parse into list of dicts
-            var data = [];
-            for (var i in d)
-                data.push( self.wsListToDict(d[i]) );
-
-            // update ui model
-            self.workspaces = data;
-            return data;
-        })
+    this.getMyFolders = function(path) {
+        return self.getMyData(path, {excludeObjects: 1});
     }
+
 
     this.wsListToDict = function(ws) {
         // takes workspace info array, returns dict.
-        return {id: ws[0],
-                name: ws[1],
-                owner: ws[2],
+        return {name: ws[0],
+                type: ws[1],
                 mod_date: ws[3],
-                files: ws[4],
+                id: ws[4],
+                owner: ws[5],
+                files: ws[6],
                 folders: ws[7],
                 timestamp: Date.parse(ws[3])
                };
@@ -62,179 +54,63 @@ angular.module('workspace', ['uiTools'])
         self.workspaces.push( self.wsListToDict(ws) );
     }
 
+
     this.rmFromModel = function(ws) {
         for (var i=0; i<self.workspaces.length; i++) {
-            console.log(self.workspaces[i].id, ws[0])
+            console.log(self.workspaces[i].id, ws[4])
 
-            if (self.workspaces[i].id == ws[0])
+            if (self.workspaces[i].id == ws[4])
                 self.workspaces.splice(i, 1);
         }
-
-        console.log('new model', self.workspaces);
     }
 
-    this.getDirectory = function(directory) {
-        console.log(directory)
-        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories:1})
-                    .then(function(d) {
-                        var data = [];
-                        for (var i in d) {
-                            var ws = d[i];
-                            data.push({name: ws[1],
-                                       type: ws[2],
-                                       mod_date: ws[3],
-                                       size: ws[9],
-                                       //owner: ws[5],
-                                       timestamp: Date.parse(ws[3])
-                                      });
-                        }
-
-                        return data;
-                    }).catch(function(e) {
-                        console.log('list_workspace_contents failed', e, directory)
-                    })
-    }
-
-    this.getFolders = function(directory) {
-        var path = '/'+auth.user+'/'+directory;
-        return $http.rpc('ws', 'list_workspace_contents', {directory: path, excludeObjects: 1})
-                    .then(function(d) {
-                        var data = [];
-                        for (var i in d) {
-                            var ws = d[i];
-                            data.push({name: ws[1],
-                                       type: ws[2],
-                                       mod_date: ws[3],
-                                       size: ws[9],
-                                       //owner: ws[5],
-                                       timestamp: Date.parse(ws[3])
-                                      });
-                        }
-
-                        return data;
-                    }).catch(function(e) {
-                        console.log('list_workspace_contents for folders failed', e, directory)
-                    })
-
-    }
-
-
-    this.getObjs = function(directory) {
-        return $http.rpc('ws', 'list_workspace_contents', {directory: directory, includeSubDirectories: 0})
-                    .then(function(d) {
-                        var data = [];
-                        for (var i in d) {
-                            var ws = d[i];
-                            data.push({name: ws[1],
-                                       type: ws[2],
-                                       mod_date: ws[3],
-                                       size: ws[9],
-                                       //owner: ws[5],
-                                       timestamp: Date.parse(ws[3])
-                                      });
-                        }
-
-                        return data;
-                    }).catch(function(e) {
-                        console.log('list_workspace_contents for folders failed', e, directory)
-                    })
-
-    }
-
-    this.newWS = function(name) {
-        console.log('called new workspace with name:', name)
-        return $http.rpc('ws', 'create_workspace', {workspace: name});
-    }
-
-    this.newFolder = function(path, name) {
-        var params = {directory: path+'/'+name}
-        console.log('creating folder with params', params)
-        return $http.rpc('ws', 'create_workspace_directory', params)
-    }
-
-    this.saveObject = function(directory, name, data, type) {
-        return $http.rpc('ws', 'save_objects', {objects: [[directory, name, data, type]]}).then(function(res) {
-            console.log('response', res)
-            return res;
-        })
-    }
-
-    this.getObject = function(directory, name) {
-        console.log('getting object', directory, name);
-        return $http.rpc('ws', 'get_objects', {objects: [[directory, name]]} ).then(function(res) {
-                    console.log('data download', res);
-                })
-    }
-
-    this.mv = function(path, name, des_path, des_name) {
-        console.log('move', path, name, des_path, des_name)
-        return $http.rpc('ws', 'move_objects',
-                    {objects: [[path, name, des_path, des_name]] }).then(function(res) {
-                        console.log('res', res);
-               })
-    }
-
-    this.deleteFolder = function(path, name) {
-        console.log('attempting to delete folder', path, name)
-        return $http.rpc('ws', 'delete_workspace_directory',
-                    {directory: path+'/'+name, force: 1}).then(function(res) {
-                        console.log('deleted directory', res)
-                    })
-    }
-
-    this.deleteObj = function(path, name) {
-        return $http.rpc('ws', 'delete_objects',
-                    {objects: [[path, name]]}).then(function(res) {
-                        console.log('deleted object', res)
-                    })
-    }
-
-    this.deleteWS = function(name) {
-        return $http.rpc('ws', 'delete_workspace', {workspace: name})
+    // takes source and destimation paths, moves object
+    this.mv = function(src, dest) {
+        return $http.rpc('ws', 'copy', {objects: [[src, dest]], move: 1 })
                     .then(function(res) {
-                        console.log('deleted workspace', res)
                         return res;
                     })
     }
 
+    // takes path of object, deletes object
+    this.deleteObj = function(path) {
+        console.log('calling delete')
+        return $http.rpc('ws', 'delete',
+                    {objects: [path]}).then(function(res) {
+                        console.log('deleted object', res)
+                        return res;
+                    }).catch(function(e) {
+                        console.error('delete failed', e, path)
+                    })
+
+    }
+
+    // takes workspace spec hash, creates node.  fixme: cleanup
     this.createNode = function(params) {
         console.log('creating upload node', params)
-        return $http.rpc('ws', 'create_upload_node', params).then(function(res) {
+        return $http.rpc('ws', 'create', params).then(function(res) {
                     console.log('response', res)
                     return res;
-                });
+                })
     }
 
+    // takes path of new folder, creates it
+    this.createFolder = function(path) {
+        var params = {objects: [[path, 'Directory']]};
+        return $http.rpc('ws', 'create', params).then(function(res) {
+                    console.log('response', res)
+                    return res;
+                }).catch(function(e){
+                    console.error('Could not create folder', path, e.data.error)
+                })
+    }
 
     // views wait on this request
-    this.getWS = this.getMyWorkspaces();
-
-
-    //
-    // some code for testing
-    //
-    function makeSomeData(name, howmany) {
-        var folder = "new folder";
-
-        self.newWS(folder).then(function(res) {
-            console.log(res)
-            for (var i=0; i<howmany; i++) {
-                self.saveObject(path+'/'+folder, name+String(i), 'this is just some test data '+i, 'Genome')
-            }
-        })
-    }
-
-    function makeSomeFolders(folder ,name, howmany) {
-        var path = '/'+auth.user+'/'+folder;
-
-        for (var i=0; i<howmany; i++) {
-            self.newFolder(path, name+String(i));
-        }
-    }
-
-    //makeSomeData('somefile', 20);
-    //makeSomeFolders('top level', 'test', 5);
-    //this.getObject('/nconrad/new folder', 'test14.fa')
+    this.getWS = this.getMyData('/'+auth.user)
+                     .then(function(data) {
+                        console.log('setting workspaces', data)
+                         self.workspaces = data;
+                    })
 
 }]);
 

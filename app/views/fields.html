@@ -27,6 +27,12 @@
        placeholder="{{field.default}}"
        ng-required="{{field.required}}">
 
+<!--
+<a ng-if="field.type == 'wstype'" class="btn btn-default" ng-click="openBrowser()">
+        Select a file...
+</a>-->
+
+
 <div ng-if="field.type == 'wstype'"
      dd-filter
      dd-id="input-{{field.id}}"
@@ -34,7 +40,7 @@
      dd-placeholder="Filter files"
      ng-model="fields[field.id]"
      dd-default="selectedObj"
-     dd-data="appUI.wsObjsByType['String']"
+     dd-data="appUI.wsObjsByType['string']"
      dd-change="objChange"
      dd-required="true"
      dd-empty-notice="None Available">

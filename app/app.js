@@ -43,19 +43,14 @@ angular.module('appTasker',
             templateUrl: 'app/views/tasks.html',
             controller: 'TaskStatus',
             authenticate: true})
-        .state('app.ws', {
-            url: "/ws",
-            templateUrl: 'app/views/ws/ws.html',
-            controller: 'WS',
-            authenticate: true})
         .state('app.public', {
             url: "/public",
             templateUrl: 'app/views/ws/public.html',
             controller: 'WS',
             authenticate: true})
-        .state('app.dir', {
-            url: "/ws{dir:.*}",
-            templateUrl: 'app/views/ws/ws.dir.html',
+        .state('app.ws', {
+            url: "/data{dir:.*}",
+            templateUrl: 'app/views/ws/ws.folder.html',
             resolve: {
               'GetApps': ['appUI', function(appUI){
                 return appUI.getApps;
@@ -64,7 +59,7 @@ angular.module('appTasker',
             controller: 'WS',
             authenticate: true})
         .state('app.apps', {
-            url: "/apps/",
+            url: "/apps",
             templateUrl: 'app/views/apps.html',
             controller: 'Apps',
             authenticate: false})

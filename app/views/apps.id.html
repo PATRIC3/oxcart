@@ -3,9 +3,8 @@
 
     <div ng-if="!workspaces.length">
         <b>Oh no!  First create a folder to store your data in.</b>
-        <form ng-submit="saveFolder(folder.name);" name="new">
+        <form ng-submit="createFolder(folder.name)">
             <input type="text"
-                   name="folder"
                    ng-model="folder.name"
                    focus-on="placeholderAdded"
                    placeholder="Folder name">
@@ -35,12 +34,12 @@
                 </span>
             </form>
 
-            <md-progress-linear ng-if="status.count" md-mode="determinate" ng-value="status.progress"></md-progress-linear>
-
             <span ng-if="status.complete">
                 complete.
             </span>
         </div>
+
+        <md-progress-linear ng-if="status.count" md-mode="determinate" ng-value="status.progress"></md-progress-linear>
     </div>
 
 </div>

@@ -1,17 +1,16 @@
 /*
  * App Tasker Model (appUI service)
  *
- *   This is responisble for the state of the app tasker model
- *   Two way binding is used to update the view
+ *   This is responsible for the state of the app tasker model
  *
 */
 
 angular.module('appUI', ['uiTools', 'kbase-auth'])
 .service('appUI', ['$http', '$log', 'uiTools', 'authService', 'workspace',
-    function($http, $log, uiTools, authService, ws) {
+    function($http, $log, uiTools, auth, ws) {
 
     // if not logged in, don't bother using this
-    if (!authService.user) return;
+    if (!auth.user) return;
 
     var self = this;
 
@@ -59,22 +58,25 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     }
 
     // a task is of the form {name: cell.title, fields: scope.fields}
-    this.startApp = function(id, form_params, workspace) {
+    this.startApp = function(id, form_params, folder) {
+        console.log('starting app', id, form_params, folder)
+
         // make the app appear more responsive
         self.status.queued = self.status.queued + 1;
 
         // FIX: refactor, deal with workspace / directory issue on front-end and back
         // iterate through ids, if type is 'wstype', add on workspace path
-
         for (var i in self.appDict[id].parameters) {
             var param = self.appDict[id].parameters[i];
-            console.log('param!', param)
 
             for (var key in form_params) {
-                if (param.id == key && (param.type == 'folder' || param.type == 'wstype') )  {
-                    form_params[key] = '/'+authService.user+'/'+
-                             workspace+'/'+form_params[key];
-                }
+                if (param.id == key && (param.type == 'wstype') )
+                    form_params[key] = '/'+auth.user+'/'+
+                             folder+'/'+form_params[key];
+
+                // temporary hack for using only top level directories
+                if (param.id == key && param.type == 'folder')
+                    form_params[key] = '/'+auth.user+'/'+form_params[key];
             }
         }
 
@@ -102,7 +104,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
 
             for (var key in form_params) {
                 if (param.id == key && (param.type == 'folder' || param.type == 'wstype') )  {
-                    form_params[key] = '/'+authService.user+'/'+
+                    form_params[key] = '/'+auth.user+'/'+
                              workspace+'/'+form_params[key];
                 }
             }
@@ -188,7 +190,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
         setInterval(self.updateStatus, pollStatusMS);
     }
 
-    // run auto updater on load
+    // run updater on load
     this.updateTasks();
     this.updateStatus();
 
@@ -232,9 +234,8 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     }
 
 
-    this.updateWSObjs = function(workspace) {
-        return ws.getObjs(workspace).then(function(objs){
-
+    this.updateWSObjs = function(path) {
+        return ws.getMyData(path).then(function(objs){
                     var objs = objs.sort(compare)
 
                     function compare(a,b) {

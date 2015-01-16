@@ -1,5 +1,5 @@
 
-/* 
+/*
  * Upload module
  *
  *   This is responisble for the state of the app runner model
@@ -20,17 +20,18 @@ angular.module('upload', [])
     var auth = {Authorization: 'OAuth ' + authService.token};
     var header = {headers:  auth }
 
-    this.createNode = function(files, path) {
-        var workspace = '/'+authService.user+'/'+path;
-
-        var params = {objects: [[workspace, files[0].name, 'String', 
-                    {description: 'this is a description about a genome'}]]}        
-        ws.createNode(params).then(function(nodeURL){
-            self.uploadFile(files, nodeURL[0], workspace);
-        })
+    this.createNode = function(path, files, overwrite) {
+        var params = {objects: [[path+'/'+files[0].name, 'String']],
+                      createUploadNodes: 1,
+                      overwrite: overwrite ? true : false};
+        return ws.createNode(params, overwrite).then(function(res){
+                    var nodeURL = res[0][11];
+                    console.log('created upload node:', nodeURL)
+                    self.uploadFile(files, nodeURL);
+                })
     }
 
-    this.uploadFile = function(files, nodeURL, workspace) {
+    this.uploadFile = function(files, nodeURL) {
         console.log('uploading...', files, nodeURL)
         $timeout(function() {
 
@@ -42,13 +43,13 @@ angular.module('upload', [])
             url: nodeURL,
             type: 'PUT',
             headers: auth,
-            xhr: function() { 
+            xhr: function() {
                 var myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload){ 
+                if(myXhr.upload){
                     myXhr.upload.addEventListener('progress', updateProgress, false);
                 }
                 return myXhr;
-            },             
+            },
             success: function(data) {
                 console.log('upload success', data)
                 $timeout(function() {
@@ -70,14 +71,14 @@ angular.module('upload', [])
                 var percent = oEvent.loaded / files[0].size;
 
                 $timeout(function() {
-                    self.status.progress = Math.floor(percent*100);                    
+                    self.status.progress = Math.floor(percent*100);
                 })
             }
         }
 
 
         })
-    
+
     }
 
     /*
@@ -93,5 +94,5 @@ angular.module('upload', [])
 
 }]);
 
- 
+
 

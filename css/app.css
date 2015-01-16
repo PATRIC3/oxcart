@@ -182,7 +182,9 @@ md-card {
     padding: 10px 20px;
 }
 
-
+md-dialog {
+    min-width: 50%;
+}
 
 
 .form-control {
