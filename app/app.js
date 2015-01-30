@@ -10,11 +10,12 @@ angular.module('appTasker',
  'directives',
  'controllers',
  'uiTools',
+ 'appUI',
  'dd-filter',
  'ng-browse',
  'ngMaterial',
  'ng-context-menu',
- 'appUI'])
+ 'smooth-scroll'])
 .config(['$locationProvider', '$stateProvider',
          '$httpProvider', '$urlRouterProvider', '$logProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider, $logProvider) {
@@ -118,13 +119,21 @@ angular.module('appTasker',
             url: "/help",
             templateUrl: 'app/views/help/help.html',
             authenticate: false
+        })
+        .state('app.developers', {
+            url: "/developers",
+            templateUrl: 'app/views/help/developers.html',
+            authenticate: false
+        })
+        .state('api', {
+            url: "/api/:service",
+            templateUrl: 'app/views/help/api.html',
+            authenticate: false
         }).state('app.proto', {
             url: "/proto",
             templateUrl: 'app/views/proto.html',
             authenticate: false
         });
-
-
 
 
     $urlRouterProvider.when('', '/app-tasker')
@@ -154,5 +163,3 @@ angular.module('appTasker',
     $rootScope.user = authService.user;
     $rootScope.token = authService.token;
 }])
-
-

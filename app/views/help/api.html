@@ -1,0 +1,160 @@
+<style>
+    .api-docs {
+        margin-top: 15px;
+    }
+    .api-index {
+        position:fixed;
+    }
+    .api-header {
+        text-transform: capitalize;
+    }
+    .api-docs  ul {
+        padding: 0;
+        list-style: none;
+    }
+    .api-docs  ul li{
+        margin-bottom: 5px;
+    }
+    .api-docs  dt {
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        color: #888;
+        font-weight: 500;
+        font-size: 12px;
+    }
+    .api-docs dd {
+        margin: 0 0 20px 40px;
+    }
+    .api-docs .structure {
+        text-transform: none;
+    }
+    .api-docs .type-details {
+        margin: 10px 30px 0 0;
+        background: #f8f8f8;
+        padding: 10px;
+        border-left: 4px solid #46A997;
+    }
+    .type-details i {
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 12px;
+        color: #888;
+    }
+    .sub-type-details {
+        margin-left: 20px;
+    }
+</style>
+
+<div api-doc class="api-docs container">
+    <div class="api-index">
+        <br>
+        <h4>Methods</h4>
+        <div ng-repeat="method in methods" ng-controller="ScrollCtrl">
+            <a ng-click="gotoElement(method.name)">{{method.name}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            <h3 class="api-header">{{service}} API Documentation</h3>
+
+            <!--
+            <div ng-repeat="struct in structures">
+                <h4>{{struct.name}}</h4>
+
+                <span ng-bind-html="struct.description | unsafe"></span>
+
+                <dl class="method-description">
+                    <dt>Attributes</dt>
+                    <dd>
+                        <ul ng-repeat="param in struct.params">
+                            <b>{{param.name}}</b>
+                            <span type-label="{{param.type}}">{{param.type}}</span>
+                             {{param.description}}
+                        </ul>
+                    </dd>
+                </dl>
+
+                <br><br>
+            </div>-->
+
+            <div ng-repeat="method in methods">
+                <h4 id="{{method.name}}">{{method.name}}</h4>
+
+                <dl class="method-description">
+
+                    <dt>Description</dt>
+                    <dd>
+                        {{method.inputs[0].structure.description}}
+                    </dd>
+
+                    <dt>Parameters
+                        <span class="structure">({{method.inputs[0].structure.name}})</span>
+                    </dt>
+
+                    <dd>
+                        <ul>
+                            <li ng-repeat="param in method.inputs[0].structure.params">
+                                <b>{{param.name}}</b>
+                                <span type-label="{{param.type}}">{{param.type}}</span>
+                                 {{param.description}}
+                                 <br>
+
+                                 <dd>
+                                     <ul class="type-details"
+                                         ng-if="!isBasicType(param.type)">
+                                        <dt>DETAILS</dt>
+                                        <li ng-repeat="type in param.typeDetails">
+                                            <b>{{type.name}}</b>
+                                            <span type-label="{{type.type}}">{{type.type}}</span>
+                                            {{type.description}}
+                                        </li>
+                                    </ul>
+
+                                 </dd>
+                            </li>
+                        </ul>
+                    </dd>
+
+                    <dt>Returns</dt>
+                    <dd>
+                        {{method.returns[0].type}}
+
+                         <ul class="type-details"
+                             ng-if="!isBasicType(method.returns[0].type)">
+                            <dt>DETAILS</dt>
+
+
+                            <li ng-repeat="type in method.returns[0].typeDetails">
+                                <b>{{type.name}}</b>
+                                <span type-label="{{type.type}}">{{type.type}}</span>
+                                <ul class="sub-type-details">
+                                    <li ng-repeat="info in type.info">
+                                        <b>{{info.type}}</b> {{info.name}} - {{info.description}}
+                                    </li>
+                                </ul>
+
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+
+                <br>
+            </div>
+
+            <!--
+            <h4>Types</h4>
+            <dl ng-repeat="type in types">
+                {{type.name}} <span type-label="{{type.type}}"> {{type.type}}</span>
+
+
+                <dt>Description</dt>
+                <dd>{{type.description}}</dd>
+            </dl>-->
+        </div>
+
+
+    </div>
+
+</div>
+
+

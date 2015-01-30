@@ -43,6 +43,9 @@
 
     <script src="app/app.js"></script>
     <script src="lib/seed-rpc/seed-rpc.js"></script>
+    <script src="lib/ng-context-menu/ng-context-menu.js"></script>
+    <script src="lib/dd-filter/dd-filter.js"></script>
+    <script src="lib/ng-browse/ng-browse.js"></script>
     <script src="app/services/auth.js"></script>
     <script src="app/services/appUI.js"></script>
     <script src="app/services/ws.js"></script>
@@ -50,9 +53,7 @@
     <script src="app/services/uiTools.js"></script>
     <script src="app/controllers.js"></script>
     <script src="app/directives.js"></script>
-    <script src="lib/ng-context-menu/ng-context-menu.js"></script>
-    <script src="lib/dd-filter/dd-filter.js"></script>
-    <script src="lib/ng-browse/ng-browse.js"></script>
+    <script src="js/tools/smooth-scroll.js"></script>
     <!-- endbuild -->
 
     <script src="config.js"></script>
@@ -92,26 +93,6 @@
             </ul>
             -->
 
-            <!--
-            <form ng-if="$root.user" class="navbar-form navbar-left col-md-12" role="search">
-                <div class="form-group">
-                    <div dd-filter
-                         dd-id="input-ws"
-                         dd-title="Current Workspace"
-                         dd-placeholder="Filter workspaces"
-                         dd-default="{{selectedWS}}"
-                         dd-data="appUI.ws_list">
-                    </div>
-                </div>
-
-            </form>
-
-            <ul ng-if="$root.user" class="nav navbar-top-links navbar-left">
-               <li ui-sref="app.objects({ws: selectedWS})">
-                    <a>Objects (<span>{{appUI.ws_objects.length}}</span>)</a>
-                </li>
-            </ul>-->
-
             <ul ng-if="$root.user" class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a  class="dropdown-toggle" data-toggle="dropdown">help
@@ -120,7 +101,17 @@
                     <ul class="dropdown-menu">
                         <li>
                             <a ui-sref="app.help">
-                                <i class="fa fa-question fa-fw"></i> Help
+                                <i class="fa fa-question fa-fw"></i> Users
+                            </a>
+                        </li>
+                        <li>
+                            <a ui-sref="app.developers">
+                                <i class="fa fa-code fa-fw"></i> Developers
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/PATRIC3/oxcart/issues" target="__blank">
+                                <i class="fa fa-github fa-fw"></i> Submit a ticket
                             </a>
                         </li>
                     </ul>
