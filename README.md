@@ -13,7 +13,6 @@ http://p3.theseed.org/oxcart
 git clone https://github.com/PATRIC3/oxcart.git oxcart
 git submodule update --init
 bower install
-
 ```
 
 Notes:
