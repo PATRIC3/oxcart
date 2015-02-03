@@ -18,13 +18,13 @@ bower install
 
 Notes:
 - "git submodule update --init" installs some submodules in `lib/`
-- "bower install" installs some third-party dependencies
+- "bower install" installs some third-party (front-end) dependencies
 
 Then point your favorite webserver at `oxcart`
 
 ### Build
 
-This step creates an index.html with concatenated/minimized CSS/JS files (in `build/`).
+This step creates an `index.html` with concatenated/minimized CSS/JS files (located in `build/`).
 
 From `oxcart`:
 
