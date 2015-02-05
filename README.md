@@ -32,8 +32,8 @@ grunt build
 ```
 
 Notes:
-- "npm install" installs grunt dependencies.
-- "grunt build" does the work
+- `npm install` installs grunt dependencies.
+- `grunt build` does the build work
 
 
 ## Contributing
