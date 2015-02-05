@@ -1,0 +1,19 @@
+<md-dialog ng-controller="Proto">
+
+    <md-content>
+    	<h4>Upload to <i>{{uploadPath}}</i></h4>
+
+        <form id="upload-form" class="upload-form" >
+            <span class="btn btn-default btn-file">
+                Choose File... <input name="upload" enctype="multipart/form-data" type="file" onchange="angular.element(this).scope().createNode(this.files)" />
+            </span>
+        </form>
+
+    </md-content>
+
+    <div class="md-actions" layout="row">
+        <span flex></span>
+        <button class="btn btn-default" ng-click="cancel()" aria-label="cancel">Cancel</button>
+    </div>
+
+</md-dialog>

@@ -354,15 +354,14 @@ md-dialog {
 }
 
 /* polymer designing */
-md-input-group label {
+
+md-input-container {
+    padding-bottom: 15px;
+}
+md-input-container label {
     margin-bottom: 0;
 }
-md-input-group input {
-    width: 100%;
-}
-md-backdrop {
-    z-index: 4000;
-}
+
 .md-dialog-container {
     z-index: 4001;
 }

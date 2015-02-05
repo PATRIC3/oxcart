@@ -6,18 +6,21 @@
  *
 */
 
-angular.module('workspace', ['uiTools'])
-.service('workspace', ['$http', 'uiTools', '$log', 'authService', 'config',
-    function($http, uiTools, $log, auth, config) {
+angular.module('workspace', [])
+.service('workspace', ['$http', '$log', 'authService', 'config', '$cacheFactory', '$q',
+    function($http, $log, auth, config, $cacheFactory, $q) {
 
     var self = this;
 
     // model for displayed workspaces
     this.workspaces = [];
+    var cache = $cacheFactory('wsCache');
 
     this.getMyData = function(path, opts) {
         var params = {paths: [path]};
         angular.extend(params, opts);
+
+        //ar data = cache.get(path);
 
         return $http.rpc('ws', 'ls', params)
                     .then(function(d) {
@@ -25,22 +28,19 @@ angular.module('workspace', ['uiTools'])
 
                         // parse into list of dicts
                         var data = [];
-                        for (var i in d)
+                        for (var i=0; i<d.length; i++)
                             data.push( self.wsListToDict(d[i]) );
 
+                        cache.put(path, data);
                         return data;
                     })
     }
-
-    this.getMyFolders = function(path) {
-        return self.getMyData(path, {excludeObjects: 1});
-    }
-
 
     this.wsListToDict = function(ws) {
         // takes workspace info array, returns dict.
         return {name: ws[0],
                 type: ws[1],
+                path: ws[2],
                 mod_date: ws[3],
                 id: ws[4],
                 owner: ws[5],
@@ -111,6 +111,7 @@ angular.module('workspace', ['uiTools'])
                         console.log('setting workspaces', data)
                          self.workspaces = data;
                     })
+
 
 }]);
 

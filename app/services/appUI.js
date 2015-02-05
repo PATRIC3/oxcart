@@ -15,7 +15,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = true;
+    var polling = false;
     var pollTasksMS = 5000;
     var pollStatusMS = 3000;
     var taskDispCount = 50;
@@ -68,8 +68,9 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
         // iterate through ids, if type is 'wstype', add on workspace path
         for (var i in self.appDict[id].parameters) {
             var param = self.appDict[id].parameters[i];
-
+            /*
             for (var key in form_params) {
+
                 if (param.id == key && (param.type == 'wstype') )
                     form_params[key] = '/'+auth.user+'/'+
                              folder+'/'+form_params[key];
@@ -77,7 +78,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
                 // temporary hack for using only top level directories
                 if (param.id == key && param.type == 'folder')
                     form_params[key] = '/'+auth.user+'/'+form_params[key];
-            }
+            }*/
         }
 
         var params = [id, form_params];

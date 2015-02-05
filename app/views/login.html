@@ -12,28 +12,20 @@
         <b>Oh snap!</b>
         {{failMsg}}
     </div>
-    
+
     <form>
-        <md-text-float ng-model="user" label="{{$root.login_label}}"></md-text-float>
-        <md-text-float ng-model="pass" label="Password" type="password"></md-text-float>
+        <md-input-container>
+            <label>{{$root.login_label}}</label>
+            <input ng-model="user">
+        </md-input-container>
+        <md-input-container>
+            <label>Password</label>
+            <input ng-model="pass" label="Password" type="password">
+        </md-input-container>
         <md-button ng-click="loginUser(user, pass)" type="submit" class="md-primary pull-left">
             Login
         </md-button>
-    </form>        
-    <md-progress-circular ng-if="loading" class="pull-left" mode="indeterminate" diameter="25"></md-progress-circular>
-
-    <!--
-    <form role="form">
-        <div class="form-group">
-            <input ng-model="user" type="text" class="form-control" placeholder="Globus username">
-        </div>
-        <div class="form-group">
-            <input ng-model="pass" type="password" class="form-control" placeholder="Password">
-        </div>
-
-        <button ng-click="loginUser(user, pass)" type="submit" class="btn btn-primary">Login</button>
-        <md-progress-circular ng-if="loading" class="" mode="indeterminate" diameter="25"></md-progress-circular>
     </form>
-    -->
+    <md-progress-circular ng-if="loading" class="pull-left" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
 </div>
 

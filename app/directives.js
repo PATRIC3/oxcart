@@ -50,18 +50,20 @@ angular.module('directives', ['controllers'])
 })
 
 
-.directive('whenScrolled', function() {
-    return function(scope, elm, attr) {
-        var raw = elm[0];
+.directive("whenScrolled", function ($window) {
+    return{
+        link: function (scope, elem, attrs) {
+            var raw = elem[0];
+            var checkBounds = function () {
+                var rect = raw.getBoundingClientRect();
+                if ($window.innerHeight >rect.bottom-100) {
+                    scope.loading = true;
+                    scope[attrs.whenScrolled]();
+                }
+            };
 
-        $(elm).on('scroll', function() {
-            console.log('scroll', raw.scrollTop + raw.offsetHeight, raw.scrollHeight)
-            if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight){
-                scope.$apply(attr.whenScrolled);
-                console.log('doing something!')
-            }
-
-        });
+            angular.element($window).bind('scroll', checkBounds);
+        }
     };
 })
 
@@ -83,6 +85,7 @@ angular.module('directives', ['controllers'])
 
         var w = angular.element($window);
         w.bind('resize', function() {
+            console.log('resising')
             adjustHeader();
         })
 
@@ -201,6 +204,62 @@ angular.module('directives', ['controllers'])
         }
     }
 })
+
+
+.directive('ngBrowse2', ['workspace', 'authService', function(ws, auth) {
+    return {
+        link: function(scope, element, attr) {
+            var ele = angular.element(element);
+
+            scope.loadingTree = true;
+            ws.getMyData('/'+auth.user).then(function(data) {
+                scope.tree = data;
+                render();
+                scope.loadingTree = false;
+            })
+
+            function render() {
+                for (var i=0; i < scope.tree.length; i++){
+                    var item = scope.tree[i];
+                    //class="fa fa-plus-square-o bold-hover point"
+
+                    /*
+    <i ng-if="!item.loading && !item.open && item.type == 'folder'"
+       ng-click="openFolder($event, getFamily($event, level))"
+       class="fa fa-plus-square-o bold-hover point">
+    </i>
+
+    <i ng-if="item.open && item.type == 'folder'"
+       ng-click="rm($event, getFamily($event, level))"
+       class="fa fa-minus-square-o bold-hover point">
+    </i>*/
+
+                    var row = angular.element('<div>');
+
+                    if (item.type == 'folder') {
+                        var collapse = angular.element('<i class="fa fa-plus-square-o bold-hover point"></i>')
+                        row.append(collapse);
+                        var icon = angular.element('<i class="fa fa-folder-o green bold">');
+                    } else if (item.type != 'folder') {
+                        var icon = angular.element('<i class="fa fa-file-text-o">')
+                    }
+
+                    row.append(icon);
+                    row.append(' <span>'+item.name+'</span>')
+
+                    ele.append(row)
+                }
+
+                ele.find('.fa-plus-square-o')
+                   .click(function() {
+
+                   })
+
+            }
+
+        }
+    }
+}])
 
 
 .directive('apiDoc', ['$http', '$stateParams', function($http, $stateParams) {

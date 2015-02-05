@@ -1,0 +1,29 @@
+<md-dialog ng-controller="Proto">
+
+    <md-content>
+    	<h4>Select a folder...</h4>
+	    <div ng-browse="./lib/ng-browse"
+             ng-model="fields[field.id]"
+	         ng-browse-highlight="folder">
+	    </div>
+
+        <md-progress-circular ng-if="loadingTree"
+                              md-mode="indeterminate"
+                              class="text-center"
+                              md-diameter="40">
+       </md-progress-circular>
+    </md-content>
+
+    <div class="md-actions" layout="row">
+        {{ngBrowseService.selected.name}}
+        <span flex></span>
+        <button class="btn btn-default" ng-click="cancel()" aria-label="cancel">Cancel</button>
+        <button class="btn btn-primary"
+                ng-click="select(ngBrowseService.selected)"
+                aria-label="select"
+                ng-disabled="!ngBrowseService.selected">
+                Select
+        </button>
+    </div>
+
+</md-dialog>

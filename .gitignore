@@ -3,3 +3,4 @@ rsa_id.pub
 authorized_keys
 node_modules
 .tmp
+js/bower_components/

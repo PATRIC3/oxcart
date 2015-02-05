@@ -132,7 +132,12 @@ angular.module('appTasker',
         }).state('app.proto', {
             url: "/proto",
             templateUrl: 'app/views/proto.html',
-            authenticate: false
+            authenticate: false,
+            resolve: {
+              'GetWS': ['workspace', function(workspace){
+                return workspace.getWS;
+              }]
+            }
         });
 
 
@@ -163,3 +168,8 @@ angular.module('appTasker',
     $rootScope.user = authService.user;
     $rootScope.token = authService.token;
 }])
+
+.config(['$mdThemingProvider', function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+        .primaryPalette('blue')
+}]);

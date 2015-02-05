@@ -1,13 +1,19 @@
 
-<div id="page-wrapper">
+<div id="page-wrapper" ng-controller="Proto" when-scrolled="moreData">
     <h3>Prototype page</h3>
 
     <p>Just some page to demonstrate potential features</p>
 
+    <input type="search" class="form-control" placeholder="Search...">
+    <br>
+
+    <!--
+    <div ng-browse2>
+    </div>
+    -->
 
     <div ng-browse="./lib/ng-browse"
-         ng-browse-highlight
-         ng-controller="Proto">
+         ng-browse-highlight>
     </div>
 
     <br>

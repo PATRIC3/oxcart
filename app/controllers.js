@@ -327,20 +327,16 @@ function($scope, $state, appUI, auth, $window, ws) {
 // Controller for container of app form
 .controller('AppCell',
     ['$scope', '$stateParams', 'appUI', 'workspace',
-    '$timeout', 'upload', '$http', 'authService', '$mdDialog',
-    function($scope, $stateParams, appUI, ws, $timeout, upload, $http, auth, $dialog) {
+    '$timeout', 'upload', '$http', 'authService', '$mdDialog', 'ngBrowseService',
+    function($scope, $stateParams, appUI, ws, $timeout, upload, $http, auth, $dialog, ngBrowseService) {
     var $self = $scope;
 
     // service for appUI state
     $scope.appUI = appUI;
 
-
-
-    if (ws.workspaces.length) {
+    if (ws.workspaces.length)
         $scope.workspaces = ws.workspaces;
-        $scope.selectedWS = ws.workspaces[0].name;
-        updateObjDD($scope.selectedWS);
-    }
+
 
     // update workspace objects if dropdown changes
     // $scope.$watch('ddDisplayed', function(new_ws) {
@@ -412,66 +408,90 @@ function($scope, $state, appUI, auth, $window, ws) {
     }
 
 
-    $scope.getDefault = function(type) {
-        return appUI.wsObjsByType[type][0].name
-    }
-
     $scope.upload = upload;
 
-    $scope.createNode = function(files, overwrite) {
-        upload.createNode('/'+auth.user+'/'+$scope.selectedWS, files, overwrite)
-              .catch(function(e){
-                  if (e.data.error.code == -32603) {
-                      $dialog.show({
-                          templateUrl: 'app/views/ws/confirm.html',
-                          onComplete: function() {
+    $scope.openBrowser = function(ev, kind, fieldID) {
+        // reset selector for now
+        ngBrowseService.reset();
 
-                          },
-                          controller: ['$scope', function($scope) {
-                              $scope.cancel = function(){
-                                  $dialog.hide();
-                              }
-                              $scope.overwrite = function(name){
-                                  $self.createNode(files, true);
-                                  $dialog.hide();
-                              }
-                              $scope.keep = function(name){
-                                  $self.createNode(files, true);
-                                  $dialog.hide();
-                              }
-                          }]
-                      })
-                  } else {
-                      alert('Server error! Could not upload node.')
-                  }
+        if (kind == 'file')
+            var template = 'app/views/ws/mini-file-browser.html';
+        else if (kind == 'folder')
+            var template = 'app/views/ws/mini-folder-browser.html';
+        else if (kind == 'upload')
+            var template = 'app/views/ws/mini-upload-browser.html';
 
-              })
-    }
-
-    $scope.openBrowser = function() {
         $dialog.show({
-            templateUrl: 'app/views/ws/mini-browser.html',
-            onComplete: function() {
-
-            },
+            templateUrl: template,
+            targetEvent: ev,
             controller: ['$scope', function($scope) {
                 $scope.cancel = function(){
                     $dialog.hide();
                 }
-                $scope.overwrite = function(name){
-                    $self.createNode(files, true);
-                    $dialog.hide();
-                }
-                $scope.keep = function(name){
-                    $self.createNode(files, true);
-                    $dialog.hide();
+                $scope.select = function(item){
+                    if (kind == 'file') {
+                        $self.selectedFile = item;
+                        $self.fields[fieldID] = item.path+item.name;
+                        $dialog.hide();
+                    } else if (kind == 'folder') {
+                        $self.selectedFolder = item;
+                        $self.fields[fieldID] = item.path+item.name;
+                        $dialog.hide();
+                    } else if (kind == 'upload')
+                        $self.openUploader(ev, item.path+item.name)
+
+
                 }
             }]
         })
     }
 
+    $scope.openUploader = function(ev, path) {
+        $dialog.show({
+            targetEvent: ev,
+            templateUrl: 'app/views/ws/mini-uploader.html',
+            controller: ['$scope', function($scope) {
+                $scope.uploadPath = path;
 
+                // putting this here there due to onchange issues
+                var $this = $scope;
+                $scope.createNode = function(files, overwrite) {
+                    upload.createNode(path, files, overwrite)
+                          .then(function() {
+                              $dialog.hide();
+                          })
+                          .catch(function(e){
+                              if (e.data.error.code == -32603) {
+                                  $dialog.show({
+                                      templateUrl: 'app/views/ws/confirm.html',
+                                      controller: ['$scope', function($scope) {
+                                          $scope.cancel = function(){
+                                              $dialog.hide();
+                                          }
+                                          $scope.overwrite = function(name){
+                                              $this.createNode(files, true);
+                                          }
+                                          /*
+                                          $scope.keep = function(name){
+                                              $this.createNode(files, true);
+                                              $dialog.hide();
+                                          }*/
+                                      }]
+                                  })
+                              } else {
+                                  alert('Server error! Could not upload node.')
+                              }
 
+                          })
+                }
+
+                $scope.cancel = function(){
+                    $dialog.hide();
+                }
+            }]
+        })
+
+    }
 
     // update dropdown after upload
     $scope.$watch('upload.status', function(value) {
@@ -479,8 +499,8 @@ function($scope, $state, appUI, auth, $window, ws) {
             updateObjDD($scope.selectedWS);
 
             // clear uploader; fix
-            document.getElementById('upload-form').innerHTML =
-            document.getElementById('upload-form').innerHTML;
+            //document.getElementById('upload-form').innerHTML =
+            //document.getElementById('upload-form').innerHTML;
 
             $timeout(function() {
                 $scope.status.complete = false;
@@ -502,26 +522,45 @@ function($scope, $state, appUI, auth, $window, ws) {
 }])
 
 .controller('Proto',
-    ['$scope', 'workspace', 'authService',
-    function($scope, ws, auth) {
+    ['$scope', 'workspace', 'authService', 'ngBrowseService', '$timeout',
+    function($scope, ws, auth, ngBrowseService, $timeout) {
+        $scope.ngBrowseService = ngBrowseService;
 
         // top level of tree
+        $scope.loadingTree = true;
+
+        var i = 0;
+        var e = 10;
+        var fullTree;
+
         ws.getMyData('/'+auth.user).then(function(data) {
-            $scope.tree = data;
+            console.log('proto data', data)
+            fullTree = data;
+            $scope.tree = fullTree.slice(i, i+e);
+
+            $scope.loadingTree = false;
         })
 
+        $scope.moreData = function() {
+            console.log('loading more', i, i+e)
+            $timeout(function() {
+                $scope.tree = $scope.tree.concat( fullTree.slice(i, i+e) )
+                i += e+1;
+            })
+
+        }
+
         $scope.getFolder = function(path) {
-            console.log('getting data!', path)
             return ws.getMyData('/'+auth.user+'/'+path).then(function(data) {
                 return data;
             })
         }
 
+
     }
 ])
 
 
-//  controller. that's it.
 .controller('Login', ['$scope', '$state', 'authService', '$window',
     function($scope, $state, authService, $window) {
 
@@ -558,9 +597,3 @@ function($scope, $state, appUI, auth, $window, ws) {
 
 }])
 
-
-.controller('DDFilter', ['$scope', function($scope) {
-
-
-
-}])
