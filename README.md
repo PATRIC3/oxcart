@@ -10,14 +10,13 @@ http://p3.theseed.org/oxcart
 ## Local Installation
 
 ```
-git clone https://github.com/PATRIC3/oxcart.git oxcart
-git submodule update --init
+git clone --recursive https://github.com/PATRIC3/oxcart.git oxcart
 bower install
 ```
 
 Notes:
-- "git submodule update --init" installs some submodules in `lib/`
-- "bower install" installs some third-party (front-end) dependencies
+- The `--recursive` flag installs some submodules in `lib/`
+- `bower install` installs some third-party (front-end) dependencies
 
 Then point your favorite webserver at `oxcart`
 
