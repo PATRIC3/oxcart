@@ -57,6 +57,7 @@ angular.module('directives', ['controllers'])
             var checkBounds = function () {
                 var rect = raw.getBoundingClientRect();
                 if ($window.innerHeight >rect.bottom-100) {
+                    console.log('loading more')
                     scope.loading = true;
                     scope[attrs.whenScrolled]();
                 }

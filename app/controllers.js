@@ -530,13 +530,15 @@ function($scope, $state, appUI, auth, $window, ws) {
         $scope.loadingTree = true;
 
         var i = 0;
+        var init = 49
         var e = 10;
         var fullTree;
 
         ws.getMyData('/'+auth.user).then(function(data) {
             console.log('proto data', data)
             fullTree = data;
-            $scope.tree = fullTree.slice(i, i+e);
+            $scope.tree = fullTree.slice(i, i+init);
+            i = i+init;
 
             $scope.loadingTree = false;
         })

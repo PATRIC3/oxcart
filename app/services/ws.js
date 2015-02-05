@@ -28,7 +28,7 @@ angular.module('workspace', [])
 
                         // parse into list of dicts
                         var data = [];
-                        for (var i=0; i<d.length; i++)
+                        for (var i in d)
                             data.push( self.wsListToDict(d[i]) );
 
                         cache.put(path, data);
