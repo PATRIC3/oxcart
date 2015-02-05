@@ -15,7 +15,7 @@ angular.module('appTasker',
  'ng-browse',
  'ngMaterial',
  'ng-context-menu',
- 'smooth-scroll'])
+ 'angularSmoothscroll'])
 .config(['$locationProvider', '$stateProvider',
          '$httpProvider', '$urlRouterProvider', '$logProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider, $logProvider) {

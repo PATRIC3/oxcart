@@ -49,13 +49,13 @@
     <div class="api-index">
         <br>
         <h4>Methods</h4>
-        <div ng-repeat="method in methods" ng-controller="ScrollCtrl">
-            <a ng-click="gotoElement(method.name)">{{method.name}}</a>
+        <div ng-repeat="method in methods">
+            <a smooth-scroll-jquery offset="90" target="{{method.name}}">{{method.name}}</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-2">
-            <h3 class="api-header">{{service}} API Documentation</h3>
+            <h2 class="api-header">{{service}} API Documentation</h2>
 
             <!--
             <div ng-repeat="struct in structures">
