@@ -14,13 +14,11 @@ angular.module('workspace', [])
 
     // model for displayed workspaces
     this.workspaces = [];
-    var cache = $cacheFactory('wsCache');
+    //var cache = $cacheFactory('wsCache');
 
     this.getMyData = function(path, opts) {
         var params = {paths: [path]};
         angular.extend(params, opts);
-
-        //ar data = cache.get(path);
 
         return $http.rpc('ws', 'ls', params)
                     .then(function(d) {
@@ -31,7 +29,6 @@ angular.module('workspace', [])
                         for (var i in d)
                             data.push( self.wsListToDict(d[i]) );
 
-                        cache.put(path, data);
                         return data;
                     })
     }
@@ -66,9 +63,14 @@ angular.module('workspace', [])
 
     // takes source and destimation paths, moves object
     this.mv = function(src, dest) {
-        return $http.rpc('ws', 'copy', {objects: [[src, dest]], move: 1 })
+        var params = {objects: [[src, dest]], move: 1 };
+        console.log('trying to rename with', params);
+        return $http.rpc('ws', 'copy', params)
                     .then(function(res) {
+                        console.log('response was', res)
                         return res;
+                    }).catch(function(e) {
+                        console.log('could not mv', e)
                     })
     }
 
@@ -106,6 +108,7 @@ angular.module('workspace', [])
     }
 
     // views wait on this request
+
     this.getWS = this.getMyData('/'+auth.user)
                      .then(function(data) {
                         console.log('setting workspaces', data)

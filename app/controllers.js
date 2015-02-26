@@ -79,12 +79,10 @@ function($scope, $state, appUI, auth, $window, ws) {
     links.reverse();
     links = links.slice(1, links.length);
 
-
-    // load data
+    // load initial data
     $scope.loading = true;
     ws.getMyData($scope.folder).then(function(data) {
         $scope.items = data;
-
         $scope.loading = false;
     })
 
@@ -145,6 +143,7 @@ function($scope, $state, appUI, auth, $window, ws) {
     // delete an object
     $scope.deleteObj = function(name) {
         ws.deleteObj( path(name) ).then(function(res) {
+            console.log('response', res)
             ws.rmFromModel(res[0]);
             $scope.updateDir();
         })
@@ -184,8 +183,6 @@ function($scope, $state, appUI, auth, $window, ws) {
     }
 
 
-
-
     $scope.selectRow = function(e, i, item) {
         console.log('called select row', e, i, item)
         $scope.select = true;
@@ -214,6 +211,7 @@ function($scope, $state, appUI, auth, $window, ws) {
     // updates the view
     $scope.updateDir = function() {
         ws.getMyData($scope.folder).then(function(data) {
+            console.log('data returned', data)
             $scope.items = data;
         })
     }
@@ -229,8 +227,6 @@ function($scope, $state, appUI, auth, $window, ws) {
     function path(name) {
         return $scope.folder+'/'+name;
     }
-
-
 }])
 
 
@@ -326,9 +322,9 @@ function($scope, $state, appUI, auth, $window, ws) {
 
 // Controller for container of app form
 .controller('AppCell',
-    ['$scope', '$stateParams', 'appUI', 'workspace',
-    '$timeout', 'upload', '$http', 'authService', '$mdDialog', 'ngBrowseService',
-    function($scope, $stateParams, appUI, ws, $timeout, upload, $http, auth, $dialog, ngBrowseService) {
+['$scope', '$stateParams', 'appUI', 'workspace',
+'$timeout', 'upload', '$http', 'authService', '$mdDialog', 'ngBrowseService',
+function($scope, $stateParams, appUI, ws, $timeout, upload, $http, auth, $dialog, ngBrowseService) {
     var $self = $scope;
 
     // service for appUI state
@@ -425,6 +421,7 @@ function($scope, $state, appUI, auth, $window, ws) {
             templateUrl: template,
             targetEvent: ev,
             controller: ['$scope', function($scope) {
+
                 $scope.cancel = function(){
                     $dialog.hide();
                 }
@@ -481,7 +478,6 @@ function($scope, $state, appUI, auth, $window, ws) {
                               } else {
                                   alert('Server error! Could not upload node.')
                               }
-
                           })
                 }
 
@@ -521,47 +517,27 @@ function($scope, $state, appUI, auth, $window, ws) {
 
 }])
 
-.controller('Proto',
+.controller('SelectedItem',
     ['$scope', 'workspace', 'authService', 'ngBrowseService', '$timeout',
     function($scope, ws, auth, ngBrowseService, $timeout) {
+
         $scope.ngBrowseService = ngBrowseService;
 
-        // top level of tree
-        $scope.loadingTree = true;
-
-        var i = 0;
-        var init = 49
-        var e = 10;
-        var fullTree;
-
-        ws.getMyData('/'+auth.user).then(function(data) {
-            console.log('proto data', data)
-            fullTree = data;
-            $scope.tree = fullTree.slice(i, i+init);
-            i = i+init;
-
-            $scope.loadingTree = false;
-        })
-
-        $scope.moreData = function() {
-            console.log('loading more', i, i+e)
-            $timeout(function() {
-                $scope.tree = $scope.tree.concat( fullTree.slice(i, i+e) )
-                i += e+1;
-            })
-
-        }
-
-        $scope.getFolder = function(path) {
-            return ws.getMyData('/'+auth.user+'/'+path).then(function(data) {
-                return data;
-            })
-        }
 
 
     }
 ])
+.service('ngBrowseService', function() {
 
+    // model for selected item
+    this.selected = {name: 'none'};
+
+    console.log('invoked service', this.selected)
+    this.reset = function() {
+        this.selected = undefined;
+    }
+
+})
 
 .controller('Login', ['$scope', '$state', 'authService', '$window',
     function($scope, $state, authService, $window) {

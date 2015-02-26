@@ -12,7 +12,6 @@ angular.module('appTasker',
  'uiTools',
  'appUI',
  'dd-filter',
- 'ng-browse',
  'ngMaterial',
  'ng-context-menu',
  'angularSmoothscroll'])

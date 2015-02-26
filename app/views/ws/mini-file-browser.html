@@ -1,17 +1,15 @@
-<md-dialog ng-controller="Proto" when-scrolled="moreData">
+<md-dialog ng-controller="SelectedItem">
 
     <md-content>
-    	<h4>Select a file...</h4>
-	    <div ng-browse="./lib/ng-browse"
-             ng-model="fields[field.id]"
-	         ng-browse-highlight="string">
-	    </div>
+      <h4>Select a file...</h4>
 
-        <md-progress-circular ng-if="loadingTree"
-                              md-mode="indeterminate"
-                              class="text-center"
-                              md-diameter="40">
-       </md-progress-circular>
+      <div react-tree="string"></div>
+
+      <md-progress-circular ng-if="loadingTree"
+                            md-mode="indeterminate"
+                            class="text-center"
+                            md-diameter="40">
+      </md-progress-circular>
     </md-content>
 
     <div class="md-actions" layout="row">

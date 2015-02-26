@@ -49,8 +49,7 @@ angular.module('directives', ['controllers'])
     }
 })
 
-
-.directive("whenScrolled", function ($window) {
+.directive("whenScrolled", ['$window', function ($window) {
     return{
         link: function (scope, elem, attrs) {
             var raw = elem[0];
@@ -66,9 +65,7 @@ angular.module('directives', ['controllers'])
             angular.element($window).bind('scroll', checkBounds);
         }
     };
-})
-
-
+}])
 .directive('tooltip', function() {
     return {
         link: function(scope, element, attr) {
@@ -86,7 +83,6 @@ angular.module('directives', ['controllers'])
 
         var w = angular.element($window);
         w.bind('resize', function() {
-            console.log('resising')
             adjustHeader();
         })
 
@@ -207,7 +203,7 @@ angular.module('directives', ['controllers'])
 })
 
 
-.directive('ngBrowse2', ['workspace', 'authService', function(ws, auth) {
+.directive('ngBrowseBeta', ['workspace', 'authService', function(ws, auth) {
     return {
         link: function(scope, element, attr) {
             var ele = angular.element(element);
@@ -223,17 +219,6 @@ angular.module('directives', ['controllers'])
                 for (var i=0; i < scope.tree.length; i++){
                     var item = scope.tree[i];
                     //class="fa fa-plus-square-o bold-hover point"
-
-                    /*
-    <i ng-if="!item.loading && !item.open && item.type == 'folder'"
-       ng-click="openFolder($event, getFamily($event, level))"
-       class="fa fa-plus-square-o bold-hover point">
-    </i>
-
-    <i ng-if="item.open && item.type == 'folder'"
-       ng-click="rm($event, getFamily($event, level))"
-       class="fa fa-minus-square-o bold-hover point">
-    </i>*/
 
                     var row = angular.element('<div>');
 
@@ -261,6 +246,157 @@ angular.module('directives', ['controllers'])
         }
     }
 }])
+
+
+.directive('reactTree',
+['workspace', 'authService', 'ngBrowseService', function(ws, auth, ngBrowseService) {
+    return {
+        link: function(scope, element, attrs) {
+            var ele = angular.element(element);
+
+            scope.loadingTree = true;
+            ws.getMyData('/'+auth.user).then(function(data) {
+                render(data);
+                scope.loadingTree = false;
+            })
+
+            // called after initial top level data is loaded
+            function render(topLevel) {
+                var cx = React.addons.classSet;
+                var lastSelected;
+
+
+                // Icon component (expand icon)
+                var Icon = React.createClass({displayName: "Icon",
+                    render: function() {
+                        var isOpen = this.props.isOpen,
+                        type = this.props.type;
+
+                        var classes = React.addons.classSet({
+                            'fa': true,
+                            'bold-hover': true,
+                            'point': true,
+                            'fa-minus-square-o': type == 'folder' && isOpen,
+                            'fa-plus-square-o': type == 'folder' && !isOpen
+                        });
+
+                        return (React.createElement("i", {onClick: this.props.onExpand, className: classes}));
+                    }
+                })
+
+                // Node (folder or file) component
+                var Node = React.createClass({displayName: "Node",
+                    getInitialState: function() {
+                        return {children: []};
+                    },
+                    expandFolder: function(item) {
+                        var self = this;
+
+                        // If already open, close.
+                        // Otherwise, fetch data and open.
+                        if (this.state.isOpen) {
+                            this.setState({isOpen: false, children: []})
+                        } else {
+                            this.setState({isOpen: true}, function() {
+                                ws.getMyData(item.path+item.name).then(function(data) {
+                                    self.setState({children: data})
+                                })
+                            })
+                        }
+                    },
+                    setSelectedItem: function(ev) {
+                        if (this.props.setSelectedItem) {
+                            this.props.setSelectedItem(this);
+                        }
+                    },
+                    render: function() {
+                        var item = this.props.data,
+                            name = item.name,
+                            type = item.type;
+
+                        // top level is 1
+                        var level = item.path.split('/').length - 2;
+
+                        var classes = cx({
+                            'fa': true,
+                            'green': item.type == 'folder',
+                            'bold': item.type == 'folder',
+                            'fa-file-text-o': item.type != 'folder',
+                            'fa-folder-o': item.type == 'folder'
+                        });
+
+                        var padding = (item.type != 'folder' ? 17 : 5) + (level*15)+'px';
+
+                        if (this.state.selected)
+                            var selectedStyle = {
+                                backgroundColor: '#428BCA',
+                                color: '#fff',
+                                display: 'block',
+                                width: '100%',
+                                paddingLeft: padding
+                            }
+                        else {
+                            var selectedStyle = {paddingLeft: padding};
+                        }
+
+
+                        return (React.createElement("div", null, 
+                                    React.createElement("div", {style: selectedStyle}, 
+                                       React.createElement(Icon, {type: type, 
+                                              isOpen: this.state.isOpen, 
+                                              onExpand: this.expandFolder.bind(this, item)}), " ", ' ', 
+                                        React.createElement("i", {className: classes}), " ", ' ', 
+                                        React.createElement("span", {onClick: this.setSelectedItem}, name)
+                                    ), 
+                                    React.createElement(Tree, {items: this.state.children})
+                                ));
+                    }
+                });
+
+                // Tree component
+                var Tree = React.createClass({displayName: "Tree",
+                    setSelectedItem: function(node) {
+                        if (node.props.data.type != attrs.reactTree)
+                            return
+
+                        // unselect previously selected
+                        if (lastSelected && lastSelected.isMounted())
+                            lastSelected.setState({selected: false});
+                        lastSelected = node;
+
+                        // set node as selected (or not)
+                        node.setState({selected: node.state.selected ? false : true});
+                        console.log('trying to set selected', node.props.data)
+                        scope.$apply(function() {
+                            ngBrowseService.selected = node.props.data;
+                        });
+                    },
+                    render: function() {
+                        var self = this;
+
+                        return (
+                            React.createElement("div", null, 
+                                this.props.items.map(function(item) {
+                                    return React.createElement(Node, {setSelectedItem: self.setSelectedItem, 
+                                                 key: item.name, 
+                                                 data: item});
+                                })
+                            )
+                        );
+                    }
+                });
+
+                // render the actual tree, starting with toplevel
+                React.render(
+                      React.createElement(Tree, {items: topLevel}),
+                      angular.element(element)[0]
+                );
+
+            }
+        }
+    }
+}])
+
 
 
 .directive('apiDoc', ['$http', '$stateParams', function($http, $stateParams) {

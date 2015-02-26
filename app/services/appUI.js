@@ -15,7 +15,7 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     var self = this;
 
     // how often to update tasks/status (in ms)
-    var polling = false;
+    var polling = true;
     var pollTasksMS = 5000;
     var pollStatusMS = 3000;
     var taskDispCount = 50;
@@ -203,7 +203,6 @@ angular.module('appUI', ['uiTools', 'kbase-auth'])
     // used in 'Run Apps' pages
     this.getApps = $http.rpc('app', 'enumerate_apps')
          .then(function(apps) {
-
             self.apps = apps;
 
             var appDict = {};
