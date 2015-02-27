@@ -8,7 +8,7 @@ PATRIC3 Web Application for data browser / app tasker.
 http://p3.theseed.org/oxcart
 
 ## Local Installation
-
+### Clone the repo and and install client-side dependencies
 ```
 git clone --recursive https://github.com/PATRIC3/oxcart.git oxcart
 bower install
@@ -16,9 +16,7 @@ bower install
 
 Notes:
 - The `--recursive` flag installs some submodules in `lib/`
-- `bower install` installs some third-party (front-end) dependencies
-
-Then point your favorite webserver at `oxcart`
+- `bower install` installs some third-party (client-side) dependencies
 
 ### Build
 
@@ -35,6 +33,7 @@ Notes:
 - `npm install` installs grunt dependencies.
 - `grunt build` does the build work
 
+Then point your favorite webserver at `oxcart`
 
 ## Contributing
 
