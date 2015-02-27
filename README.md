@@ -8,7 +8,6 @@ PATRIC3 Web Application for data browser / app tasker.
 http://p3.theseed.org/oxcart
 
 ## Local Installation
-### Clone the repo and and install client-side dependencies
 ```
 git clone --recursive https://github.com/PATRIC3/oxcart.git oxcart
 bower install
