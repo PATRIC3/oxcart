@@ -12,10 +12,9 @@ angular.module('appTasker',
  'uiTools',
  'appUI',
  'dd-filter',
- 'ng-browse',
  'ngMaterial',
  'ng-context-menu',
- 'smooth-scroll'])
+ 'angularSmoothscroll'])
 .config(['$locationProvider', '$stateProvider',
          '$httpProvider', '$urlRouterProvider', '$logProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider, $logProvider) {
@@ -132,7 +131,12 @@ angular.module('appTasker',
         }).state('app.proto', {
             url: "/proto",
             templateUrl: 'app/views/proto.html',
-            authenticate: false
+            authenticate: false,
+            resolve: {
+              'GetWS': ['workspace', function(workspace){
+                return workspace.getWS;
+              }]
+            }
         });
 
 
@@ -163,3 +167,8 @@ angular.module('appTasker',
     $rootScope.user = authService.user;
     $rootScope.token = authService.token;
 }])
+
+.config(['$mdThemingProvider', function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+        .primaryPalette('blue')
+}]);

@@ -4,11 +4,22 @@
 
     <p>Just some page to demonstrate potential features</p>
 
+    <input type="search" class="form-control" placeholder="Search...">
+    <br>
 
-    <div ng-browse="./lib/ng-browse"
-         ng-browse-highlight
-         ng-controller="Proto">
+    <!--<div ng-browse="./lib/ng-browse"
+         ng-browse-highlight="folder">
+    </div>-->
+
+    <div react-tree id="file-tree">
     </div>
+
+
+    <md-progress-circular ng-if="loadingTree"
+                          md-mode="indeterminate"
+                          class="text-center"
+                          md-diameter="40">
+    </md-progress-circular>
 
     <br>
     <br>

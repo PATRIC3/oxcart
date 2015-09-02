@@ -1,5 +1,4 @@
 
-
 <input ng-if="field.type == 'string'"
        id="input-{{field.id}}"
        ng-model="fields[field.id]"
@@ -27,12 +26,21 @@
        placeholder="{{field.default}}"
        ng-required="{{field.required}}">
 
-<!--
-<a ng-if="field.type == 'wstype'" class="btn btn-default" ng-click="openBrowser()">
-        Select a file...
-</a>-->
+<input ng-if="field.type == 'wstype'"
+       type="button"
+       class="btn btn-default"
+       ng-click="openBrowser($event, 'file', field.id)"
+       ng-value="selectedFile.name ? selectedFile.name : 'Select a file...' "
+       ng-required="{{field.required}}">
 
+<input ng-if="field.type == 'folder'"
+       type="button"
+       class="btn btn-default"
+       ng-click="openBrowser($event, 'folder', field.id)"
+       ng-value="selectedFolder.name ? selectedFolder.name : 'Select a folder...' "
+       ng-required="{{field.required}}">
 
+<!-- old selector
 <div ng-if="field.type == 'wstype'"
      dd-filter
      dd-id="input-{{field.id}}"
@@ -44,8 +52,9 @@
      dd-change="objChange"
      dd-required="true"
      dd-empty-notice="None Available">
-</div>
+</div>-->
 
+<!-- old folder selector
 <div dd-filter
      ng-if="field.type == 'folder'"
      ng-model="fields[field.id]"
@@ -54,7 +63,7 @@
      dd-default="selectedWS"
      dd-data="workspaces"
      dd-required="true">
-</div>
+</div>-->
 
 
 <select ng-if="field.type == 'enum'"

@@ -4,12 +4,12 @@
         <div class="col-md-3">
             <div class="h3">Apps</div>
         </div>
-        <div class="col-md-5">        
-            <input ng-model="appQuery" type="search" 
+        <div class="col-md-5">
+            <input ng-model="appQuery" type="search"
                    class="form-control pull-right app-search" placeholder="Search apps">
         </div>
         <div class="col-md-1 col-md-offset-3">
-        </div>        
+        </div>
     </div>
     <hr class="skinny"></hr>
 
@@ -26,7 +26,7 @@
                     <a ui-sref="app.id({id: app.id})">
                         <h4 class="media-heading">{{app.label}}</h4>
                         {{appUI.appDict[app.id].description}}
-                    </a> 
+                    </a>
                 </div>
             </div>
         </div>
@@ -42,15 +42,15 @@
                 <a ui-sref="app.id({id: app.id})">
                     <h4 class="media-heading">{{app.label}}</h4>
                     {{appUI.appDict[app.id].description}}
-                </a> 
+                </a>
             </div>
         </div>
 
         <div ng-if="!appUI.loadingApps" ng-show="(appUI.apps | filter: appQuery).length == 0" class="col-md-12">
             <b class="text-muted">No apps found</b>
-        </div>        
+        </div>
 
-        <md-progress-circular ng-if="appUI.loadingApps" mode="indeterminate" diameter="40"></md-progress-circular>
+        <md-progress-circular ng-if="appUI.loadingApps" md-mode="indeterminate" md-diameter="40"></md-progress-circular>
 
     </div>
 </div>

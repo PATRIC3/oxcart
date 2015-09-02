@@ -12,48 +12,46 @@
 
     <title>{{$root.ui_name}}</title>
 
-    <link href="js/angular/material/angular-material/angular-material.css" rel="stylesheet">
-    <link href="js/angular/material/angular-material/themes/default-theme.css" rel="stylesheet">
-
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="css/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- build:css build/style.css -->
+    <link href="components/angular-material/angular-material.css" rel="stylesheet">
+    <link href="components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
     <link href="css/main.css" rel="stylesheet" type="text/css">
     <link href="css/app.css" rel="stylesheet" type="text/css">
     <link href="css/viz.css" rel="stylesheet" type="text/css">
     <link href="lib/dd-filter/dd-filter.css" rel="stylesheet" type="text/css">
-    <link href="lib/ng-browse/ng-browse.css" rel="stylesheet" type="text/css">
+    <!--<link href="lib/ng-browse/ng-browse.css" rel="stylesheet" type="text/css">-->
     <!-- endbuild -->
 
-    <!--<script src="app/clients/appService.js"></script>-->
-
     <!-- build:js build/site.js -->
-    <script src="js/jquery/jquery-1.11.0.min.js"></script>
-    <script src="js/jquery/jquery-ui.min.js"></script>
-    <script src="js/bootstrap/bootstrap.min.js"></script>
-    <script src="js/viz/d3.min.js"></script>
+        <script src="components/jquery/dist/jquery.min.js"></script>
+        <script src="components/jquery-ui/jquery-ui.min.js"></script><!-- to be removed -->
+        <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="components/d3/d3.min.js"></script>
 
-    <script src="js/angular/angular.min.js"></script>
-    <script src="js/angular/angular-ui-router.min.js"></script>
-    <script src="js/angular/material/angular-aria/angular-aria.js"></script>
-    <script src="js/angular/material/angular-animate/angular-animate.js"></script>
-    <script src="js/angular/material/hammerjs/hammer.js"></script>
-    <script src="js/angular/material/angular-material/angular-material.js"></script>
+        <!-- angular/react deps -->
+        <script src="components/angular/angular.js"></script>
+        <script src="components/ui-router/release/angular-ui-router.js"></script>
+        <script src="components/angular-aria/angular-aria.js"></script>
+        <script src="components/angular-animate/angular-animate.js"></script>
+        <script src="components/angular-material/angular-material.js"></script>
+        <script src="components/react/react-with-addons.js"></script>
+        <script src="components/angular-smoothscroll/dist/scripts/bb15da28.scripts.js"></script>
 
-    <script src="app/app.js"></script>
-    <script src="lib/seed-rpc/seed-rpc.js"></script>
-    <script src="lib/ng-context-menu/ng-context-menu.js"></script>
-    <script src="lib/dd-filter/dd-filter.js"></script>
-    <script src="lib/ng-browse/ng-browse.js"></script>
-    <script src="app/services/auth.js"></script>
-    <script src="app/services/appUI.js"></script>
-    <script src="app/services/ws.js"></script>
-    <script src="app/services/upload.js"></script>
-    <script src="app/services/uiTools.js"></script>
-    <script src="app/controllers.js"></script>
-    <script src="app/directives.js"></script>
-    <script src="js/tools/smooth-scroll.js"></script>
+        <script src="app/app.js"></script>
+        <script src="lib/seed-rpc/seed-rpc.js"></script>
+        <script src="lib/ng-context-menu/ng-context-menu.js"></script>
+        <script src="lib/dd-filter/dd-filter.js"></script>
+        <!--<script src="lib/ng-browse/ng-browse.js"></script>-->
+        <script src="app/services/auth.js"></script>
+        <script src="app/services/appUI.js"></script>
+        <script src="app/services/ws.js"></script>
+        <script src="app/services/upload.js"></script>
+        <script src="app/services/uiTools.js"></script>
+        <script src="app/controllers.js"></script>
+        <script src="app/directives-build/directives.js"></script>
     <!-- endbuild -->
 
     <script src="config.js"></script>

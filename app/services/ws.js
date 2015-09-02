@@ -6,14 +6,15 @@
  *
 */
 
-angular.module('workspace', ['uiTools'])
-.service('workspace', ['$http', 'uiTools', '$log', 'authService', 'config',
-    function($http, uiTools, $log, auth, config) {
+angular.module('workspace', [])
+.service('workspace', ['$http', '$log', 'authService', 'config', '$cacheFactory', '$q',
+    function($http, $log, auth, config, $cacheFactory, $q) {
 
     var self = this;
 
     // model for displayed workspaces
     this.workspaces = [];
+    //var cache = $cacheFactory('wsCache');
 
     this.getMyData = function(path, opts) {
         var params = {paths: [path]};
@@ -32,15 +33,11 @@ angular.module('workspace', ['uiTools'])
                     })
     }
 
-    this.getMyFolders = function(path) {
-        return self.getMyData(path, {excludeObjects: 1});
-    }
-
-
     this.wsListToDict = function(ws) {
         // takes workspace info array, returns dict.
         return {name: ws[0],
                 type: ws[1],
+                path: ws[2],
                 mod_date: ws[3],
                 id: ws[4],
                 owner: ws[5],
@@ -66,9 +63,14 @@ angular.module('workspace', ['uiTools'])
 
     // takes source and destimation paths, moves object
     this.mv = function(src, dest) {
-        return $http.rpc('ws', 'copy', {objects: [[src, dest]], move: 1 })
+        var params = {objects: [[src, dest]], move: 1 };
+        console.log('trying to rename with', params);
+        return $http.rpc('ws', 'copy', params)
                     .then(function(res) {
+                        console.log('response was', res)
                         return res;
+                    }).catch(function(e) {
+                        console.log('could not mv', e)
                     })
     }
 
@@ -106,11 +108,13 @@ angular.module('workspace', ['uiTools'])
     }
 
     // views wait on this request
+
     this.getWS = this.getMyData('/'+auth.user)
                      .then(function(data) {
                         console.log('setting workspaces', data)
                          self.workspaces = data;
                     })
+
 
 }]);
 
